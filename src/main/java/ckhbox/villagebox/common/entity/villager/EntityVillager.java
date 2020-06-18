@@ -3,10 +3,6 @@
 
 package ckhbox.villagebox.common.entity.villager;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import ckhbox.villagebox.VillageBoxMod;
 import ckhbox.villagebox.common.config.VBConfig;
 import ckhbox.villagebox.common.entity.ai.VillagerAIFollowing;
@@ -31,13 +27,7 @@ import ckhbox.villagebox.common.village.trading.TradingRecipeList;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.EntityAIAvoidEntity;
-import net.minecraft.entity.ai.EntityAIMoveTowardsRestriction;
-import net.minecraft.entity.ai.EntityAIOpenDoor;
-import net.minecraft.entity.ai.EntityAISwimming;
-import net.minecraft.entity.ai.EntityAIWatchClosest;
-import net.minecraft.entity.ai.EntityAIWatchClosest2;
-import net.minecraft.entity.ai.EntityJumpHelper;
+import net.minecraft.entity.ai.*;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -57,27 +47,35 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class EntityVillager
         extends EntityCreature
         implements ITrading, IQuestProvider{
-	private static final DataParameter<Integer> PROFESSIONID = EntityDataManager.<Integer>createKey(EntityVillager.class, DataSerializers.VARINT);
-    private static final DataParameter<Integer> FLAGS = EntityDataManager.<Integer>createKey(EntityVillager.class, DataSerializers.VARINT);
-    private static final DataParameter<Integer> QUEST = EntityDataManager.<Integer>createKey(EntityVillager.class, DataSerializers.VARINT);
+	private static final DataParameter<Integer> PROFESSIONID = EntityDataManager.createKey(EntityVillager.class, DataSerializers.VARINT);
+
+    private static final DataParameter<Integer> FLAGS = EntityDataManager.createKey(EntityVillager.class, DataSerializers.VARINT);
+
+    private static final DataParameter<Integer> QUEST = EntityDataManager.createKey(EntityVillager.class, DataSerializers.VARINT);
 	
 	private Profession profession;
-	//the player this villager is currently interacting with
+
+	// the player this villager is currently interacting with
 	private EntityPlayer interacting;
+
 	private EntityPlayer following;
 	
 	private IntBoundary home;
 	
-	//the canter of wandering when no home has been set to this villager
+	// the canter of wandering when no home has been set to this villager
 	private Vec3d wanderCenter;
 	
-	//the upgrading history
-	private List<Integer> upgradingHistory = new ArrayList<Integer>(Arrays.asList(new Integer[]{99999}));//99999:caveman
+	// the upgrading history
+	private final List<Integer> upgradingHistory = new ArrayList<>(Collections.singletonList(99999));//99999:caveman
 	
 	public EntityVillager(World worldIn){
 		this(worldIn, Rand.get().nextBoolean());
@@ -106,7 +104,8 @@ public class EntityVillager
 	}
 	
 	
-	
+
+	@Nonnull
 	@Override
 	public EntityJumpHelper getJumpHelper() {
 		// TODO Auto-generated method stub
@@ -122,15 +121,24 @@ public class EntityVillager
 	}
 
 	protected void initAI(){
-		((PathNavigateGround)this.getNavigator()).setBreakDoors(true);
+		((PathNavigateGround) this.getNavigator()).setBreakDoors(true);
+
         this.tasks.addTask(0, new EntityAISwimming(this));
+
         this.tasks.addTask(1, new EntityAIAvoidEntity(this, EntityZombie.class, 8.0F, 0.6D, 0.6D));
+
         this.tasks.addTask(1, new VillagerAILookAtInteractPlayer(this));
+
         this.tasks.addTask(4, new EntityAIOpenDoor(this, true));
+
         this.tasks.addTask(5, new VillagerAIFollowing(this,0.6F));
+
         this.tasks.addTask(5, new EntityAIMoveTowardsRestriction(this, 0.3D));
+
         this.tasks.addTask(9, new EntityAIWatchClosest2(this, EntityPlayer.class, 3.0F, 1.0F));
+
         this.tasks.addTask(9, new VillagerAIWander(this, 0.4D));
+
         this.tasks.addTask(10, new EntityAIWatchClosest(this, EntityLiving.class, 8.0F));
 	}
 
@@ -143,33 +151,35 @@ public class EntityVillager
 	@Override
 	protected void entityInit() {
 		super.entityInit();
-		//profession id
-		this.getDataManager().register(PROFESSIONID, Integer.valueOf(0));
-		//data flags(interacting.following,etc.)
-		this.getDataManager().register(FLAGS, Integer.valueOf(0));
-		//quest
-		this.getDataManager().register(QUEST, Integer.valueOf(-1));
+		// profession id
+		this.getDataManager().register(PROFESSIONID, 0);
+
+		// data flags(interacting.following,etc.)
+		this.getDataManager().register(FLAGS, 0);
+
+		// quest
+		this.getDataManager().register(QUEST, -1);
 	}
 
 	
 	@Override
-	protected boolean processInteract(EntityPlayer player, EnumHand hand, ItemStack stack) {
-		
-		if(!player.worldObj.isRemote){
+	protected boolean processInteract(EntityPlayer player,
+                                      @Nonnull EnumHand hand,
+                                      ItemStack stack) {
+		if (!player.worldObj.isRemote) {
 			if(	(this.isInteracting() && this.interacting.isEntityAlive() && this.interacting != player) ||
 				(this.isFollowing() && this.following.isEntityAlive() && this.following != player)){
 				player.addChatMessage(new TextComponentTranslation(PathHelper.full("message.villager.isbusy")));
-			}
-			else{
+			} else{
 				ItemStack itemstack = player.inventory.getCurrentItem();
+
 				if(itemstack != null && (itemstack.getItem() == ModItems.resetScroll || itemstack.getItem() == ModItems.dismissalScroll) && itemstack.stackSize > 0){
 					//if the player is using a reset or a dismissal scroll
 					if((itemstack.getItem() == ModItems.resetScroll && this.downgrade()) || 
 						(itemstack.getItem() == ModItems.dismissalScroll && this.dismiss(player))){
 						this.consumeItemFromStack(player,itemstack);
 					}
-				}
-				else{
+				} else{
 					player.openGui(VillageBoxMod.instance, GuiIDs.VillagerMain, player.worldObj, player.dimension, this.getEntityId(), 0);
 					//collections
 					this.addProIDToCollections(player);
@@ -188,7 +198,10 @@ public class EntityVillager
 
             if (stack.stackSize <= 0)
             {
-                player.inventory.setInventorySlotContents(player.inventory.currentItem, (ItemStack)null);
+                player.inventory.setInventorySlotContents(
+                        player.inventory.currentItem,
+                        null
+                );
             }
         }
     }
@@ -215,20 +228,23 @@ public class EntityVillager
 	 * POS: 0=Interacting, 1=Following, 2=Has Home
 	 */
 	protected void setDataFlag(int pos, boolean flag){
-		int data = ((Integer)this.getDataManager().get(FLAGS)).intValue();
+		int data = this.getDataManager().get(FLAGS);
+
 		data = BitHelper.writeBit(data, pos, flag);
-		this.getDataManager().set(FLAGS, Integer.valueOf(data));
+
+		this.getDataManager().set(FLAGS, data);
 	}
 	
 	/**
 	 * POS: 0=Interacting, 1=Following, 2=Has Home, 3 gender
 	 */
 	protected boolean getDataFlag(int pos){
-		int data = ((Integer)this.getDataManager().get(FLAGS)).intValue();
+		int data = this.getDataManager().get(FLAGS);
+
 		return BitHelper.readBit(data, pos);
 	}
 	
-	//gender
+	// gender
 	public void setGender(boolean male){
 		this.setDataFlag(3, male);
 	}
@@ -238,7 +254,7 @@ public class EntityVillager
 	}
 	
 	public int[] getUpgradingHistory(){
-		if(this.upgradingHistory == null || this.upgradingHistory.size() < 1)
+		if (this.upgradingHistory.size() < 1)
 			return null;
 		int[] upgrades = new int[this.upgradingHistory.size()];
 		for(int i =0;i<upgrades.length;i++){
@@ -247,18 +263,19 @@ public class EntityVillager
 		return upgrades;
 	}
 	
-	public void setUpgradingHistory(int[] arr){
+	public void setUpgradingHistory(int[] array){
 		this.upgradingHistory.clear();
-		if(arr != null && arr.length > 0){
-			for(int i =0;i<arr.length;i++){
-				this.upgradingHistory.add(arr[i]);
-			}
+
+		if (array != null && array.length > 0){
+            for (int element : array) {
+                this.upgradingHistory.add(element);
+            }
 		}
 	}
 	
-	//interacting and following	
+	// interacting and following
 	public void setInteracting(EntityPlayer player){
-		if(!this.worldObj.isRemote){
+		if (!this.worldObj.isRemote) {
 			this.interacting = player;
 			this.setDataFlag(0, (this.interacting != null));
 		}
@@ -273,7 +290,7 @@ public class EntityVillager
 	}
 	
 	public void setFollowing(EntityPlayer player){
-		if(!this.worldObj.isRemote){
+		if (!this.worldObj.isRemote) {
 			this.following = player;
 			this.setDataFlag(1, (this.following != null));
 			this.wanderCenter = null;
@@ -300,13 +317,13 @@ public class EntityVillager
 		if (bound == null) {
 			player.addChatMessage(new TextComponentTranslation(PathHelper.full("message.villager.home.openspace")));
 		} else{
-			//remove outlines
+			// remove outlines
 			bound = bound.extend(-1,0,-1);
 
 			bound.maxy -= 1;
 
-			//System.out.println(bound.toString());
-			//add home bounday
+			// System.out.println(bound.toString());
+			// add home bounday
 
             @Nullable String oldOwner = null;
             @Nullable final DataVillage villageData = DataVillage.get(this.worldObj);
@@ -379,61 +396,105 @@ public class EntityVillager
 		return this.getDataFlag(2);
 	}
 	
-	//profession
+	// profession
 	public Profession getProfession(){
-		if(this.worldObj.isRemote && (this.profession == null || ((Integer)this.getDataManager().get(PROFESSIONID)).intValue() != this.profession.getRegID())){
-			this.profession = Profession.registry.get(((Integer)this.getDataManager().get(PROFESSIONID)).intValue());
+		if (this.worldObj.isRemote && (this.profession == null
+                || this.getDataManager().get(PROFESSIONID) != this.profession.getRegID())){
+			this.profession = Profession.registry.get(this.getDataManager().get(PROFESSIONID));
+
 			this.refreshProfession();
 		}
 		return this.profession;
 	}
 	
 	public void setProfession(int proid){
-		this.getDataManager().set(PROFESSIONID, Integer.valueOf(proid));
+		this.getDataManager().set(PROFESSIONID, proid);
+
 		this.refreshProfession();
 	}
 	
 	public void upgrade(int pid){
-		if(!this.worldObj.isRemote){
+		if (!this.worldObj.isRemote) {
 			TextComponentTranslation oldProName = new TextComponentTranslation(this.getProfession().getUnloalizedDisplayName());
+
 			this.upgradingHistory.add(this.getProfession().getRegID());
+
 			this.setProfession(pid);
-			TextComponentTranslation newProName = new TextComponentTranslation(this.getProfession().getUnloalizedDisplayName());	
-			this.getServer().getPlayerList().sendChatMsg(new TextComponentTranslation(PathHelper.full("message.villager.upgrade"),this.getName(),oldProName,newProName));
-			//quest
-			this.removeCurrentQuest();
+
+			TextComponentTranslation newProName = new TextComponentTranslation(this.getProfession().getUnloalizedDisplayName());
+
+			@Nullable final MinecraftServer minecraftServer = this.getServer();
+
+			if (minecraftServer != null) {
+			    minecraftServer
+                        .getPlayerList()
+                        .sendChatMsg(
+                                new TextComponentTranslation(PathHelper.full("message.villager.upgrade"),
+                                        this.getName(), oldProName, newProName)
+                        );
+
+                // quest
+                this.removeCurrentQuest();
+            }
 		}
 	}
 	
 	public boolean downgrade(){
-		if(!this.worldObj.isRemote && this.upgradingHistory.size() > 0){
+		if (!this.worldObj.isRemote && this.upgradingHistory.size() > 0) {
 			TextComponentTranslation oldProName = new TextComponentTranslation(this.getProfession().getUnloalizedDisplayName());
+
 			int last = this.upgradingHistory.remove(this.upgradingHistory.size() - 1);
+
 			this.setProfession(last);
-			TextComponentTranslation newProName = new TextComponentTranslation(this.getProfession().getUnloalizedDisplayName());	
-			this.getServer().getPlayerList().sendChatMsg(new TextComponentTranslation(PathHelper.full("message.villager.downgrade"),this.getName(),oldProName,newProName));
-			//quest
-			this.removeCurrentQuest();
+
+			TextComponentTranslation newProName = new TextComponentTranslation(this.getProfession().getUnloalizedDisplayName());
+
+			@Nullable final MinecraftServer minecraftServer = this.getServer();
+
+			if (minecraftServer != null) {
+			    minecraftServer
+                        .getPlayerList()
+                        .sendChatMsg(
+                                new TextComponentTranslation(
+                                        PathHelper.full("message.villager.downgrade"),
+                                        this.getName(), oldProName,newProName)
+                        );
+
+                //quest
+                this.removeCurrentQuest();
+            }
+
 			return true;
-		}
-		else{
+		} else{
 			return false;
 		}
 	}
 	
 	public boolean dismiss(EntityPlayer player){
-		if(!this.worldObj.isRemote){
+		if (!this.worldObj.isRemote) {
 			this.moveOutHome(player);
+
 			this.worldObj.removeEntity(this);
-			this.getServer().getPlayerList().sendChatMsg(new TextComponentTranslation(PathHelper.full("message.villager.dismiss"), player.getName(),this.getName(),
-					new TextComponentTranslation(this.getProfession().getUnloalizedDisplayName())));
+
+			@Nullable final MinecraftServer minecraftServer = this.getServer();
+
+			if (minecraftServer != null) {
+			    minecraftServer
+                        .getPlayerList()
+                        .sendChatMsg(
+                                new TextComponentTranslation(PathHelper.full("message.villager.dismiss"),
+                                        player.getName(),this.getName(),
+                                        new TextComponentTranslation(this.getProfession().getUnloalizedDisplayName()))
+                        );
+            }
+
 			return true;
-		}
-		else{
+		} else{
 			return false;
 		}
 	}
-	
+
+	@Nonnull
 	public String getName(){
 		return this.getCustomNameTag();
 	}
@@ -441,10 +502,13 @@ public class EntityVillager
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
+
 		//update profession
-		if(this.worldObj.isRemote && (this.profession == null || ((Integer)this.getDataManager().get(PROFESSIONID)).intValue() != this.profession.getRegID())){
-			this.setProfession(((Integer)this.getDataManager().get(PROFESSIONID)).intValue());
+		if (this.worldObj.isRemote
+                && (this.profession == null || this.getDataManager().get(PROFESSIONID) != this.profession.getRegID())) {
+			this.setProfession(this.getDataManager().get(PROFESSIONID));
 		}
+
 		//update quest
 		if(!this.worldObj.isRemote){
 			this.updateQuest();
@@ -452,7 +516,7 @@ public class EntityVillager
 	}
 	
 	@Override
-	public void onDeath(DamageSource cause) {
+	public void onDeath(@Nonnull DamageSource cause) {
 		super.onDeath(cause);
 
 		if (!this.worldObj.isRemote) {
@@ -484,7 +548,7 @@ public class EntityVillager
 	}
 
 	public void refreshProfession(){
-		int proid = ((Integer)this.getDataManager().get(PROFESSIONID)).intValue();
+		int proid = this.getDataManager().get(PROFESSIONID);
 		this.profession = Profession.registry.get(proid);
 		if(!this.worldObj.isRemote){
 			//clear both hands
@@ -507,29 +571,36 @@ public class EntityVillager
 	//* quest index is start from -1, end with 254, -1 means no quest 
 	
 	public void setCurrentQuestIdx(int idx){
-		int data = ((Integer)this.getDataManager().get(QUEST)).intValue();
+		int data = this.getDataManager().get(QUEST);
+
 		data &= 0xFFFFFF00;
+
 		data |= Math.max(0, idx + 1);
-		this.getDataManager().set(QUEST, Integer.valueOf(data));
+
+		this.getDataManager().set(QUEST, data);
 	}
 	
 	public int getCurrentQuestIdx(){
-		int data = ((Integer)this.getDataManager().get(QUEST)).intValue();
-		int idx = (data & 0x000000FF) - 1;
-		return idx;
+		int data = this.getDataManager().get(QUEST);
+
+        return (data & 0x000000FF) - 1;
 	}
 	
 	public int getCurrentQuestTicks(){
-		int data = ((Integer)this.getDataManager().get(QUEST)).intValue();
-		data >>= 8;
-		return data;
-	}
+		int data = this.getDataManager().get(QUEST);
+
+		//return data;
+        return data >> 8;
+    }
 	
 	public void setCurrentQuestTicks(int ticks){
-		int data = ((Integer)this.getDataManager().get(QUEST)).intValue();
+		int data = this.getDataManager().get(QUEST);
+
 		data &= 0x000000FF;
+
 		data |= (ticks << 8);
-		this.getDataManager().set(QUEST, Integer.valueOf(data));
+
+		this.getDataManager().set(QUEST, data);
 	}
 	
 	public int getCurrentQuestTicksLeft(){
@@ -544,7 +615,7 @@ public class EntityVillager
 	
 	@Override
 	public void createNewQuest(){
-		if(this.getProfession() == null) 
+		if (this.getProfession() == null)
 			return;
 		List<Quest> quests= this.getProfession().getQuests();
 		//generate a random quest idx
@@ -599,7 +670,7 @@ public class EntityVillager
 	//-----
 	
 	@Override
-	public boolean canBeLeashedTo(EntityPlayer player) {
+	public boolean canBeLeashedTo(@Nonnull EntityPlayer player) {
 		return false;
 	}
 	
@@ -615,11 +686,17 @@ public class EntityVillager
 	}
 	
 	@Override
-	public void writeEntityToNBT(NBTTagCompound tagCompound) {
+	public void writeEntityToNBT(@Nonnull NBTTagCompound tagCompound) {
 		super.writeEntityToNBT(tagCompound);
-		tagCompound.setInteger("proid", ((Integer)this.getDataManager().get(PROFESSIONID)).intValue());
+
+		tagCompound.setInteger(
+		        "proid",
+                this.getDataManager().get(PROFESSIONID)
+        );
+
 		tagCompound.setBoolean("gender", this.isMale());
-		//home
+
+		// home
 		if(this.home != null){
 			tagCompound.setIntArray("homebd", new int[]{
 					this.home.minx,
@@ -630,37 +707,55 @@ public class EntityVillager
 					this.home.maxz
 					});
 		}
-		//upgrading history
-		int[] upgrades = this.getUpgradingHistory();
-		if(upgrades != null){
+
+		// upgrading history
+		@Nullable final int[] upgrades = this.getUpgradingHistory();
+
+		if (upgrades != null) {
 			tagCompound.setIntArray("upgrades", upgrades);
 		}
-		//quest
-		tagCompound.setInteger("questinfo", ((Integer)this.getDataManager().get(QUEST)).intValue());
+
+		// quest
+		tagCompound.setInteger(
+		        "questinfo",
+                this.getDataManager().get(QUEST)
+        );
 	}
 
 	@Override
-	public void readEntityFromNBT(NBTTagCompound tagCompund) {
+	public void readEntityFromNBT(@Nonnull NBTTagCompound tagCompund) {
 		super.readEntityFromNBT(tagCompund);
+
 		int proid = tagCompund.getInteger("proid");
+
 		this.setProfession(proid);
+
 		this.setGender(tagCompund.getBoolean("gender"));
-		//home
-		int[] arr = tagCompund.getIntArray("homebd");
-		if(arr == null || arr.length == 0){
+
+		// home
+		int[] array = tagCompund.getIntArray("homebd");
+
+		if (array.length == 0) {
 			this.home = null;
+
 			this.setDataFlag(2,false);
-		}
-		else{
-			this.home = new IntBoundary(arr[0],arr[1],arr[2],arr[3],arr[4],arr[5]);
+		} else{
+			this.home = new IntBoundary(array[0],array[1],array[2],array[3],array[4],array[5]);
+
 			this.setDataFlag(2,true);
 		}
-		//upgrading history
-		arr = tagCompund.getIntArray("upgrades");
-		this.setUpgradingHistory(arr);
-		//quest
-		if(tagCompund.hasKey("questinfo")){
-			this.getDataManager().set(QUEST, Integer.valueOf(tagCompund.getInteger("questinfo")));
+
+		// upgrading history
+		array = tagCompund.getIntArray("upgrades");
+
+		this.setUpgradingHistory(array);
+
+		// quest
+		if (tagCompund.hasKey("questinfo")) {
+			this.getDataManager().set(
+			        QUEST,
+                    tagCompund.getInteger("questinfo")
+            );
 		}
 	}
 
