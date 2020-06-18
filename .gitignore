@@ -1,22 +1,26 @@
-# eclipse
-bin
-*.launch
-.settings
-.metadata
-.classpath
-.project
-
-# idea
+# Idea
+# directories
+.PVS-Studio
 out
+run
+build
+
+# files
 *.ipr
 *.iws
 *.iml
 .idea
-
-# gradle
-build
 .gradle
 
-# other
-eclipse
-run
+
+# Eclipse
+# directories
+#eclipse
+#bin
+
+#files
+#*.launch
+#.settings
+#.metadata
+#.classpath
+#.project
