@@ -1,3 +1,6 @@
+//  This is an open source non-commercial project. Dear PVS-Studio, please check it.
+//  PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+
 package ckhbox.villagebox.common.entity.villager;
 
 import java.util.ArrayList;
@@ -45,6 +48,7 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.pathfinding.PathNavigateGround;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.management.PlayerList;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.Vec3d;
@@ -53,8 +57,11 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class EntityVillager extends EntityCreature implements ITrading, IQuestProvider{
+import javax.annotation.Nullable;
 
+public class EntityVillager
+        extends EntityCreature
+        implements ITrading, IQuestProvider{
 	private static final DataParameter<Integer> PROFESSIONID = EntityDataManager.<Integer>createKey(EntityVillager.class, DataSerializers.VARINT);
     private static final DataParameter<Integer> FLAGS = EntityDataManager.<Integer>createKey(EntityVillager.class, DataSerializers.VARINT);
     private static final DataParameter<Integer> QUEST = EntityDataManager.<Integer>createKey(EntityVillager.class, DataSerializers.VARINT);
@@ -283,34 +290,56 @@ public class EntityVillager extends EntityCreature implements ITrading, IQuestPr
 	
 	//set home
 	public void setCurrentPosAsHome(EntityPlayer player){
-		//server side only
-		if(this.worldObj.isRemote)
+		// server side only
+		if (this.worldObj.isRemote)
 			return;
 		
-		//scan home boundary
-		IntBoundary bound = HouseDetector.getClosedField(this.worldObj, new IntVec3(this.posX,this.posY,this.posZ));
-		if(bound == null){
+		// scan home boundary
+		@Nullable IntBoundary bound = HouseDetector.getClosedField(this.worldObj, new IntVec3(this.posX,this.posY,this.posZ));
+
+		if (bound == null) {
 			player.addChatMessage(new TextComponentTranslation(PathHelper.full("message.villager.home.openspace")));
-		}
-		else{
+		} else{
 			//remove outlines
 			bound = bound.extend(-1,0,-1);
+
 			bound.maxy -= 1;
+
 			//System.out.println(bound.toString());
 			//add home bounday
-			String oldOwner = DataVillage.get(this.worldObj).addHome(this.getName(),bound);
-			if(oldOwner != null){
-				player.addChatMessage(new TextComponentTranslation(PathHelper.full("message.villager.home.existed"),oldOwner));
-			}
-			else{
+
+            @Nullable String oldOwner = null;
+            @Nullable final DataVillage villageData = DataVillage.get(this.worldObj);
+
+            if (villageData != null) {
+                oldOwner = villageData.addHome(this.getName(),bound);
+            }
+
+			if (oldOwner != null) {
+				player.addChatMessage(
+				        new TextComponentTranslation(PathHelper.full("message.villager.home.existed"),
+                                oldOwner)
+                );
+			} else{
 				//remove old home
-				if(this.home != null){
-					DataVillage.get(this.worldObj).removeHome(this.getName(),home);
-				}
+				if (this.home != null) {
+				    // Are villageData in 14 lines above this and below this comment are the same?
+                    //DataVillage.get(this.worldObj).removeHome(this.getName(),home);
+
+                    if (villageData != null) {
+                        villageData.removeHome(this.getName(),home);
+                    }
+                }
 				this.home = bound;
+
 				//stop following
 				this.setFollowing(null);
-				player.addChatMessage(new TextComponentTranslation(PathHelper.full("message.villager.home.movein"),this.getName()));
+
+				player.addChatMessage(
+				        new TextComponentTranslation(PathHelper.full("message.villager.home.movein"),
+                                this.getName())
+                );
+
 				//update data flag
 				this.setDataFlag(2, true);
 			}
@@ -319,15 +348,26 @@ public class EntityVillager extends EntityCreature implements ITrading, IQuestPr
 	
 	public void setHome(IntBoundary home){
 		this.home = home;
+
 		this.setDataFlag(2, true);
 	}
 	
 	public void moveOutHome(EntityPlayer player){
-		if(this.home != null){
-			DataVillage.get(this.worldObj).removeHome(this.getName(),home);
-			this.home = null;
-			this.setDataFlag(2, false);
-			player.addChatMessage(new TextComponentTranslation(PathHelper.full("message.villager.home.moveout"),this.getName()));
+		if (this.home != null) {
+            @Nullable final DataVillage villageData = DataVillage.get(this.worldObj);
+
+            if (villageData != null) {
+                villageData.removeHome(this.getName(),home);
+
+                this.home = null;
+
+                this.setDataFlag(2, false);
+
+                player.addChatMessage(
+                        new TextComponentTranslation(PathHelper.full("message.villager.home.moveout"),
+                                this.getName())
+                );
+            }
 		}
 	}
 	
@@ -414,9 +454,27 @@ public class EntityVillager extends EntityCreature implements ITrading, IQuestPr
 	@Override
 	public void onDeath(DamageSource cause) {
 		super.onDeath(cause);
-		if(!this.worldObj.isRemote){
-			DataVillage.get(this.worldObj).addDeadVillager(this);
-			this.getServer().getPlayerList().sendChatMsg(new TextComponentTranslation(PathHelper.full("message.villager.died"),this.getName()));
+
+		if (!this.worldObj.isRemote) {
+		    @Nullable final DataVillage villageData = DataVillage.get(this.worldObj);
+
+		    if (villageData != null) {
+		        villageData.addDeadVillager(this);
+
+		        @Nullable final MinecraftServer minecraftServer = this.getServer();
+                @Nullable PlayerList listOfPlayers = null;
+
+		        if (minecraftServer != null) {
+		            listOfPlayers = this.getServer().getPlayerList();
+                }
+
+		        if (listOfPlayers != null) {
+                    listOfPlayers.sendChatMsg(
+                            new TextComponentTranslation(PathHelper.full("message.villager.died"),
+                                    this.getName())
+                    );
+                }
+		    }
 		}
 	}
 	
