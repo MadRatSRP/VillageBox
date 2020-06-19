@@ -137,7 +137,10 @@ public class ModItemRenderers {
 	}
 
 	private static void registerModel(Item item, String resource){
-		Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
-		.register(item, 0, new ModelResourceLocation(PathHelper.full(resource), "inventory"));
+		Minecraft
+                .getMinecraft()
+                .getRenderItem()
+                .getItemModelMesher()
+                .register(item, 0, new ModelResourceLocation(PathHelper.full(resource), "inventory"));
 	}
 }

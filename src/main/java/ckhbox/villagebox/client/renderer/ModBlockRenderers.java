@@ -113,14 +113,14 @@ public class ModBlockRenderers {
 	}
 	
 	private static void registerModel(Block block, String resource){
-		registerModel(Item.getItemFromBlock(block), 0, resource);
+		registerModel(Item.getItemFromBlock(block), resource);
 	}
 	
-	private static void registerModel(Item item, int meta, String resource){
+	private static void registerModel(Item item, String resource){
 		Minecraft
                 .getMinecraft()
                 .getRenderItem()
                 .getItemModelMesher()
-                .register(item, meta, new ModelResourceLocation(PathHelper.full(resource), "inventory"));
+                .register(item, 0, new ModelResourceLocation(PathHelper.full(resource), "inventory"));
 	}
 }
