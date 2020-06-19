@@ -17,5 +17,4 @@ public class RenderFactoryVillager implements IRenderFactory<EntityVillager>{
 	public Render<? super EntityVillager> createRenderFor(RenderManager manager) {
 		return new RenderVillager(manager);
 	}
-
 }
