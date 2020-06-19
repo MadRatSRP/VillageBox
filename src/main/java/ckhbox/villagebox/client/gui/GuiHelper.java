@@ -3,11 +3,8 @@
 
 package ckhbox.villagebox.client.gui;
 
-import java.util.ArrayList;
-
 import ckhbox.villagebox.common.entity.villager.EntityVillager;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;

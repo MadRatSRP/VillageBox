@@ -6,27 +6,28 @@ package ckhbox.villagebox.client.gui;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import javax.annotation.Nonnull;
 
 @SideOnly(Side.CLIENT)
 public class GuiTextButton extends GuiButton{
 	
-	private Minecraft mc;
+	private final Minecraft minecraft;
 	
 	private int colorNormal = 0xFFFFFF;
 	private int colorHover = 0xFFFF55;
 	private boolean shadow = true;
 	
-	public GuiTextButton(Minecraft mc,int id, int x, int y, String text) {
-		super(id, x, y,mc.fontRendererObj.getStringWidth(text),mc.fontRendererObj.FONT_HEIGHT,text);
-		this.mc = mc;
+	public GuiTextButton(Minecraft minecraft, int id, int x, int y, String text) {
+		super(id, x, y, minecraft.fontRendererObj.getStringWidth(text), minecraft.fontRendererObj.FONT_HEIGHT,text);
+		this.minecraft = minecraft;
 	}
 	
 	public void setText(String text){
 		this.displayString = text;
-		this.width = this.mc.fontRendererObj.getStringWidth(text);
+		this.width = this.minecraft.fontRendererObj.getStringWidth(text);
 	}
 	
 	public void setShadow(boolean shadow){
@@ -43,13 +44,18 @@ public class GuiTextButton extends GuiButton{
 	}
 	
 	@Override
-	public void drawButton(Minecraft mc, int p_146112_2_, int p_146112_3_) {
+	public void drawButton(@Nonnull Minecraft minecraft, int p_146112_2_, int p_146112_3_) {
 		 if (this.visible)
         {
-            FontRenderer fontrenderer = mc.fontRendererObj;
-            this.hovered = p_146112_2_ >= this.xPosition && p_146112_3_ >= this.yPosition && p_146112_2_ < this.xPosition + this.width && p_146112_3_ < this.yPosition + this.height;
+            FontRenderer fontrenderer = minecraft.fontRendererObj;
+
+            this.hovered = p_146112_2_ >= this.xPosition && p_146112_3_ >= this.yPosition
+                    && p_146112_2_ < this.xPosition + this.width && p_146112_3_ < this.yPosition + this.height;
+
             int k = this.getHoverState(this.hovered);
-            this.mouseDragged(mc, p_146112_2_, p_146112_3_);
+
+            this.mouseDragged(minecraft, p_146112_2_, p_146112_3_);
+
             int l = this.colorNormal;
 
             if (packedFGColour != 0)
