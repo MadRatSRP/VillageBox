@@ -3,9 +3,6 @@
 
 package ckhbox.villagebox.client.gui.villager;
 
-import java.io.IOException;
-import java.util.ArrayList;
-
 import ckhbox.villagebox.client.gui.GuiHelper;
 import ckhbox.villagebox.client.gui.GuiTextButton;
 import ckhbox.villagebox.common.entity.villager.EntityVillager;
@@ -29,10 +26,18 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
+import java.io.IOException;
+import java.util.ArrayList;
+
 @SideOnly(Side.CLIENT)
-public class GuiVillagerMain extends GuiContainer{
+public class GuiVillagerMain
+        extends GuiContainer{
 	
-	private static final ResourceLocation VillagerMainGuiTexture = new ResourceLocation(PathHelper.full("textures/gui/villager/main.png"));
+	private static final ResourceLocation VillagerMainGuiTexture = new ResourceLocation(
+	        PathHelper.full("textures/gui/villager/main.png")
+    );
+
     protected int xSize = 176;
     protected int ySize = 166;
     protected int villagerTextOffsetY = 30;
@@ -51,13 +56,12 @@ public class GuiVillagerMain extends GuiContainer{
     private String chatContent;
     private String chatContentDisplay;
     private int chatDisplayInterval; // ms
-    private int chatDisplayDurationTotal = 1000; // ms
-    
+
     private boolean isFollowingLast;
     private boolean hasHomeLast;
     
-    private EntityPlayer player;
-    private EntityVillager villager;
+    private final EntityPlayer player;
+    private final EntityVillager villager;
     
     private long lastNanotime;
     private long chatTimer;
@@ -75,7 +79,9 @@ public class GuiVillagerMain extends GuiContainer{
         
         refreshChatContent();
         
-        ModNetwork.getInstance().sendToServer(new MessageGuiSetInteracting(this.villager.getEntityId(), this.villager.dimension, true));
+        ModNetwork.getInstance().sendToServer(
+                new MessageGuiSetInteracting(this.villager.getEntityId(), this.villager.dimension, true)
+        );
     }
 
     public void initGui()
@@ -88,10 +94,21 @@ public class GuiVillagerMain extends GuiContainer{
         String strUpgrade = I18n.format(PathHelper.full("gui.villagermain.menu.upgrade"));
         String strTrade = I18n.format(PathHelper.full("gui.villagermain.menu.trade"));
         
-        this.buttonList.add(buttonTrade = new GuiTextButton(this.mc, 0, x + offsetX, y + playerChatOptionsOffsetY + 0 * playerChatOptionHeight, strTrade));
-        this.buttonList.add(buttonUpgrade = new GuiTextButton(this.mc, 1, x + offsetX, y + playerChatOptionsOffsetY + 1 * playerChatOptionHeight, strUpgrade));
-        this.buttonList.add(buttonFollow = new GuiTextButton(this.mc, 2, x + offsetX, y + playerChatOptionsOffsetY + 2 * playerChatOptionHeight, ""));
-        this.buttonList.add(buttonHome = new GuiTextButton(this.mc, 3, x + offsetX, y + playerChatOptionsOffsetY + 3 * playerChatOptionHeight, ""));
+        this.buttonList.add(buttonTrade = new GuiTextButton(
+                this.mc, 0, x + offsetX, y + playerChatOptionsOffsetY, strTrade)
+        );
+
+        this.buttonList.add(buttonUpgrade = new GuiTextButton(
+                this.mc, 1, x + offsetX, y + playerChatOptionsOffsetY + playerChatOptionHeight, strUpgrade)
+        );
+
+        this.buttonList.add(buttonFollow = new GuiTextButton(
+                this.mc, 2, x + offsetX, y + playerChatOptionsOffsetY + 2 * playerChatOptionHeight, "")
+        );
+
+        this.buttonList.add(buttonHome = new GuiTextButton(
+                this.mc, 3, x + offsetX, y + playerChatOptionsOffsetY + 3 * playerChatOptionHeight, "")
+        );
 
         this.buttonList.add(buttonQuest = new QuestButton(100,x + 153,y + 4));
         
@@ -118,17 +135,22 @@ public class GuiVillagerMain extends GuiContainer{
     
     private void calculateChatSpeed(){
     	int l = this.chatContent.length();
-    	this.chatDisplayInterval = this.chatDisplayDurationTotal / l;
+        // ms
+        int chatDisplayDurationTotal = 1000;
+        this.chatDisplayInterval = chatDisplayDurationTotal / l;
     }
     
     private void refreshChatContent(){
-    	ArrayList<String> list = new ArrayList<String>();
-    	//common
-    	for(int i =0;i<3;i++){
+    	ArrayList<String> list = new ArrayList<>();
+
+    	// common
+    	for (int i =0; i<3; i++){
     		list.add(I18n.format(PathHelper.full("gui.villagermain.menu.chat.common" + i), player.getName()));
     	}
+
     	String home = villager.hasHome()?"hashome":"nohome";
-    	for(int i =0;i<2;i++){
+
+    	for (int i =0; i<2; i++){
     		list.add(I18n.format(PathHelper.full("gui.villagermain.menu.chat."+ home + i)));
     	}
     	
@@ -158,9 +180,13 @@ public class GuiVillagerMain extends GuiContainer{
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
 		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+
         this.mc.getTextureManager().bindTexture(VillagerMainGuiTexture);
+
         int x = (this.width - this.xSize) / 2;
+
         int y = (this.height - this.ySize) / 2;
+
         this.drawTexturedModalRect(x, y, 0, 0, this.xSize, this.ySize);
 		
         GuiHelper.drawNameAndProfession(this.mc.fontRendererObj, villager, this.width / 2, y + villagerNameOffsetY);
@@ -219,31 +245,39 @@ public class GuiVillagerMain extends GuiContainer{
 
 	private void drawButtonHoverText(GuiButton button, int mouseX, int mouseY, String title, String desc){	
 		if(GuiHelper.isPointInRegion(button.xPosition, button.yPosition, button.width, button.height, mouseX, mouseY)){
-			ArrayList<String> list = new ArrayList<String>();
+			ArrayList<String> list = new ArrayList<>();
+
 			list.add(title);
+
 			list.add(desc);
+
 			this.drawHoveringText(list, mouseX, mouseY, this.fontRendererObj);
 		}
 	}
 	
 	@Override
-	protected void actionPerformed(GuiButton button) throws IOException {
-
+	protected void actionPerformed(@Nonnull GuiButton button) throws IOException {
 		if(button == buttonUpgrade){
-			ModNetwork.getInstance().sendToServer(new MessageGuiVillagerOpen(GuiIDs.VillagerUpgrading,villager.dimension,villager.getEntityId()));
-		}
-		else if(button == buttonTrade){
-			ModNetwork.getInstance().sendToServer(new MessageGuiVillagerOpen(GuiIDs.VillagerTrading,villager.dimension,villager.getEntityId()));
-		}
-		else if(button == buttonFollow){
+			ModNetwork.getInstance().sendToServer(
+			        new MessageGuiVillagerOpen(GuiIDs.VillagerUpgrading,villager.dimension,villager.getEntityId())
+            );
+		} else if(button == buttonTrade){
+			ModNetwork.getInstance().sendToServer(
+			        new MessageGuiVillagerOpen(GuiIDs.VillagerTrading,villager.dimension,villager.getEntityId())
+            );
+		} else if(button == buttonFollow){
 			boolean enable = !this.villager.isFollowing();
-			ModNetwork.getInstance().sendToServer(new MessageGuiSetFollowing(this.villager.getEntityId(), this.villager.dimension, enable));
-		}
-		else if(button == buttonHome){
-			ModNetwork.getInstance().sendToServer(new MessageGuiSetHome(this.villager.getEntityId(), this.villager.dimension,!this.villager.hasHome()));
-		}
-		else if(button == buttonQuest){
-			ModNetwork.getInstance().sendToServer(new MessageGuiVillagerOpen(GuiIDs.VillagerQuest,villager.dimension,villager.getEntityId()));
+			ModNetwork.getInstance().sendToServer(
+			        new MessageGuiSetFollowing(this.villager.getEntityId(), this.villager.dimension, enable)
+            );
+		} else if(button == buttonHome){
+			ModNetwork.getInstance().sendToServer(
+			        new MessageGuiSetHome(this.villager.getEntityId(), this.villager.dimension,!this.villager.hasHome())
+            );
+		} else if(button == buttonQuest){
+			ModNetwork.getInstance().sendToServer(
+			        new MessageGuiVillagerOpen(GuiIDs.VillagerQuest,villager.dimension,villager.getEntityId())
+            );
 		}
 		
 		super.actionPerformed(button);
@@ -281,13 +315,18 @@ public class GuiVillagerMain extends GuiContainer{
         /**
          * Draws this button to the screen.
          */
-        public void drawButton(Minecraft mc, int mouseX, int mouseY)
+        public void drawButton(@Nonnull Minecraft minecraft, int mouseX, int mouseY)
         {
             if (this.visible && this.enabled)
             {
-                mc.getTextureManager().bindTexture(VillagerMainGuiTexture);
+                minecraft.getTextureManager().bindTexture(VillagerMainGuiTexture);
+
                 GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-                boolean flag = mouseX >= this.xPosition && mouseY >= this.yPosition && mouseX < this.xPosition + this.width && mouseY < this.yPosition + this.height;
+
+                boolean flag = mouseX >= this.xPosition && mouseY >= this.yPosition
+                        && mouseX < this.xPosition + this.width
+                        && mouseY < this.yPosition + this.height;
+
                 int x = 176;
                 int y = 0;
 
