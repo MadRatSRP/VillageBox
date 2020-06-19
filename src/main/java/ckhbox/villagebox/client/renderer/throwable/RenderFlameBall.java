@@ -17,5 +17,4 @@ public class RenderFlameBall extends RenderSnowball<EntityFlameBall>{
 	public RenderFlameBall(RenderManager renderManagerIn, Item p_i46137_2_, RenderItem p_i46137_3_) {
 		super(renderManagerIn, p_i46137_2_, p_i46137_3_);
 	}
-
 }

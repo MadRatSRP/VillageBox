@@ -13,11 +13,11 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class RenderFactoryLargeSnowBall implements IRenderFactory<EntityLargeSnowBall>{
+public class RenderFactoryLargeSnowBall
+        implements IRenderFactory<EntityLargeSnowBall>{
 
 	@Override
 	public Render<? super EntityLargeSnowBall> createRenderFor(RenderManager manager) {
 		return new RenderLargeSnowBall(manager, Items.SNOWBALL, Minecraft.getMinecraft().getRenderItem());
 	}
-
 }
