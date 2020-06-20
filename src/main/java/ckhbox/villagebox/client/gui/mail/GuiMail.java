@@ -3,8 +3,6 @@
 
 package ckhbox.villagebox.client.gui.mail;
 
-import java.io.IOException;
-
 import ckhbox.villagebox.client.gui.GuiTextButton;
 import ckhbox.villagebox.common.gui.common.ContainerEmpty;
 import ckhbox.villagebox.common.item.ModItems;
@@ -20,14 +18,20 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
-public class GuiMail extends GuiContainer{
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.io.IOException;
 
-	private static final ResourceLocation mailGuiTextures = new ResourceLocation(PathHelper.full("textures/gui/mail/mail.png"));
+public class GuiMail
+        extends GuiContainer{
+	private static final ResourceLocation mailGuiTextures = new ResourceLocation(
+	        PathHelper.full("textures/gui/mail/mail.png")
+    );
 	
 	protected int xSize = 143;
     protected int ySize = 150; 
     
-	private EntityPlayer player;
+	private final EntityPlayer player;
 	
 	private GuiTextButton buttonApprove;
 	
@@ -40,7 +44,7 @@ public class GuiMail extends GuiContainer{
     {
         super.initGui();
         
-        int x = (this.width - this.xSize) / 2;
+        // int x = (this.width - this.xSize) / 2;
         int y = (this.height - this.ySize) / 2;
         
         this.buttonList.add(this.buttonApprove = new GuiTextButton(this.mc, 0, 0,y + 130, I18n.format(PathHelper.full("gui.mail.button.approve"))));
@@ -48,10 +52,11 @@ public class GuiMail extends GuiContainer{
         this.buttonApprove.setColors(0xFF006400, 0xFF32CD32);
         this.buttonApprove.setShadow(false);
         
-        ItemStack hold = this.player.getHeldItemMainhand();
-        if(hold.getItem() == ModItems.mail){
-        	int mailType = ItemMail.getMailType(hold);
-        	this.buttonApprove.visible = (mailType == ItemMail.MailType_NewVillagerFemale || mailType == ItemMail.MailType_NewVillagerMale);
+        @Nullable final ItemStack hold = this.player.getHeldItemMainhand();
+
+        if (hold != null && hold.getItem() == ModItems.mail) {
+            int mailType = ItemMail.getMailType(hold);
+            this.buttonApprove.visible = (mailType == ItemMail.MailType_NewVillagerFemale || mailType == ItemMail.MailType_NewVillagerMale);
         }
     }
     
@@ -79,24 +84,28 @@ public class GuiMail extends GuiContainer{
         int y = (this.height - this.ySize) / 2;
 
 		GlStateManager.disableLighting();
-        ItemStack hold = this.player.getHeldItemMainhand();
-        if(hold.getItem() == ModItems.mail){
-        	String content = I18n.format(ItemMail.getMailContent(hold));
-        	String sender = I18n.format(PathHelper.full("gui.mail.from"), ItemMail.getMailSender(hold));
-        	String hi = I18n.format(PathHelper.full("gui.mail.hi"), this.player.getName(),false);
-    		this.fontRendererObj.drawString(hi, x + 20, y + 12, 0);
-    		this.fontRendererObj.drawSplitString(content, x + 20, y + 28, this.xSize - 40, 0);
-    		int h = this.fontRendererObj.splitStringWidth(content, this.xSize - 40);
-    		this.fontRendererObj.drawString(sender, x + this.xSize - 20 - this.fontRendererObj.getStringWidth(sender), y + 36 + h, 0, false);
+
+        @Nullable final ItemStack hold = this.player.getHeldItemMainhand();
+
+        if (hold != null && hold.getItem() == ModItems.mail) {
+            String content = I18n.format(ItemMail.getMailContent(hold));
+
+            String sender = I18n.format(PathHelper.full("gui.mail.from"), ItemMail.getMailSender(hold));
+
+            String hi = I18n.format(PathHelper.full("gui.mail.hi"), this.player.getName(), false);
+
+            this.fontRendererObj.drawString(hi, x + 20, y + 12, 0);
+
+            this.fontRendererObj.drawSplitString(content, x + 20, y + 28, this.xSize - 40, 0);
+
+            int h = this.fontRendererObj.splitStringWidth(content, this.xSize - 40);
+
+            this.fontRendererObj.drawString(sender, x + this.xSize - 20 - this.fontRendererObj.getStringWidth(sender), y + 36 + h, 0, false);
         }
-        
-		
-		
-		
-	}
+    }
 
 	@Override
-	protected void actionPerformed(GuiButton button) throws IOException {
+	protected void actionPerformed(@Nonnull GuiButton button) throws IOException {
 		super.actionPerformed(button);
 		
 		if(button == buttonApprove){

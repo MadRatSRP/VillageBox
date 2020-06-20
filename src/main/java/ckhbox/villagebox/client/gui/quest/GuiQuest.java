@@ -3,17 +3,8 @@
 
 package ckhbox.villagebox.client.gui.quest;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import ckhbox.villagebox.client.gui.GuiTextButton;
 import ckhbox.villagebox.common.config.VBConfig;
 import ckhbox.villagebox.common.gui.common.ContainerEmpty;
-import ckhbox.villagebox.common.item.ModItems;
-import ckhbox.villagebox.common.item.common.ItemMail;
-import ckhbox.villagebox.common.network.ModNetwork;
-import ckhbox.villagebox.common.network.message.villager.MessageSpawnNewVillagerThroughMail;
 import ckhbox.villagebox.common.util.helper.PathHelper;
 import ckhbox.villagebox.common.village.quest.IQuestProvider;
 import ckhbox.villagebox.common.village.quest.Quest;
@@ -21,19 +12,26 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.client.resources.I18n;
 
-public abstract class GuiQuest extends GuiContainer{
+import javax.annotation.Nonnull;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+public abstract class GuiQuest
+        extends GuiContainer{
 	
-	private static final ResourceLocation questGuiTextures = new ResourceLocation(PathHelper.full("textures/gui/quest/quest.png"));
+	private static final ResourceLocation questGuiTextures = new ResourceLocation(
+	        PathHelper.full("textures/gui/quest/quest.png")
+    );
     
-	private EntityPlayer player;
-	private IQuestProvider provider;
-	private Quest quest;
+	private final EntityPlayer player;
+	private final IQuestProvider provider;
+	private final Quest quest;
 	private GuiButton btnComplate;
 	
 	private String text;
@@ -41,7 +39,7 @@ public abstract class GuiQuest extends GuiContainer{
 	private ItemStack[] rewards;
 	
 	private ItemStack cacheProgressItem;
-	private List<String> cacheProgressString = new ArrayList<String>();
+	private final List<String> cacheProgressString = new ArrayList<>();
 	
 	public GuiQuest(EntityPlayer player, IQuestProvider provider) {
 		super(new ContainerEmpty());
@@ -145,38 +143,52 @@ public abstract class GuiQuest extends GuiContainer{
 		
 		//hover texts     
         x -= this.guiLeft;
-		for(int i =0;i<this.required.length;i++){
-			if (this.isPointInRegion(x + i * 20, y1, 16, 16, mouseX, mouseY) && required[i] != null){
+		for (int i =0; i<this.required.length; i++) {
+			if (this.isPointInRegion(x + i * 20, y1, 16, 16,
+                    mouseX, mouseY) && required[i] != null) {
 				this.renderToolTip(this.required[i], mouseX, mouseY);
+
 				this.renderProgress(this.required[i], mouseX, mouseY - 16);
 	        }
 		}
 		
-		for(int i =0;i<this.rewards.length;i++){
-			if (this.isPointInRegion(x + i * 20, y2, 16, 16, mouseX, mouseY) && rewards[i] != null){
+		for (int i =0; i<this.rewards.length; i++) {
+			if (this.isPointInRegion(x + i * 20, y2, 16, 16,
+                    mouseX, mouseY) && rewards[i] != null) {
 				this.renderToolTip(this.rewards[i], mouseX, mouseY);
 	        }
 		}
 	}
 	
 	private void renderProgress(ItemStack itemstack, int mouseX, int mouseY){
-		if(itemstack == null) return;
-		if(this.cacheProgressItem != itemstack){
+		if (itemstack == null)
+		    return;
+
+		if (this.cacheProgressItem != itemstack) {
 			this.cacheProgressItem = itemstack;
+
 			int num = this.quest.getItemNum(this.cacheProgressItem, this.player);
+
 			String state = num >= itemstack.stackSize?"meet":"unmeet";
+
 			this.cacheProgressString.clear();
-			this.cacheProgressString.add(I18n.format(PathHelper.full("gui.quest.progress." + state),num,itemstack.stackSize));
+
+			this.cacheProgressString.add(I18n.format(
+			        PathHelper.full("gui.quest.progress." + state),
+                    num,
+                    itemstack.stackSize)
+            );
 		}
 		this.drawHoveringText(this.cacheProgressString, mouseX, mouseY);
 	}
 
 	@Override
-	protected void actionPerformed(GuiButton button) throws IOException {
+	protected void actionPerformed(@Nonnull GuiButton button) throws IOException {
 		super.actionPerformed(button);
 		
 		if(button == this.btnComplate){
 			this.onButtonCompleteClicked();
+
 			this.mc.thePlayer.closeScreen();
 		}
 	}

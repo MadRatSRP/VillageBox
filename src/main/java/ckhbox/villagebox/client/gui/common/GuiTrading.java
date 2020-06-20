@@ -26,20 +26,28 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
+
 @SideOnly(Side.CLIENT)
-public class GuiTrading extends GuiContainer{
+public class GuiTrading
+        extends GuiContainer{
 	
-	private static final ResourceLocation TradeGuiTexture = new ResourceLocation(PathHelper.full("textures/gui/villager/trade.png"));
-	private static final ResourceLocation TradeAllRecipesGuiTexture = new ResourceLocation(PathHelper.full("textures/gui/villager/trade_allrecipes.png"));
+	private static final ResourceLocation TradeGuiTexture = new ResourceLocation(
+	        PathHelper.full("textures/gui/villager/trade.png")
+    );
+
+	private static final ResourceLocation TradeAllRecipesGuiTexture = new ResourceLocation(
+	        PathHelper.full("textures/gui/villager/trade_allrecipes.png")
+    );
 	
-	private ITrading trader;
+	private final ITrading trader;
     private TradeButton nextButton;
     private TradeButton previousButton;
     private AllRecipesButton allRecipesButton;
     private int selectedTradingRecipeIdx;
-    private int widthAllRecpiesPanel = 104;
-    private int heightAllRecpiesPanel = 166;
-    private int allRecipesColumns = 5;
+    private final int widthAllRecpiesPanel = 104;
+    private final int heightAllRecpiesPanel = 166;
+    private final int allRecipesColumns = 5;
     
 	public GuiTrading(InventoryPlayer playerInventory, ITrading trader, World worldIn)
     {
@@ -98,7 +106,7 @@ public class GuiTrading extends GuiContainer{
             int j = (this.height - this.ySize) / 2;
             int k = this.selectedTradingRecipeIdx;
             TradingRecipe tradingRecipe = tradingRecipeList.get(k);
-            ItemStack itemstack = null;
+            ItemStack itemstack;
             
             GlStateManager.pushMatrix();
             RenderHelper.enableGUIStandardItemLighting();
@@ -160,16 +168,21 @@ public class GuiTrading extends GuiContainer{
                        
             //all recipes panel tooltips
             if(this.allRecipesButton.isDisplayingAllRecipes){
-            	int px = (this.width + this.xSize) / 2;
-            	int py = (this.height - this.heightAllRecpiesPanel) / 2;             	
+            	// int px = (this.width + this.xSize) / 2;
+            	// int py = (this.height - this.heightAllRecpiesPanel) / 2;
+
             	int rx,ry;
-            	//tooltips
-            	for(int recipeIdx = 0;recipeIdx<tradingRecipeList.size();recipeIdx++){
+
+            	// tooltips
+            	for(int recipeIdx = 0; recipeIdx < tradingRecipeList.size(); recipeIdx++){
                 	itemstack = tradingRecipeList.get(recipeIdx).getItemOutput();
+
                 	rx = this.xSize + 7 + (recipeIdx % allRecipesColumns) * 18;
+
                 	ry = 15 + (recipeIdx / allRecipesColumns) * 18;
-    		    	if (this.isPointInRegion(rx + 1, ry + 1, 16, 16, mouseX, mouseY) && itemstack != null)
-    		        {
+
+    		    	if (this.isPointInRegion(rx + 1, ry + 1, 16,
+                            16, mouseX, mouseY) && itemstack != null) {
     		            this.renderToolTip(itemstack, mouseX, mouseY);
     		        }
                 }          	
@@ -202,13 +215,19 @@ public class GuiTrading extends GuiContainer{
 		//all recipes panel
 		if(this.allRecipesButton.isDisplayingAllRecipes){
 			TradingRecipeList tradingRecipeList = this.trader.getTradingRecipeList();
+
 			int mx = mouseX - (this.width + this.xSize) / 2 - 7;
-	    	int my = mouseY - (this.height - this.heightAllRecpiesPanel) / 2 - 15; 
-			if(tradingRecipeList != null && mx >= 0 && mx < this.allRecipesColumns * 18 && my >= 0){
+
+	    	int my = mouseY - (this.height - this.heightAllRecpiesPanel) / 2 - 15;
+
+			if (tradingRecipeList != null && mx >= 0 && mx < this.allRecipesColumns * 18 && my >= 0) {
 				int idx = (mx / 18) + (my / 18) * this.allRecipesColumns;
-				if(idx >= 0 && idx < tradingRecipeList.size()){
+				
+				if(idx < tradingRecipeList.size()){
 					this.selectedTradingRecipeIdx = idx;
-					((ContainerTrading)this.inventorySlots).setCurrentRecipeIndex(this.selectedTradingRecipeIdx);
+
+					((ContainerTrading) this.inventorySlots).setCurrentRecipeIndex(this.selectedTradingRecipeIdx);
+
 		            ModNetwork.getInstance().sendToServer(new MessageGuiSelectTradeRecipeIndex(this.selectedTradingRecipeIdx));
 				}
 			}
@@ -217,9 +236,8 @@ public class GuiTrading extends GuiContainer{
 	}
 
 	@Override
-	protected void actionPerformed(GuiButton button) throws IOException
-    {
-		//prev and next button
+	protected void actionPerformed(@Nonnull GuiButton button) {
+		// prev and next button
 		
         boolean flag = false;
 
@@ -273,11 +291,11 @@ public class GuiTrading extends GuiContainer{
         /**
          * Draws this button to the screen.
          */
-        public void drawButton(Minecraft mc, int mouseX, int mouseY)
+        public void drawButton(@Nonnull Minecraft minecraft, int mouseX, int mouseY)
         {
             if (this.visible)
             {
-                mc.getTextureManager().bindTexture(TradeGuiTexture);
+                minecraft.getTextureManager().bindTexture(TradeGuiTexture);
                 GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
                 boolean flag = mouseX >= this.xPosition && mouseY >= this.yPosition && mouseX < this.xPosition + this.width && mouseY < this.yPosition + this.height;
                 int i = 0;
@@ -317,11 +335,11 @@ public class GuiTrading extends GuiContainer{
         /**
          * Draws this button to the screen.
          */
-        public void drawButton(Minecraft mc, int mouseX, int mouseY)
+        public void drawButton(@Nonnull Minecraft minecraft, int mouseX, int mouseY)
         {
             if (this.visible)
             {
-                mc.getTextureManager().bindTexture(TradeGuiTexture);
+                minecraft.getTextureManager().bindTexture(TradeGuiTexture);
                 GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
                 boolean flag = mouseX >= this.xPosition && mouseY >= this.yPosition && mouseX < this.xPosition + this.width && mouseY < this.yPosition + this.height;
                 int x = 176;
