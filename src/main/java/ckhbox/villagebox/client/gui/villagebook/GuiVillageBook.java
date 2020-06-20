@@ -3,25 +3,13 @@
 
 package ckhbox.villagebox.client.gui.villagebook;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.Stack;
-
-import ckhbox.villagebox.client.gui.villagebook.page.Page;
-import ckhbox.villagebox.client.gui.villagebook.page.PageHome;
-import ckhbox.villagebox.client.gui.villagebook.page.PageItem;
-import ckhbox.villagebox.client.gui.villagebook.page.PageItemList;
-import ckhbox.villagebox.client.gui.villagebook.page.PagePro;
-import ckhbox.villagebox.client.gui.villagebook.page.PageProList;
-import ckhbox.villagebox.client.gui.villagebook.page.PageTrading;
-import ckhbox.villagebox.client.gui.villagebook.page.PageTutorial;
+import ckhbox.villagebox.client.gui.villagebook.page.*;
 import ckhbox.villagebox.client.gui.villagebook.page.data.VillageBookData;
 import ckhbox.villagebox.common.entity.villager.EntityVillager;
 import ckhbox.villagebox.common.gui.common.ContainerEmpty;
 import ckhbox.villagebox.common.util.helper.PathHelper;
 import ckhbox.villagebox.common.village.profession.Profession;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
@@ -31,15 +19,27 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
-public class GuiVillageBook extends GuiContainer{
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.io.IOException;
+import java.util.List;
+import java.util.Stack;
 
-	public static final ResourceLocation guiBookGuiTextures = new ResourceLocation(PathHelper.full("textures/gui/villagebook/page.png"));
+public class GuiVillageBook
+        extends GuiContainer{
+	public static final ResourceLocation guiBookGuiTextures = new ResourceLocation(
+	        PathHelper.full("textures/gui/villagebook/page.png")
+    );
 	
 	public VillageBookData villagebookData = null;
+
 	protected Page currentPage;
-	private EntityVillager tempVillager = new EntityVillager(Minecraft.getMinecraft().thePlayer.getEntityWorld());
+
+	private final EntityVillager tempVillager = new EntityVillager(
+	        Minecraft.getMinecraft().thePlayer.getEntityWorld()
+    );
 	
-	public Stack<String> linkStack = new Stack<String>();
+	public Stack<String> linkStack = new Stack<>();
 	
 	protected int xSize = 176;
     protected int ySize = 180; 
@@ -84,7 +84,8 @@ public class GuiVillageBook extends GuiContainer{
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 		super.drawScreen(mouseX, mouseY, partialTicks);
-		if(this.currentPage != null)
+
+		if (this.currentPage != null)
 			this.currentPage.onDrawScreen(mouseX, mouseY);
 	}
 
@@ -110,24 +111,28 @@ public class GuiVillageBook extends GuiContainer{
 	
 	public void drawProHead(int x, int y, Profession pro, boolean isMale){
 		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+
         this.mc.getTextureManager().bindTexture(pro.getTexture(isMale));
-        this.drawModalRectWithCustomSizedTexture(x, y, 8, 8, 8, 8, 64, 32);
+
+        drawModalRectWithCustomSizedTexture(x, y, 8,
+                8, 8,
+                8, 64, 32);
 	}
 	
 	public void drawProEntity(int x, int y, Profession pro, boolean isMale){
 		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
     	this.tempVillager.previewProfession = pro;
     	this.tempVillager.setGender(isMale);
-    	this.drawEntityOnScreen(x, y, 20,-0.8F, this.tempVillager);
+    	this.drawEntityOnScreen(x, y, this.tempVillager);
     	this.tempVillager.previewProfession = null;
 	}
 
-	private void drawEntityOnScreen(int posX, int posY, int scale,float r, EntityLivingBase ent)
+	private void drawEntityOnScreen(int posX, int posY, EntityLivingBase ent)
 	{
 	    GlStateManager.enableColorMaterial();
 	    GlStateManager.pushMatrix();
 	    GlStateManager.translate((float)posX, (float)posY, 50.0F);
-	    GlStateManager.scale((float)(-scale), (float)scale, (float)scale);
+	    GlStateManager.scale((float)(-20), (float) 20, (float) 20);
 	    GlStateManager.rotate(180.0F, 0.0F, 0.0F, 1.0F);
 	    float f = ent.renderYawOffset;
 	    float f1 = ent.rotationYaw;
@@ -164,58 +169,93 @@ public class GuiVillageBook extends GuiContainer{
 	}
 	
 	public void gotoLink(String link){
-		if(link == null)
+		if (link == null)
 			return;
 		boolean pushPrevLink = false;
-		if(link.startsWith(">")){ // start with > means pushing old link
-			link = link.substring(1,link.length());
+
+        // start with > means pushing old link
+		if (link.startsWith(">")) {
+			link = link.substring(1);
+
 			pushPrevLink = true;
 		}
 		
 		//reslove links
 		//format: PAGETYPE=PARAMS, examples: 1. item=staff   2.  pro=cook   3. home=
-		String[] arr = link.split("=");
-		Page newPage = null;
-		if(arr[0].equals("home")){
-			newPage = new PageHome(this);
-		}
-		else if(arr[0].equals("itemlist")){
-			int pageIdx = Integer.valueOf(arr[1]);
-			newPage = new PageItemList(this,pageIdx);
-		}
-		else if(arr[0].equals("prolist")){
-			int pageIdx = Integer.valueOf(arr[1]);
-			newPage = new PageProList(this,pageIdx);
-		}
-		else if(arr[0].equals("item")){
-			ItemStack itemstack = this.villagebookData.mapNamesToItemStacks.get(arr[1]);
-			newPage = new PageItem(this,itemstack);
-		}
-		else if(arr[0].equals("pro")){
-			int proid = Integer.valueOf(arr[1]);
-			Profession pro = Profession.registry.get(proid);
-			newPage = new PagePro(this,pro);
-		}
-		else if(arr[0].equals("trading")){
-			String[] ps = arr[1].split(",");
-			int proid = Integer.valueOf(ps[0]);
-			int pageIdx = Integer.valueOf(ps[1]);
-			Profession pro = Profession.registry.get(proid);
-			newPage = new PageTrading(this,pro,pageIdx);
-		}
-		else if(arr[0].equals("tutorial")){
-			newPage = new PageTutorial(this);
-		}
-		else if(arr[0].equals("back")){
-			this.gotoLink(this.getLastLink());
-			return;
-		}
+
+		String[] array = link.split("=");
+
+		@Nullable Page newPage = null;
+
+        switch (array[0]) {
+            case "home":
+                newPage = new PageHome(this);
+
+                break;
+
+            case "itemlist": {
+                int pageIdx = Integer.parseInt(array[1]);
+
+                newPage = new PageItemList(this, pageIdx);
+
+                break;
+            }
+
+            case "prolist": {
+                int pageIdx = Integer.parseInt(array[1]);
+
+                newPage = new PageProList(this, pageIdx);
+
+                break;
+            }
+
+            case "item":
+                ItemStack itemstack = this.villagebookData.mapNamesToItemStacks.get(array[1]);
+
+                newPage = new PageItem(this, itemstack);
+
+                break;
+
+            case "pro": {
+                int proid = Integer.parseInt(array[1]);
+
+                Profession pro = Profession.registry.get(proid);
+
+                newPage = new PagePro(this, pro);
+
+                break;
+            }
+
+            case "trading": {
+                String[] ps = array[1].split(",");
+
+                int proid = Integer.parseInt(ps[0]);
+
+                int pageIdx = Integer.parseInt(ps[1]);
+
+                Profession pro = Profession.registry.get(proid);
+
+                newPage = new PageTrading(this, pro, pageIdx);
+
+                break;
+            }
+
+            case "tutorial":
+                newPage = new PageTutorial(this);
+
+                break;
+
+            case "back":
+                this.gotoLink(this.getLastLink());
+
+                return;
+        }
 		
-		if(newPage!=null){
+		if (newPage != null) {
 			newPage.currentLink = link;
+
 			this.openPage(newPage,pushPrevLink);
 		}
-		
 	}
 	
 	public void openPage(Page page, boolean pushPrevLink){
@@ -235,11 +275,11 @@ public class GuiVillageBook extends GuiContainer{
 		return this.linkStack.pop();
 	}
 	
-	public void drawHoveringText(List<String> textLines, int x, int y){
+	public void drawHoveringText(@Nonnull List<String> textLines, int x, int y){
 		super.drawHoveringText(textLines, x, y);
 	}
 	
-	public void renderToolTip(ItemStack stack, int x, int y){
+	public void renderToolTip(@Nonnull ItemStack stack, int x, int y){
 		super.renderToolTip(stack, x, y);
 	}
 	
