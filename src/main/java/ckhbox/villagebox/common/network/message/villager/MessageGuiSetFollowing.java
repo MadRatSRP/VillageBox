@@ -6,20 +6,16 @@ package ckhbox.villagebox.common.network.message.villager;
 import ckhbox.villagebox.common.entity.villager.EntityVillager;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
-public class MessageGuiSetFollowing implements IMessage {
+import javax.annotation.Nullable;
 
+public class MessageGuiSetFollowing implements IMessage {
 	private int dimension;
 	private int entityVillagerID;
 	private boolean setPlayer;
-	
-	
-	public MessageGuiSetFollowing(){
-	}
 
 	public MessageGuiSetFollowing(int entityVillagerID, int dimension, boolean setPlayer){
 		this.entityVillagerID = entityVillagerID;
@@ -49,9 +45,10 @@ public class MessageGuiSetFollowing implements IMessage {
         public IMessage onMessage(MessageGuiSetFollowing message, MessageContext ctx) {
         	
         	if(ctx.getServerHandler().playerEntity.worldObj.provider.getDimension() == message.dimension){
-        		//get villager
-        		Entity entity = ctx.getServerHandler().playerEntity.worldObj.getEntityByID(message.entityVillagerID);
-        		if(entity != null && entity instanceof EntityVillager){
+        		// get villager
+        		@Nullable  Entity entity = ctx.getServerHandler().playerEntity.worldObj.getEntityByID(message.entityVillagerID);
+
+        		if (entity instanceof EntityVillager) {
         			EntityVillager villager = (EntityVillager)entity;
         			villager.setFollowing(message.setPlayer?ctx.getServerHandler().playerEntity:null);
         		}

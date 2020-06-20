@@ -16,7 +16,7 @@ import net.minecraft.world.World;
 public class GuiVillagerTrading extends GuiTrading{
 
     protected int villagerNameOffsetY = 6;
-	private EntityVillager villager;
+	private final EntityVillager villager;
     
 	public GuiVillagerTrading(InventoryPlayer playerInventory, EntityVillager villager, World worldIn) {
 		super(playerInventory, villager, worldIn);
@@ -27,7 +27,7 @@ public class GuiVillagerTrading extends GuiTrading{
 	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
 		super.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
 		
-		int x = (this.width - this.xSize) / 2;
+		// int x = (this.width - this.xSize) / 2;
         int y = (this.height - this.ySize) / 2;
 		
         GuiHelper.drawNameAndProfession(this.mc.fontRendererObj, villager, this.width / 2, y + villagerNameOffsetY);
