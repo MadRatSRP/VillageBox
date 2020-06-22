@@ -3,10 +3,6 @@
 
 package ckhbox.villagebox.client.gui.villagebook.page.data;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
 import ckhbox.villagebox.common.item.ModItems;
 import ckhbox.villagebox.common.village.profession.Profession;
 import ckhbox.villagebox.common.village.trading.TradingRecipe;
@@ -14,43 +10,55 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 public class VillageBookData{
-	public List<ItemStack> itemstacks = new ArrayList<ItemStack>();
-	public List<Profession> pros = new ArrayList<Profession>();
-	public HashMap<String,ItemStack> mapNamesToItemStacks = new HashMap<String,ItemStack>();
+	public List<ItemStack> listOfItemStacks = new ArrayList<>();
+
+	public List<Profession> listOfProfessions = new ArrayList<>();
+
+	public HashMap<String,ItemStack> mapNamesToItemStacks = new HashMap<>();
 	
 	public VillageBookData(){
 		this.generate();
 	}
 	
 	public void generate(){
-		//items
-		this.itemstacks.clear();
+		// items
+		this.listOfItemStacks.clear();
+
 		for (Item item : Item.REGISTRY){
-            if (item == null){
+            if (item == null) {
                 continue;
             }
-            for (CreativeTabs tab : item.getCreativeTabs()){
-                if (tab == ModItems.tabVB){
-                	item.getSubItems(item, ModItems.tabVB, this.itemstacks);
+
+            for (CreativeTabs tab : item.getCreativeTabs()) {
+                if (tab == ModItems.tabVB) {
+                	item.getSubItems(item, ModItems.tabVB, this.listOfItemStacks);
                 }
             }
         }
+
 		this.mapNamesToItemStacks.clear();
-		for(ItemStack itemstack : this.itemstacks){
+
+		for (ItemStack itemstack : this.listOfItemStacks) {
 			this.mapNamesToItemStacks.put(itemstack.getUnlocalizedName(), itemstack);
 		}
 		
-		//professions
-		this.pros = Profession.registry.getAll();
+		// professions
+		this.listOfProfessions = Profession.registry.getAll();
 	}
 	
 	public List<Profession> findRelatedProByItem(ItemStack itemstack){
-		List<Profession> list = new ArrayList<Profession>();
-		for(Profession pro : this.pros){
-			for(TradingRecipe recipe : pro.getTradingRecipeList()){
-				if(recipe.getItemOutput().isItemEqual(itemstack)){
-					list.add(pro);
+		List<Profession> list = new ArrayList<>();
+
+		for (Profession profession : this.listOfProfessions) {
+			for (TradingRecipe recipe : profession.getTradingRecipeList()) {
+				if (recipe.getItemOutput().isItemEqual(itemstack)) {
+					list.add(profession);
+
 					break;
 				}
 			}

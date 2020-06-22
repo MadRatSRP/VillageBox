@@ -43,7 +43,7 @@ public class PageTutorial extends Page{
 		this.addLinkAt(new LinkItem(this,new ItemStack(ModItems.invitation),null,null), top, left + 80);
 		this.addLinkAt(new LinkImg(this, this.guiVillageBook.guiBookGuiTextures, 192,54,0,0,16,16,null,null), top, left + 60);
 		this.addLinkAt(new LinkImg(this, this.guiVillageBook.guiBookGuiTextures, 176,54,0,0,16,16,null,null), top + 20, left + 80);
-		
+
 		top = this.guiVillageBook.getContentTop() + 56;
 		left = this.guiVillageBook.getContentLeft() + 20;
 		this.addLinkAt(new LinkItem(this,new ItemStack(Items.PAPER),null,null), top, left + 20);
@@ -51,7 +51,7 @@ public class PageTutorial extends Page{
 		this.addLinkAt(new LinkItem(this,new ItemStack(ModBlocks.mailbox),null,null), top, left + 80);
 		this.addLinkAt(new LinkImg(this, this.guiVillageBook.guiBookGuiTextures, 192,54,0,0,16,16,null,null), top, left + 60);
 		this.addLinkAt(new LinkImg(this, this.guiVillageBook.guiBookGuiTextures, 176,54,0,0,16,16,null,null), top + 20, left + 80);
-		
+
 		top = this.guiVillageBook.getContentTop() + 96;
 		left = this.guiVillageBook.getContentLeft() + 20;
 		this.addLinkAt(new LinkItem(this,new ItemStack(ModItems.mail),null,null), top, left + 80);
@@ -66,7 +66,7 @@ public class PageTutorial extends Page{
 		super.onDrawScreen(mouseX, mouseY);
 		
 		int top = this.guiVillageBook.getContentTop() + 120;
-		int left = this.guiVillageBook.getContentLeft() + 20;
+		//int left = this.guiVillageBook.getContentLeft() + 20;
 		this.guiVillageBook.drawProEntity(this.guiVillageBook.getContentLeft() + 50, top, this.expample, true);
 	}
 	

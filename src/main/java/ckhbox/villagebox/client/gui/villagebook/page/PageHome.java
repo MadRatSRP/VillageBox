@@ -3,18 +3,14 @@
 
 package ckhbox.villagebox.client.gui.villagebook.page;
 
-import java.util.ArrayList;
-
-import ckhbox.villagebox.client.gui.GuiTextButton;
 import ckhbox.villagebox.client.gui.villagebook.GuiVillageBook;
 import ckhbox.villagebox.client.gui.villagebook.page.link.LinkText;
 import ckhbox.villagebox.common.util.helper.PathHelper;
-import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 
-public class PageHome extends Page{
-
+public class PageHome
+        extends Page {
 	public PageHome(GuiVillageBook guiVillageBook) {
 		super(guiVillageBook,I18n.format(PathHelper.full("villageBook.title")));
 	}

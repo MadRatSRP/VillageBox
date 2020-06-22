@@ -3,21 +3,17 @@
 
 package ckhbox.villagebox.client.gui.villagebook.page;
 
-import java.util.List;
-
 import ckhbox.villagebox.client.gui.villagebook.GuiVillageBook;
 import ckhbox.villagebox.client.gui.villagebook.page.link.LinkImg;
-import ckhbox.villagebox.client.gui.villagebook.page.link.LinkItem;
 import ckhbox.villagebox.client.gui.villagebook.page.link.LinkText;
 import ckhbox.villagebox.common.util.helper.PathHelper;
 import ckhbox.villagebox.common.village.profession.Profession;
-import net.minecraft.item.ItemStack;
 import net.minecraft.client.resources.I18n;
 
 public class PagePro extends Page{
 	
-	private Profession pro;
-	private static int itemsPerPage = 30;
+	private final Profession pro;
+	//private static final int itemsPerPage = 30;
 	
 	public PagePro(GuiVillageBook guiVillageBook, Profession pro) {
 		super(guiVillageBook, I18n.format(pro.getUnloalizedDisplayName()));
@@ -33,7 +29,7 @@ public class PagePro extends Page{
 		this.addLink(new LinkText(this,trading,">trading=" + this.pro.getRegID() + ",0",null),top,1);
 		
 		top = this.guiVillageBook.getContentTop() + this.guiVillageBook.getContentHeight() - 16;
-		this.addLink(new LinkImg(this,this.guiVillageBook.guiBookGuiTextures,240,0,0,16,16,16,"back=",null),top,1);
+		this.addLink(new LinkImg(this, GuiVillageBook.guiBookGuiTextures,240,0,0,16,16,16,"back=",null),top,1);
 	}
 
 	@Override

@@ -17,11 +17,10 @@ import net.minecraft.item.ItemStack;
 
 public class PageTrading extends Page{
 	
-	private Profession pro;
-	private int pageIdx;
-	private static int itemsPerPage = 30;
-	
-	public PageTrading(GuiVillageBook guiVillageBook, Profession pro, int pageIdx) {
+	private final Profession pro;
+	private final int pageIdx;
+
+    public PageTrading(GuiVillageBook guiVillageBook, Profession pro, int pageIdx) {
 		super(guiVillageBook, I18n.format(pro.getUnloalizedDisplayName()));
 		this.pageIdx = pageIdx;
 		this.pro = pro;
@@ -29,14 +28,15 @@ public class PageTrading extends Page{
 
 	@Override
 	public void onInit() {		
-		List<ItemStack> itemstacks = new ArrayList<ItemStack>();
+		List<ItemStack> itemstacks = new ArrayList<>();
 		if(this.pro.getTradingRecipeList() != null){
 			for(TradingRecipe recipe : this.pro.getTradingRecipeList()){
 				itemstacks.add(recipe.getItemOutput());
 			}
 		}
-		
-		int from = pageIdx * itemsPerPage;
+
+        int itemsPerPage = 30;
+        int from = pageIdx * itemsPerPage;
 		int to = Math.min(itemstacks.size(), (pageIdx+1) * itemsPerPage);
 		for(int i =from;i<to;i++){
 			this.addLink(new LinkItem(this,itemstacks.get(i),null,null), false);
@@ -51,7 +51,7 @@ public class PageTrading extends Page{
 			this.addLink(new LinkText(this,"-->","trading="  + this.pro.getRegID() + "," + (this.pageIdx + 1),null),top,2);
 		}
 		
-		this.addLink(new LinkImg(this,this.guiVillageBook.guiBookGuiTextures,240,0,0,16,16,16,"back=",null),top,1);
+		this.addLink(new LinkImg(this, GuiVillageBook.guiBookGuiTextures,240,0,0,16,16,16,"back=",null),top,1);
 	}
 
 	@Override
