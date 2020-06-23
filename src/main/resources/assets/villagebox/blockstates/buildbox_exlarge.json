@@ -1,5 +1,7 @@
 {
-	"variants": {
-        "normal": { "model": "villagebox:buildbox_exlarge" }
+  "variants": {
+    "normal": {
+      "model": "villagebox:buildbox_exlarge"
     }
+  }
 }

@@ -1,6 +1,6 @@
 {
-	"parent": "villagebox:block/bench",
-    "textures": {
-		"material": "blocks/planks_birch"
-    }
+  "parent": "villagebox:block/bench",
+  "textures": {
+    "material": "blocks/planks_birch"
+  }
 }

@@ -1,6 +1,6 @@
 {
-    "parent": "item/generated",
-    "textures": {
-        "layer0": "villagebox:items/chocolate_banana"
-    }
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "villagebox:items/chocolate_banana"
+  }
 }

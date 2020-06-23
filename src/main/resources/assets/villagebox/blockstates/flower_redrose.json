@@ -1,5 +1,7 @@
 {
-    "variants": {
-        "normal": { "model": "villagebox:flower_redrose" }
+  "variants": {
+    "normal": {
+      "model": "villagebox:flower_redrose"
     }
+  }
 }

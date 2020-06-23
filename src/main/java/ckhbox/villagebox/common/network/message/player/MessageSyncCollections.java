@@ -16,29 +16,29 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class MessageSyncCollections implements IMessage {
-	
-	public NBTTagCompound tagcollections;
-	
-	public MessageSyncCollections(){
-	}
-	
-	public MessageSyncCollections(Collections collections){
-		this.tagcollections = new NBTTagCompound();
-		collections.saveNBTData(this.tagcollections);
-	}
-	
-	
-	@Override
-	public void fromBytes(ByteBuf buf) {
-		this.tagcollections = ByteBufUtils.readTag(buf);
-	}
 
-	@Override
-	public void toBytes(ByteBuf buf) {
-		ByteBufUtils.writeTag(buf, this.tagcollections);
-	}
+    public NBTTagCompound tagcollections;
 
-	private static class HandlerCommon implements IMessageHandler<MessageSyncCollections, IMessage> {
+    public MessageSyncCollections() {
+    }
+
+    public MessageSyncCollections(Collections collections) {
+        this.tagcollections = new NBTTagCompound();
+        collections.saveNBTData(this.tagcollections);
+    }
+
+
+    @Override
+    public void fromBytes(ByteBuf buf) {
+        this.tagcollections = ByteBufUtils.readTag(buf);
+    }
+
+    @Override
+    public void toBytes(ByteBuf buf) {
+        ByteBufUtils.writeTag(buf, this.tagcollections);
+    }
+
+    private static class HandlerCommon implements IMessageHandler<MessageSyncCollections, IMessage> {
         /**
          * This gets called when the packet is read and received.
          */
@@ -47,14 +47,14 @@ public class MessageSyncCollections implements IMessage {
             return null;
         }
     }
-	
-	public static class Handler extends HandlerCommon {
+
+    public static class Handler extends HandlerCommon {
 
         @Override
-		@SideOnly(Side.CLIENT)
+        @SideOnly(Side.CLIENT)
         public IMessage onMessage(MessageSyncCollections message, MessageContext ctx) {
-        	ExtendedPlayerProperties properties = ExtendedPlayerProperties.get(Minecraft.getMinecraft().thePlayer);
-        	properties.collections.loadNBTData(message.tagcollections);
+            ExtendedPlayerProperties properties = ExtendedPlayerProperties.get(Minecraft.getMinecraft().thePlayer);
+            properties.collections.loadNBTData(message.tagcollections);
             return null;
         }
     }

@@ -1,6 +1,6 @@
 {
-    "parent": "item/generated",
-    "textures": {
-        "layer0": "villagebox:items/soybean"
-    }
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "villagebox:items/soybean"
+  }
 }

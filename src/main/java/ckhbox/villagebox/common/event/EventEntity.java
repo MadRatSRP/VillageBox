@@ -24,75 +24,74 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class EventEntity {
-	
-	@SubscribeEvent
-	public void onAttachCapability(AttachCapabilitiesEvent.Entity event){
-		if(event.getEntity() instanceof EntityPlayer){
-			event.addCapability(ExtendedPlayerProperties.key, new CapExPlayerPropertiesProvider((EntityPlayer)event.getEntity()));
-		}
-	}
-	
-	@SubscribeEvent
-    public void livingSpawnEvent(LivingSpawnEvent event) {
-		
-		Class ec = event.getEntityLiving().getClass();
-		
-		if(ec == EntityZombie.class){
-			EntityZombie entity = (EntityZombie)event.getEntityLiving();
-			entity.targetTasks.addTask(3, new EntityAINearestAttackableTarget(entity, EntityVillager.class, true));
-		}
-		
+
+    @SubscribeEvent
+    public void onAttachCapability(AttachCapabilitiesEvent.Entity event) {
+        if (event.getEntity() instanceof EntityPlayer) {
+            event.addCapability(ExtendedPlayerProperties.key, new CapExPlayerPropertiesProvider((EntityPlayer) event.getEntity()));
+        }
     }
-	
-	@SubscribeEvent
-	public void onLivingUpdating(LivingUpdateEvent event)
-	{
-		if(!event.getEntity().worldObj.isRemote){
-			//register extended player properties
-			if(event.getEntity() instanceof EntityPlayer){
 
-				ExtendedPlayerProperties playerProperties = ExtendedPlayerProperties.get((EntityPlayer)event.getEntity());
+    @SubscribeEvent
+    public void livingSpawnEvent(LivingSpawnEvent event) {
 
-				if(playerProperties.hasSentInvitation && playerProperties.newMailTimer > 0){
-					if(--playerProperties.newMailTimer == 0){
-						((EntityPlayer)event.getEntity()).addChatMessage(new TextComponentTranslation(PathHelper.full("message.mail.newmail")));
-					}
-				}
-			}
-		}
+        Class ec = event.getEntityLiving().getClass();
 
-	}
-	
-	@SubscribeEvent
-	public void onEntityJoinWorld(EntityJoinWorldEvent event) {
-		if (!event.getWorld().isRemote && event.getEntity() instanceof EntityPlayer) {
-			EntityPlayer player = (EntityPlayer)event.getEntity();
+        if (ec == EntityZombie.class) {
+            EntityZombie entity = (EntityZombie) event.getEntityLiving();
+            entity.targetTasks.addTask(3, new EntityAINearestAttackableTarget(entity, EntityVillager.class, true));
+        }
 
-			ExtendedPlayerProperties p = ExtendedPlayerProperties.get(player);
-			
-			if(!p.receivedVillagebook && !VBConfig.disableBookAtStarting){
-				ItemStack villageBook = new ItemStack(ModItems.villageBook);
-				if (!player.inventory.addItemStackToInventory(villageBook)) {
-					player.dropItem(villageBook, false);
-				}
-				p.receivedVillagebook = true;
-			}
-		}
-	}
-	
-	@SubscribeEvent
-	void onClone(PlayerEvent.Clone event) {
-	    NBTTagCompound temp = new NBTTagCompound();
-	    ExtendedPlayerProperties old = ExtendedPlayerProperties.get(event.getOriginal());
-	    ExtendedPlayerProperties current = ExtendedPlayerProperties.get(event.getEntityPlayer());
-	    old.saveNBTData(temp);
-	    current.loadNBTData(temp);
-	}
-	
-	@SubscribeEvent
-	void onItemUseTick(LivingEntityUseItemEvent.Start event){
-		if(event.getItem().getItem() == ModItems.efficientBow){
-			event.setDuration(ModItems.efficientBow.getMaxItemUseDuration(event.getItem()) - 9);
-		}
-	}
+    }
+
+    @SubscribeEvent
+    public void onLivingUpdating(LivingUpdateEvent event) {
+        if (!event.getEntity().worldObj.isRemote) {
+            //register extended player properties
+            if (event.getEntity() instanceof EntityPlayer) {
+
+                ExtendedPlayerProperties playerProperties = ExtendedPlayerProperties.get((EntityPlayer) event.getEntity());
+
+                if (playerProperties.hasSentInvitation && playerProperties.newMailTimer > 0) {
+                    if (--playerProperties.newMailTimer == 0) {
+                        ((EntityPlayer) event.getEntity()).addChatMessage(new TextComponentTranslation(PathHelper.full("message.mail.newmail")));
+                    }
+                }
+            }
+        }
+
+    }
+
+    @SubscribeEvent
+    public void onEntityJoinWorld(EntityJoinWorldEvent event) {
+        if (!event.getWorld().isRemote && event.getEntity() instanceof EntityPlayer) {
+            EntityPlayer player = (EntityPlayer) event.getEntity();
+
+            ExtendedPlayerProperties p = ExtendedPlayerProperties.get(player);
+
+            if (!p.receivedVillagebook && !VBConfig.disableBookAtStarting) {
+                ItemStack villageBook = new ItemStack(ModItems.villageBook);
+                if (!player.inventory.addItemStackToInventory(villageBook)) {
+                    player.dropItem(villageBook, false);
+                }
+                p.receivedVillagebook = true;
+            }
+        }
+    }
+
+    @SubscribeEvent
+    void onClone(PlayerEvent.Clone event) {
+        NBTTagCompound temp = new NBTTagCompound();
+        ExtendedPlayerProperties old = ExtendedPlayerProperties.get(event.getOriginal());
+        ExtendedPlayerProperties current = ExtendedPlayerProperties.get(event.getEntityPlayer());
+        old.saveNBTData(temp);
+        current.loadNBTData(temp);
+    }
+
+    @SubscribeEvent
+    void onItemUseTick(LivingEntityUseItemEvent.Start event) {
+        if (event.getItem().getItem() == ModItems.efficientBow) {
+            event.setDuration(ModItems.efficientBow.getMaxItemUseDuration(event.getItem()) - 9);
+        }
+    }
 }

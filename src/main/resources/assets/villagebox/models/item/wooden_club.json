@@ -1,6 +1,6 @@
 {
-    "parent": "item/handheld",
-    "textures": {
-        "layer0": "villagebox:items/wooden_club"
-    }
+  "parent": "item/handheld",
+  "textures": {
+    "layer0": "villagebox:items/wooden_club"
+  }
 }

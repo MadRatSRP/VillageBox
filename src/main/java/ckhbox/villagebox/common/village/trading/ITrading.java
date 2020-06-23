@@ -4,6 +4,7 @@
 package ckhbox.villagebox.common.village.trading;
 
 public interface ITrading {
-	TradingRecipeList getTradingRecipeList();
-	void onTrade();
+    TradingRecipeList getTradingRecipeList();
+
+    void onTrade();
 }

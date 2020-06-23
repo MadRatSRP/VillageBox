@@ -21,49 +21,49 @@ import javax.annotation.Nonnull;
 
 @SideOnly(Side.CLIENT)
 public class RenderVillager
-        extends RenderBiped<EntityVillager>{
-	private final AxisAlignedBB questMarkBoundBot = new AxisAlignedBB(
-	        -0.05D,2.3D,-0.05D,0.05D,2.4D,0.05D
+        extends RenderBiped<EntityVillager> {
+    private final AxisAlignedBB questMarkBoundBot = new AxisAlignedBB(
+            -0.05D, 2.3D, -0.05D, 0.05D, 2.4D, 0.05D
     );
 
-	private final AxisAlignedBB questMarkBoundTop = new AxisAlignedBB(
-	        -0.05D,2.5D,-0.05D,0.05D,2.8D,0.05D
+    private final AxisAlignedBB questMarkBoundTop = new AxisAlignedBB(
+            -0.05D, 2.5D, -0.05D, 0.05D, 2.8D, 0.05D
     );
 
     private VertexBuffer vertexBuffer;
 
-	public RenderVillager(RenderManager renderManagerIn) {
-		super(renderManagerIn, new ModelVillager(), 0.5F, 1.0F);
-		this.addLayer(new LayerVillagerHeldItem(this));
-	}
+    public RenderVillager(RenderManager renderManagerIn) {
+        super(renderManagerIn, new ModelVillager(), 0.5F, 1.0F);
+        this.addLayer(new LayerVillagerHeldItem(this));
+    }
 
-	@Override
-	protected boolean canRenderName(EntityVillager entity) {
-		if (entity.previewProfession != null)
-			return false;
-		else
-			return super.canRenderName(entity);
-	}
+    @Override
+    protected boolean canRenderName(EntityVillager entity) {
+        if (entity.previewProfession != null)
+            return false;
+        else
+            return super.canRenderName(entity);
+    }
 
-	@Override
-	public void doRender(@Nonnull EntityVillager entity, double x, double y,
+    @Override
+    public void doRender(@Nonnull EntityVillager entity, double x, double y,
                          double z, float entityYaw, float partialTicks) {
-		super.doRender(entity, x, y, z, entityYaw, partialTicks);
-		
-		if (entity.previewProfession == null && entity.getCurrentQuest() != null && entity.hasHome()) {
-			this.renderQuestMark(x, y, z, -entityYaw);
-		}
-	}
-	
-	private void renderQuestMark(double x, double y, double z, float rotY) {
+        super.doRender(entity, x, y, z, entityYaw, partialTicks);
+
+        if (entity.previewProfession == null && entity.getCurrentQuest() != null && entity.hasHome()) {
+            this.renderQuestMark(x, y, z, -entityYaw);
+        }
+    }
+
+    private void renderQuestMark(double x, double y, double z, float rotY) {
         renderColorBox(this.questMarkBoundTop, x, y, z, rotY);
         renderColorBox(this.questMarkBoundBot, x, y, z, rotY);
-	}
-	
-	private void renderColorBox(AxisAlignedBB boundingBox, double x, double y, double z, float rotY){
-		GlStateManager.pushMatrix();
+    }
 
-		GlStateManager.disableTexture2D();
+    private void renderColorBox(AxisAlignedBB boundingBox, double x, double y, double z, float rotY) {
+        GlStateManager.pushMatrix();
+
+        GlStateManager.disableTexture2D();
 
         Tessellator tessellator = Tessellator.getInstance();
 
@@ -140,9 +140,9 @@ public class RenderVillager
         GlStateManager.enableLighting();
 
         GlStateManager.popMatrix();
-	}
+    }
 
-	void doTaskWithVertexBuffer(double boundingBoxPositionFirst, double boundingBoxPositionSecond,
+    void doTaskWithVertexBuffer(double boundingBoxPositionFirst, double boundingBoxPositionSecond,
                                 double boundingBoxPositionThird, float colorValue) {
         vertexBuffer
                 .pos(boundingBoxPositionFirst, boundingBoxPositionSecond, boundingBoxPositionThird)
@@ -150,18 +150,18 @@ public class RenderVillager
                 .endVertex();
     }
 
-	@Nonnull
-	@Override
-	protected ResourceLocation getEntityTexture(EntityVillager entity) {
-		if (entity.previewProfession != null)
-			return entity.previewProfession.getTexture(entity.isMale());
-		else
-			return entity.getProfession().getTexture(entity.isMale());
-	}
+    @Nonnull
+    @Override
+    protected ResourceLocation getEntityTexture(EntityVillager entity) {
+        if (entity.previewProfession != null)
+            return entity.previewProfession.getTexture(entity.isMale());
+        else
+            return entity.getProfession().getTexture(entity.isMale());
+    }
 
-	@Override
-	protected void preRenderCallback(@Nonnull EntityVillager entitylivingbaseIn, float partialTickTime) {
-		float f = 0.9375F;
-        GlStateManager.scale(f, f, f);	
-	}
+    @Override
+    protected void preRenderCallback(@Nonnull EntityVillager entitylivingbaseIn, float partialTickTime) {
+        float f = 0.9375F;
+        GlStateManager.scale(f, f, f);
+    }
 }

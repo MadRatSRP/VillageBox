@@ -32,12 +32,13 @@ import java.util.ArrayList;
 
 @SideOnly(Side.CLIENT)
 public class GuiVillagerMain
-        extends GuiContainer{
-	
-	private static final ResourceLocation VillagerMainGuiTexture = new ResourceLocation(
-	        PathHelper.full("textures/gui/villager/main.png")
-    );
+        extends GuiContainer {
 
+    private static final ResourceLocation VillagerMainGuiTexture = new ResourceLocation(
+            PathHelper.full("textures/gui/villager/main.png")
+    );
+    private final EntityPlayer player;
+    private final EntityVillager villager;
     protected int xSize = 176;
     protected int ySize = 166;
     protected int villagerTextOffsetY = 30;
@@ -45,55 +46,45 @@ public class GuiVillagerMain
     protected int playerChatOptionsOffsetY = 88;
     protected int playerChatOptionHeight = 18;
     protected int offsetX = 12;
-    
     GuiTextButton buttonUpgrade;
     GuiTextButton buttonTrade;
     GuiTextButton buttonFollow;
     GuiTextButton buttonHome;
-    
     QuestButton buttonQuest;
-    
     private String chatContent;
     private String chatContentDisplay;
     private int chatDisplayInterval; // ms
-
     private boolean isFollowingLast;
     private boolean hasHomeLast;
-    
-    private final EntityPlayer player;
-    private final EntityVillager villager;
-    
     private long lastNanotime;
     private long chatTimer;
-    
-	public GuiVillagerMain(EntityPlayer player, EntityVillager villager)
-    {
+
+    public GuiVillagerMain(EntityPlayer player, EntityVillager villager) {
         super(new ContainerVillagerMain());
         this.player = player;
         this.villager = villager;
-        
+
         this.isFollowingLast = this.villager.isFollowing();
         this.hasHomeLast = this.villager.hasHome();
-        
+
         this.lastNanotime = System.nanoTime();
-        
+
         refreshChatContent();
-        
+
         ModNetwork.getInstance().sendToServer(
                 new MessageGuiSetInteracting(this.villager.getEntityId(), this.villager.dimension, true)
         );
     }
 
-    public void initGui()
-    {
+    public void initGui() {
         super.initGui();
-        
+
         int x = (this.width - this.xSize) / 2;
-        int y = (this.height - this.ySize) / 2;  
-        
+        int y = (this.height - this.ySize) / 2;
+
         String strUpgrade = I18n.format(PathHelper.full("gui.villagermain.menu.upgrade"));
         String strTrade = I18n.format(PathHelper.full("gui.villagermain.menu.trade"));
-        
+
         this.buttonList.add(buttonTrade = new GuiTextButton(
                 this.mc, 0, x + offsetX, y + playerChatOptionsOffsetY, strTrade)
         );
@@ -110,76 +101,75 @@ public class GuiVillagerMain
                 this.mc, 3, x + offsetX, y + playerChatOptionsOffsetY + 3 * playerChatOptionHeight, "")
         );
 
-        this.buttonList.add(buttonQuest = new QuestButton(100,x + 153,y + 4));
-        
-        this.refreshButtons(); 		
+        this.buttonList.add(buttonQuest = new QuestButton(100, x + 153, y + 4));
+
+        this.refreshButtons();
     }
-    
-    public boolean doesGuiPauseGame()
-    {
+
+    public boolean doesGuiPauseGame() {
         return false;
     }
 
-    private void refreshButtons(){
-    	String f = this.villager.isFollowing()?"stop":"start";
-    	buttonFollow.setText(I18n.format(PathHelper.full("gui.villagermain.menu.follow." + f)));
-    	
-    	f = this.villager.hasHome()?"moveout":"movein";
-    	buttonHome.setText(I18n.format(PathHelper.full("gui.villagermain.menu.home." + f)));
-    	
-    	Profession[] upgradeOptions = this.villager.getProfession().getUpgradeToNextOptions();
-    	buttonUpgrade.enabled = this.villager.hasHome() && (upgradeOptions != null && upgradeOptions.length > 0);
-    	buttonTrade.enabled = this.villager.hasHome();
-    	buttonQuest.enabled = this.villager.hasHome() & (this.villager.getCurrentQuest() != null);
+    private void refreshButtons() {
+        String f = this.villager.isFollowing() ? "stop" : "start";
+        buttonFollow.setText(I18n.format(PathHelper.full("gui.villagermain.menu.follow." + f)));
+
+        f = this.villager.hasHome() ? "moveout" : "movein";
+        buttonHome.setText(I18n.format(PathHelper.full("gui.villagermain.menu.home." + f)));
+
+        Profession[] upgradeOptions = this.villager.getProfession().getUpgradeToNextOptions();
+        buttonUpgrade.enabled = this.villager.hasHome() && (upgradeOptions != null && upgradeOptions.length > 0);
+        buttonTrade.enabled = this.villager.hasHome();
+        buttonQuest.enabled = this.villager.hasHome() & (this.villager.getCurrentQuest() != null);
     }
-    
-    private void calculateChatSpeed(){
-    	int l = this.chatContent.length();
+
+    private void calculateChatSpeed() {
+        int l = this.chatContent.length();
         // ms
         int chatDisplayDurationTotal = 1000;
         this.chatDisplayInterval = chatDisplayDurationTotal / l;
     }
-    
-    private void refreshChatContent(){
-    	ArrayList<String> list = new ArrayList<>();
 
-    	// common
-    	for (int i =0; i<3; i++){
-    		list.add(I18n.format(PathHelper.full("gui.villagermain.menu.chat.common" + i), player.getName()));
-    	}
+    private void refreshChatContent() {
+        ArrayList<String> list = new ArrayList<>();
 
-    	String home = villager.hasHome()?"hashome":"nohome";
+        // common
+        for (int i = 0; i < 3; i++) {
+            list.add(I18n.format(PathHelper.full("gui.villagermain.menu.chat.common" + i), player.getName()));
+        }
 
-    	for (int i =0; i<2; i++){
-    		list.add(I18n.format(PathHelper.full("gui.villagermain.menu.chat."+ home + i)));
-    	}
-    	
-    	this.chatContent = list.get(Rand.get().nextInt(list.size()));
-    	this.chatContentDisplay = "";
-    	
-    	this.calculateChatSpeed();
+        String home = villager.hasHome() ? "hashome" : "nohome";
+
+        for (int i = 0; i < 2; i++) {
+            list.add(I18n.format(PathHelper.full("gui.villagermain.menu.chat." + home + i)));
+        }
+
+        this.chatContent = list.get(Rand.get().nextInt(list.size()));
+        this.chatContentDisplay = "";
+
+        this.calculateChatSpeed();
     }
-    
-    private void setChatContent(String type){
-    	this.chatContent = I18n.format(PathHelper.full("gui.villagermain.menu.chat." + type));
-    	this.chatContentDisplay = "";
-    	
-    	this.calculateChatSpeed();
+
+    private void setChatContent(String type) {
+        this.chatContent = I18n.format(PathHelper.full("gui.villagermain.menu.chat." + type));
+        this.chatContentDisplay = "";
+
+        this.calculateChatSpeed();
     }
-    
-    private void updateChatContent(){
-    	boolean isFollowing = this.villager.isFollowing();
-    	boolean hasHome = this.villager.hasHome();
-    	if(!this.isFollowingLast && isFollowing) setChatContent("followstart");
-    	else if(this.isFollowingLast && !isFollowing) setChatContent("followstop");
-    	
-    	if(!this.hasHomeLast && hasHome) setChatContent("movein");
-    	else if(this.hasHomeLast && !hasHome) setChatContent("moveout");
+
+    private void updateChatContent() {
+        boolean isFollowing = this.villager.isFollowing();
+        boolean hasHome = this.villager.hasHome();
+        if (!this.isFollowingLast && isFollowing) setChatContent("followstart");
+        else if (this.isFollowingLast && !isFollowing) setChatContent("followstop");
+
+        if (!this.hasHomeLast && hasHome) setChatContent("movein");
+        else if (this.hasHomeLast && !hasHome) setChatContent("moveout");
     }
-    
-	@Override
-	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
-		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+
+    @Override
+    protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
         this.mc.getTextureManager().bindTexture(VillagerMainGuiTexture);
 
@@ -188,137 +178,133 @@ public class GuiVillagerMain
         int y = (this.height - this.ySize) / 2;
 
         this.drawTexturedModalRect(x, y, 0, 0, this.xSize, this.ySize);
-		
+
         GuiHelper.drawNameAndProfession(this.mc.fontRendererObj, villager, this.width / 2, y + villagerNameOffsetY);
-	}
-    
-	@Override
-	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-		
-		super.drawScreen(mouseX, mouseY, partialTicks);
+    }
 
-		GlStateManager.disableLighting();
-		
-		int x = (this.width - this.xSize) / 2;
+    @Override
+    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+
+        super.drawScreen(mouseX, mouseY, partialTicks);
+
+        GlStateManager.disableLighting();
+
+        int x = (this.width - this.xSize) / 2;
         int y = (this.height - this.ySize) / 2;
-        
+
         long currentNanotime = System.nanoTime();
-        
-        
+
+
         //chat text animation
-        if(this.chatContent.length() > this.chatContentDisplay.length()){
-        	chatTimer += (currentNanotime - this.lastNanotime) / 1000000;
-        	if(chatTimer >= this.chatDisplayInterval){
-        		chatTimer -= this.chatDisplayInterval;
-        		this.chatContentDisplay = this.chatContent.substring(0, this.chatContentDisplay.length() + 1);
-        	}
+        if (this.chatContent.length() > this.chatContentDisplay.length()) {
+            chatTimer += (currentNanotime - this.lastNanotime) / 1000000;
+            if (chatTimer >= this.chatDisplayInterval) {
+                chatTimer -= this.chatDisplayInterval;
+                this.chatContentDisplay = this.chatContent.substring(0, this.chatContentDisplay.length() + 1);
+            }
         }
-        
+
         this.lastNanotime = currentNanotime;
-        
-        this.fontRendererObj.drawSplitString(this.chatContentDisplay,x + offsetX, y + villagerTextOffsetY, this.xSize - offsetX * 2, 0xFFFF55);
-        
-        if(!this.buttonTrade.enabled){
-    		this.drawButtonHoverText(this.buttonTrade, mouseX, mouseY, 
-    			I18n.format(PathHelper.full("gui.villagermain.button.lock.title")), 
-    			I18n.format(PathHelper.full("gui.villagermain.button.lock.desc")));
-        }
-        
-        if(!this.buttonUpgrade.enabled){
-        	if(!this.villager.hasHome())
-        		this.drawButtonHoverText(this.buttonUpgrade, mouseX, mouseY, 
-        			I18n.format(PathHelper.full("gui.villagermain.button.lock.title")), 
-        			I18n.format(PathHelper.full("gui.villagermain.button.lock.desc")));
-        	else
-        		this.drawButtonHoverText(this.buttonUpgrade, mouseX, mouseY, 
-        				I18n.format(PathHelper.full("gui.villagermain.button.maxupgrade.title")), 
-        				I18n.format(PathHelper.full("gui.villagermain.button.maxupgrade.desc")));
-        }
-        
-        if(this.buttonQuest.enabled){
-    		this.drawButtonHoverText(this.buttonQuest, mouseX, mouseY, 
-    				I18n.format(PathHelper.full("gui.villagermain.button.newquest.title")), 
-    				I18n.format(PathHelper.full("gui.villagermain.button.newquest.desc")));
+
+        this.fontRendererObj.drawSplitString(this.chatContentDisplay, x + offsetX, y + villagerTextOffsetY, this.xSize - offsetX * 2, 0xFFFF55);
+
+        if (!this.buttonTrade.enabled) {
+            this.drawButtonHoverText(this.buttonTrade, mouseX, mouseY,
+                    I18n.format(PathHelper.full("gui.villagermain.button.lock.title")),
+                    I18n.format(PathHelper.full("gui.villagermain.button.lock.desc")));
         }
 
-	}
+        if (!this.buttonUpgrade.enabled) {
+            if (!this.villager.hasHome())
+                this.drawButtonHoverText(this.buttonUpgrade, mouseX, mouseY,
+                        I18n.format(PathHelper.full("gui.villagermain.button.lock.title")),
+                        I18n.format(PathHelper.full("gui.villagermain.button.lock.desc")));
+            else
+                this.drawButtonHoverText(this.buttonUpgrade, mouseX, mouseY,
+                        I18n.format(PathHelper.full("gui.villagermain.button.maxupgrade.title")),
+                        I18n.format(PathHelper.full("gui.villagermain.button.maxupgrade.desc")));
+        }
 
-	private void drawButtonHoverText(GuiButton button, int mouseX, int mouseY, String title, String desc){	
-		if(GuiHelper.isPointInRegion(button.xPosition, button.yPosition, button.width, button.height, mouseX, mouseY)){
-			ArrayList<String> list = new ArrayList<>();
+        if (this.buttonQuest.enabled) {
+            this.drawButtonHoverText(this.buttonQuest, mouseX, mouseY,
+                    I18n.format(PathHelper.full("gui.villagermain.button.newquest.title")),
+                    I18n.format(PathHelper.full("gui.villagermain.button.newquest.desc")));
+        }
 
-			list.add(title);
+    }
 
-			list.add(desc);
+    private void drawButtonHoverText(GuiButton button, int mouseX, int mouseY, String title, String desc) {
+        if (GuiHelper.isPointInRegion(button.xPosition, button.yPosition, button.width, button.height, mouseX, mouseY)) {
+            ArrayList<String> list = new ArrayList<>();
 
-			this.drawHoveringText(list, mouseX, mouseY, this.fontRendererObj);
-		}
-	}
-	
-	@Override
-	protected void actionPerformed(@Nonnull GuiButton button) throws IOException {
-		if(button == buttonUpgrade){
-			ModNetwork.getInstance().sendToServer(
-			        new MessageGuiVillagerOpen(GuiIDs.VillagerUpgrading,villager.dimension,villager.getEntityId())
+            list.add(title);
+
+            list.add(desc);
+
+            this.drawHoveringText(list, mouseX, mouseY, this.fontRendererObj);
+        }
+    }
+
+    @Override
+    protected void actionPerformed(@Nonnull GuiButton button) throws IOException {
+        if (button == buttonUpgrade) {
+            ModNetwork.getInstance().sendToServer(
+                    new MessageGuiVillagerOpen(GuiIDs.VillagerUpgrading, villager.dimension, villager.getEntityId())
             );
-		} else if(button == buttonTrade){
-			ModNetwork.getInstance().sendToServer(
-			        new MessageGuiVillagerOpen(GuiIDs.VillagerTrading,villager.dimension,villager.getEntityId())
+        } else if (button == buttonTrade) {
+            ModNetwork.getInstance().sendToServer(
+                    new MessageGuiVillagerOpen(GuiIDs.VillagerTrading, villager.dimension, villager.getEntityId())
             );
-		} else if(button == buttonFollow){
-			boolean enable = !this.villager.isFollowing();
-			ModNetwork.getInstance().sendToServer(
-			        new MessageGuiSetFollowing(this.villager.getEntityId(), this.villager.dimension, enable)
+        } else if (button == buttonFollow) {
+            boolean enable = !this.villager.isFollowing();
+            ModNetwork.getInstance().sendToServer(
+                    new MessageGuiSetFollowing(this.villager.getEntityId(), this.villager.dimension, enable)
             );
-		} else if(button == buttonHome){
-			ModNetwork.getInstance().sendToServer(
-			        new MessageGuiSetHome(this.villager.getEntityId(), this.villager.dimension,!this.villager.hasHome())
+        } else if (button == buttonHome) {
+            ModNetwork.getInstance().sendToServer(
+                    new MessageGuiSetHome(this.villager.getEntityId(), this.villager.dimension, !this.villager.hasHome())
             );
-		} else if(button == buttonQuest){
-			ModNetwork.getInstance().sendToServer(
-			        new MessageGuiVillagerOpen(GuiIDs.VillagerQuest,villager.dimension,villager.getEntityId())
+        } else if (button == buttonQuest) {
+            ModNetwork.getInstance().sendToServer(
+                    new MessageGuiVillagerOpen(GuiIDs.VillagerQuest, villager.dimension, villager.getEntityId())
             );
-		}
-		
-		super.actionPerformed(button);
-	}
+        }
 
-	@Override
-	protected void keyTyped(char typedChar, int keyCode) throws IOException {
-		super.keyTyped(typedChar, keyCode);
-		
-		if (keyCode == 1 || keyCode == this.mc.gameSettings.keyBindInventory.getKeyCode()){
-			ModNetwork.getInstance().sendToServer(new MessageGuiSetInteracting(this.villager.getEntityId(), this.villager.dimension, false));
-		}
-	}
+        super.actionPerformed(button);
+    }
 
-	@Override
-	public void updateScreen() {
-		super.updateScreen();
-		
-		this.updateChatContent();
-		this.refreshButtons(); 
-		
-		this.isFollowingLast = this.villager.isFollowing();
+    @Override
+    protected void keyTyped(char typedChar, int keyCode) throws IOException {
+        super.keyTyped(typedChar, keyCode);
+
+        if (keyCode == 1 || keyCode == this.mc.gameSettings.keyBindInventory.getKeyCode()) {
+            ModNetwork.getInstance().sendToServer(new MessageGuiSetInteracting(this.villager.getEntityId(), this.villager.dimension, false));
+        }
+    }
+
+    @Override
+    public void updateScreen() {
+        super.updateScreen();
+
+        this.updateChatContent();
+        this.refreshButtons();
+
+        this.isFollowingLast = this.villager.isFollowing();
         this.hasHomeLast = this.villager.hasHome();
-	}	
-	
-	@SideOnly(Side.CLIENT)
-    static class QuestButton extends GuiButton
-    {
-		
-        public QuestButton(int buttonID, int x, int y)
-        {
+    }
+
+    @SideOnly(Side.CLIENT)
+    static class QuestButton extends GuiButton {
+
+        public QuestButton(int buttonID, int x, int y) {
             super(buttonID, x, y, 16, 16, "");
         }
 
         /**
          * Draws this button to the screen.
          */
-        public void drawButton(@Nonnull Minecraft minecraft, int mouseX, int mouseY)
-        {
-            if (this.visible && this.enabled)
-            {
+        public void drawButton(@Nonnull Minecraft minecraft, int mouseX, int mouseY) {
+            if (this.visible && this.enabled) {
                 minecraft.getTextureManager().bindTexture(VillagerMainGuiTexture);
 
                 GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
@@ -330,14 +316,13 @@ public class GuiVillagerMain
                 int x = 176;
                 int y = 0;
 
-                if (flag)
-                {
+                if (flag) {
                     x += this.width;
                 }
-                
+
                 this.drawTexturedModalRect(this.xPosition, this.yPosition, x, y, this.width, this.height);
             }
         }
     }
-	
+
 }

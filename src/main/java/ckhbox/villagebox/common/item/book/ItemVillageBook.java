@@ -15,23 +15,23 @@ import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
 
-public class ItemVillageBook extends Item{
-	
-	public ItemVillageBook(){
-		this.setUnlocalizedName(PathHelper.full("villageBook"));
-		this.setCreativeTab(ModItems.tabVB);
-		this.setMaxStackSize(1);
-	}
-	
-	@Override
-	public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn, EnumHand hand) {
-		
-		if(!worldIn.isRemote){
-			playerIn.openGui(VillageBoxMod.instance, GuiIDs.VillageBook, worldIn, 0, 0, 0);
-		}
-		
-		return new ActionResult(EnumActionResult.SUCCESS, itemStackIn);
-	}
-	
-	
+public class ItemVillageBook extends Item {
+
+    public ItemVillageBook() {
+        this.setUnlocalizedName(PathHelper.full("villageBook"));
+        this.setCreativeTab(ModItems.tabVB);
+        this.setMaxStackSize(1);
+    }
+
+    @Override
+    public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn, EnumHand hand) {
+
+        if (!worldIn.isRemote) {
+            playerIn.openGui(VillageBoxMod.instance, GuiIDs.VillageBook, worldIn, 0, 0, 0);
+        }
+
+        return new ActionResult(EnumActionResult.SUCCESS, itemStackIn);
+    }
+
+
 }

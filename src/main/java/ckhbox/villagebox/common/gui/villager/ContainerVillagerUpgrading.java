@@ -15,15 +15,15 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class ContainerVillagerUpgrading extends Container
-{
-    private EntityVillager villager;
-    private InventoryUpgrading upgradingInventory;	
-    /** Instance of World. */
+public class ContainerVillagerUpgrading extends Container {
+    /**
+     * Instance of World.
+     */
     private final World world;
+    private EntityVillager villager;
+    private InventoryUpgrading upgradingInventory;
 
-    public ContainerVillagerUpgrading(InventoryPlayer playerInventory, EntityVillager villager, World world)
-    {
+    public ContainerVillagerUpgrading(InventoryPlayer playerInventory, EntityVillager villager, World world) {
         this.villager = villager;
         this.world = world;
         this.upgradingInventory = new InventoryUpgrading(playerInventory.player, villager);
@@ -31,103 +31,81 @@ public class ContainerVillagerUpgrading extends Container
         this.addSlotToContainer(new Slot(this.upgradingInventory, 1, 38, 49));
         this.addSlotToContainer(new Slot(this.upgradingInventory, 2, 56, 49));
 
-        for (int i = 0; i < 3; ++i)
-        {
-            for (int j = 0; j < 9; ++j)
-            {
+        for (int i = 0; i < 3; ++i) {
+            for (int j = 0; j < 9; ++j) {
                 this.addSlotToContainer(new Slot(playerInventory, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
             }
         }
 
-        for (int k = 0; k < 9; ++k)
-        {
+        for (int k = 0; k < 9; ++k) {
             this.addSlotToContainer(new Slot(playerInventory, k, 8 + k * 18, 142));
         }
     }
 
-    public InventoryUpgrading getUpgradingInventory()
-    {
+    public InventoryUpgrading getUpgradingInventory() {
         return this.upgradingInventory;
     }
 
     /**
      * Looks for changes made in the container, sends them to every listener.
      */
-    public void detectAndSendChanges()
-    {
+    public void detectAndSendChanges() {
         super.detectAndSendChanges();
     }
 
     /**
      * Callback for when the crafting matrix is changed.
      */
-    public void onCraftMatrixChanged(IInventory inventoryIn)
-    {
+    public void onCraftMatrixChanged(IInventory inventoryIn) {
         this.upgradingInventory.resetUpgradeOptionAndSlots();
         super.onCraftMatrixChanged(inventoryIn);
     }
 
-    public void setCurrentUpgradeOptionIndex(int currentUpgradeOptionIndex)
-    {
-       this.upgradingInventory.setCurrentUpgradeOptionIndex(currentUpgradeOptionIndex);
+    public void setCurrentUpgradeOptionIndex(int currentUpgradeOptionIndex) {
+        this.upgradingInventory.setCurrentUpgradeOptionIndex(currentUpgradeOptionIndex);
     }
 
     @SideOnly(Side.CLIENT)
-    public void updateProgressBar(int id, int data)
-    {
+    public void updateProgressBar(int id, int data) {
     }
 
-    public boolean canInteractWith(EntityPlayer playerIn)
-    {
+    public boolean canInteractWith(EntityPlayer playerIn) {
         return this.upgradingInventory.isUseableByPlayer(playerIn);
     }
 
-    public void upgrade(){
-    	this.upgradingInventory.upgrade();
+    public void upgrade() {
+        this.upgradingInventory.upgrade();
     }
-    
+
     @Override
-    public ItemStack transferStackInSlot(EntityPlayer playerIn, int index)
-    {
-    	//NEED CHANGES
+    public ItemStack transferStackInSlot(EntityPlayer playerIn, int index) {
+        //NEED CHANGES
         ItemStack itemstack = null;
-        Slot slot = (Slot)this.inventorySlots.get(index);
-        
-        if (slot != null && slot.getHasStack())
-        {
+        Slot slot = (Slot) this.inventorySlots.get(index);
+
+        if (slot != null && slot.getHasStack()) {
             ItemStack itemstack1 = slot.getStack();
             itemstack = itemstack1.copy();
-            
-            if (index >= 3)
-            {
-                if (index >= 3 && index < 30)
-                {
-                    if (!this.mergeItemStack(itemstack1, 30, 39, false))
-                    {
+
+            if (index >= 3) {
+                if (index >= 3 && index < 30) {
+                    if (!this.mergeItemStack(itemstack1, 30, 39, false)) {
                         return null;
                     }
-                }
-                else if (index >= 30 && index < 39 && !this.mergeItemStack(itemstack1, 3, 30, false))
-                {
+                } else if (index >= 30 && index < 39 && !this.mergeItemStack(itemstack1, 3, 30, false)) {
                     return null;
                 }
-            }
-            else if (!this.mergeItemStack(itemstack1, 3, 39, false))
-            {
+            } else if (!this.mergeItemStack(itemstack1, 3, 39, false)) {
                 return null;
             }
 
-            if (itemstack1.stackSize == 0)
-            {
-                slot.putStack((ItemStack)null);
-            }
-            else
-            {
+            if (itemstack1.stackSize == 0) {
+                slot.putStack((ItemStack) null);
+            } else {
                 slot.onSlotChanged();
             }
 
-            if (itemstack1.stackSize == itemstack.stackSize)
-            {
+            if (itemstack1.stackSize == itemstack.stackSize) {
                 return null;
             }
 
@@ -140,21 +118,18 @@ public class ContainerVillagerUpgrading extends Container
     /**
      * Called when the container is closed.
      */
-    public void onContainerClosed(EntityPlayer playerIn)
-    {
+    public void onContainerClosed(EntityPlayer playerIn) {
         super.onContainerClosed(playerIn);
-    
-        if (!this.world.isRemote)
-        {
-        	playerIn.inventoryContainer.detectAndSendChanges();
-        	for(int i =0;i<3;i++){
-        		if (this.upgradingInventory.getStackInSlot(i) != null)
-                {
-        			if(!playerIn.inventory.addItemStackToInventory(this.upgradingInventory.getStackInSlot(i)))
-        				playerIn.dropItem(this.upgradingInventory.getStackInSlot(i), false);
+
+        if (!this.world.isRemote) {
+            playerIn.inventoryContainer.detectAndSendChanges();
+            for (int i = 0; i < 3; i++) {
+                if (this.upgradingInventory.getStackInSlot(i) != null) {
+                    if (!playerIn.inventory.addItemStackToInventory(this.upgradingInventory.getStackInSlot(i)))
+                        playerIn.dropItem(this.upgradingInventory.getStackInSlot(i), false);
                 }
-        	}
-        	playerIn.inventoryContainer.detectAndSendChanges();
+            }
+            playerIn.inventoryContainer.detectAndSendChanges();
         }
     }
 }

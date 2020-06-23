@@ -9,43 +9,43 @@ import net.minecraft.client.Minecraft;
 import java.util.List;
 
 public abstract class Link {
-	public int left;
-	public int top;
-	public int width;
-	public int height;
-	public String link;
-	public Page page;
-	public Minecraft mc;
-	public List<String> tooltips;
-	
-	public Link(Page page, String link, List<String> tooltips) {
-		this.link = link;
+    public int left;
+    public int top;
+    public int width;
+    public int height;
+    public String link;
+    public Page page;
+    public Minecraft mc;
+    public List<String> tooltips;
 
-		this.page = page;
+    public Link(Page page, String link, List<String> tooltips) {
+        this.link = link;
 
-		this.tooltips = tooltips;
+        this.page = page;
 
-		this.mc = this.page.guiVillageBook.mc;
-	}
-	
-	public boolean isMouseHover(int mouseX, int mouseY) {
+        this.tooltips = tooltips;
+
+        this.mc = this.page.guiVillageBook.mc;
+    }
+
+    public boolean isMouseHover(int mouseX, int mouseY) {
         return mouseX > this.left &&
                 mouseX < this.left + this.width &&
                 mouseY > this.top &&
                 mouseY < this.top + this.height;
     }
-	
-	public void onDraw(int mouseX, int mouseY) {
-		
-	}
-	
-	public void onDrawHover(int mouseX, int mouseY) {
-		
-	}
-	
-	public void onDrawToolTip(int mouseX, int mouseY) {
-		if (this.tooltips != null) {
-			this.page.guiVillageBook.drawHoveringText(this.tooltips, mouseX, mouseY);
-		}
-	}
+
+    public void onDraw(int mouseX, int mouseY) {
+
+    }
+
+    public void onDrawHover(int mouseX, int mouseY) {
+
+    }
+
+    public void onDrawToolTip(int mouseX, int mouseY) {
+        if (this.tooltips != null) {
+            this.page.guiVillageBook.drawHoveringText(this.tooltips, mouseX, mouseY);
+        }
+    }
 }

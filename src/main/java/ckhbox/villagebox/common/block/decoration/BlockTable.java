@@ -9,13 +9,10 @@ import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.EnumDyeColor;
 
-public class BlockTable extends Block{
-	
-	public BlockTable(String name)
-	{
+public class BlockTable extends Block {
+
+    public BlockTable(String name) {
         super(Material.WOOD);
         this.setUnlocalizedName(PathHelper.full(name));
         this.setCreativeTab(ModItems.tabVB);
@@ -23,10 +20,9 @@ public class BlockTable extends Block{
         this.setSoundType(SoundType.WOOD);
     }
 
-	@Override
-    public boolean isOpaqueCube(IBlockState state)
-    {
+    @Override
+    public boolean isOpaqueCube(IBlockState state) {
         return false;
     }
-	
+
 }

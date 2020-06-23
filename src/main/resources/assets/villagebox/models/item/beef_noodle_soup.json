@@ -1,6 +1,6 @@
 {
-    "parent": "item/generated",
-    "textures": {
-        "layer0": "villagebox:items/beef_noodle_soup"
-    }
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "villagebox:items/beef_noodle_soup"
+  }
 }

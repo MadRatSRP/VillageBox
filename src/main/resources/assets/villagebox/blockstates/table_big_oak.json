@@ -1,5 +1,7 @@
 {
-    "variants": {
-        "normal": { "model": "villagebox:table_big_oak" }
+  "variants": {
+    "normal": {
+      "model": "villagebox:table_big_oak"
     }
+  }
 }

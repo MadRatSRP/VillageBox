@@ -1,5 +1,7 @@
 {
-    "variants": {
-        "normal": { "model": "villagebox:carpet_2" }
+  "variants": {
+    "normal": {
+      "model": "villagebox:carpet_2"
     }
+  }
 }

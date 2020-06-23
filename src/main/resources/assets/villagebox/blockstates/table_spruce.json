@@ -1,5 +1,7 @@
 {
-    "variants": {
-        "normal": { "model": "villagebox:table_spruce" }
+  "variants": {
+    "normal": {
+      "model": "villagebox:table_spruce"
     }
+  }
 }

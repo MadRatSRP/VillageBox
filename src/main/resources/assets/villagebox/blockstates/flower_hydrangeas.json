@@ -1,5 +1,7 @@
 {
-    "variants": {
-        "normal": { "model": "villagebox:flower_hydrangeas" }
+  "variants": {
+    "normal": {
+      "model": "villagebox:flower_hydrangeas"
     }
+  }
 }

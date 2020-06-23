@@ -1,5 +1,7 @@
 {
-    "variants": {
-        "normal": { "model": "villagebox:flower_rosyspiraea" }
+  "variants": {
+    "normal": {
+      "model": "villagebox:flower_rosyspiraea"
     }
+  }
 }

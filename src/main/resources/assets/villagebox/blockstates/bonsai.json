@@ -1,5 +1,7 @@
 {
-    "variants": {
-        "normal": { "model": "villagebox:bonsai" }
+  "variants": {
+    "normal": {
+      "model": "villagebox:bonsai"
     }
+  }
 }

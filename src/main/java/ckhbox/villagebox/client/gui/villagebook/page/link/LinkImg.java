@@ -10,59 +10,59 @@ import net.minecraft.util.ResourceLocation;
 import java.util.List;
 
 public class LinkImg
-        extends Link{
-	public int coordX;
+        extends Link {
+    public int coordX;
 
-	public int coordY;
+    public int coordY;
 
-	public int hoverOffsetX;
+    public int hoverOffsetX;
 
-	public int hoverOffsetY;
+    public int hoverOffsetY;
 
-	public ResourceLocation resource;
-	
-	public LinkImg(Page page, ResourceLocation resource, int coordX, int coordY, int hoverOffsetX,
-                   int hoverOffsetY, int width, int height, String link, List<String> tooltips){
-		super(page,link,tooltips);
+    public ResourceLocation resource;
 
-		this.coordX = coordX;
+    public LinkImg(Page page, ResourceLocation resource, int coordX, int coordY, int hoverOffsetX,
+                   int hoverOffsetY, int width, int height, String link, List<String> tooltips) {
+        super(page, link, tooltips);
 
-		this.coordY = coordY;
+        this.coordX = coordX;
 
-		this.hoverOffsetX = hoverOffsetX;
+        this.coordY = coordY;
 
-		this.hoverOffsetY = hoverOffsetY;
+        this.hoverOffsetX = hoverOffsetX;
 
-		this.width = width;
+        this.hoverOffsetY = hoverOffsetY;
 
-		this.height = height;
+        this.width = width;
 
-		this.resource = resource;
-	}
-	
-	public void onDraw(int mouseX, int mouseY) {
-		GlStateManager.disableLighting();
+        this.height = height;
 
-		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        this.resource = resource;
+    }
 
-        this.mc.getTextureManager().bindTexture(this.resource);
+    public void onDraw(int mouseX, int mouseY) {
+        GlStateManager.disableLighting();
 
-		this.page.guiVillageBook.drawTexturedModalRect(this.left, this.top, this.coordX, this.coordY, this.width, this.height);
-
-		GlStateManager.enableLighting();
-	}
-	
-	public void onDrawHover(int mouseX, int mouseY) {
-		GlStateManager.disableLighting();
-
-		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
         this.mc.getTextureManager().bindTexture(this.resource);
 
-		this.page.guiVillageBook.drawTexturedModalRect(this.left, this.top,
+        this.page.guiVillageBook.drawTexturedModalRect(this.left, this.top, this.coordX, this.coordY, this.width, this.height);
+
+        GlStateManager.enableLighting();
+    }
+
+    public void onDrawHover(int mouseX, int mouseY) {
+        GlStateManager.disableLighting();
+
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+
+        this.mc.getTextureManager().bindTexture(this.resource);
+
+        this.page.guiVillageBook.drawTexturedModalRect(this.left, this.top,
                 this.coordX + this.hoverOffsetX,
                 this.coordY + this.hoverOffsetY, this.width, this.height);
 
-		GlStateManager.enableLighting();
-	}
+        GlStateManager.enableLighting();
+    }
 }

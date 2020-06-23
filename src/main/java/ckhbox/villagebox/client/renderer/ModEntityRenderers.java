@@ -17,11 +17,11 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class ModEntityRenderers {
-	public static void init(){
-		RenderingRegistry.registerEntityRenderingHandler(EntityVillager.class, new RenderFactoryVillager());
-		RenderingRegistry.registerEntityRenderingHandler(EntityFlameBall.class, new RenderFactoryFlameBall());
-		RenderingRegistry.registerEntityRenderingHandler(EntityLargeSnowBall.class, new RenderFactoryLargeSnowBall());
-		RenderingRegistry.registerEntityRenderingHandler(EntityPainting.class, new RenderFactoryPainting());
-	}
+    public static void init() {
+        RenderingRegistry.registerEntityRenderingHandler(EntityVillager.class, new RenderFactoryVillager());
+        RenderingRegistry.registerEntityRenderingHandler(EntityFlameBall.class, new RenderFactoryFlameBall());
+        RenderingRegistry.registerEntityRenderingHandler(EntityLargeSnowBall.class, new RenderFactoryLargeSnowBall());
+        RenderingRegistry.registerEntityRenderingHandler(EntityPainting.class, new RenderFactoryPainting());
+    }
 
 }

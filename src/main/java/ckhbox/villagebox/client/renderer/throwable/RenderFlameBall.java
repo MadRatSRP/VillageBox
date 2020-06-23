@@ -12,9 +12,9 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class RenderFlameBall extends RenderSnowball<EntityFlameBall>{
+public class RenderFlameBall extends RenderSnowball<EntityFlameBall> {
 
-	public RenderFlameBall(RenderManager renderManagerIn, Item p_i46137_2_, RenderItem p_i46137_3_) {
-		super(renderManagerIn, p_i46137_2_, p_i46137_3_);
-	}
+    public RenderFlameBall(RenderManager renderManagerIn, Item p_i46137_2_, RenderItem p_i46137_3_) {
+        super(renderManagerIn, p_i46137_2_, p_i46137_3_);
+    }
 }

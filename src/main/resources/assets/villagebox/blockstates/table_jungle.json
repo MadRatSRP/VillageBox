@@ -1,5 +1,7 @@
 {
-    "variants": {
-        "normal": { "model": "villagebox:table_jungle" }
+  "variants": {
+    "normal": {
+      "model": "villagebox:table_jungle"
     }
+  }
 }

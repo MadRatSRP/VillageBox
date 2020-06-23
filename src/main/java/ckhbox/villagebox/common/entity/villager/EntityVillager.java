@@ -55,73 +55,68 @@ import java.util.List;
 
 public class EntityVillager
         extends EntityCreature
-        implements ITrading, IQuestProvider{
-	private static final DataParameter<Integer> PROFESSIONID = EntityDataManager.createKey(EntityVillager.class, DataSerializers.VARINT);
+        implements ITrading, IQuestProvider {
+    private static final DataParameter<Integer> PROFESSIONID = EntityDataManager.createKey(EntityVillager.class, DataSerializers.VARINT);
 
     private static final DataParameter<Integer> FLAGS = EntityDataManager.createKey(EntityVillager.class, DataSerializers.VARINT);
 
     private static final DataParameter<Integer> QUEST = EntityDataManager.createKey(EntityVillager.class, DataSerializers.VARINT);
-	
-	private Profession profession;
+    // the upgrading history
+    private final List<Integer> upgradingHistory = new ArrayList<>(Collections.singletonList(99999));//99999:caveman
+    //----------------------------------
+    //upgrading preview
+    @SideOnly(Side.CLIENT)
+    public Profession previewProfession;
+    private Profession profession;
+    // the player this villager is currently interacting with
+    private EntityPlayer interacting;
+    private EntityPlayer following;
+    private IntBoundary home;
+    // the canter of wandering when no home has been set to this villager
+    private Vec3d wanderCenter;
 
-	// the player this villager is currently interacting with
-	private EntityPlayer interacting;
+    public EntityVillager(World worldIn) {
+        this(worldIn, Rand.get().nextBoolean());
+    }
 
-	private EntityPlayer following;
-	
-	private IntBoundary home;
-	
-	// the canter of wandering when no home has been set to this villager
-	private Vec3d wanderCenter;
-	
-	// the upgrading history
-	private final List<Integer> upgradingHistory = new ArrayList<>(Collections.singletonList(99999));//99999:caveman
-	
-	public EntityVillager(World worldIn){
-		this(worldIn, Rand.get().nextBoolean());
-	}
-	
-	public EntityVillager(World worldIn, boolean male){
-		this(worldIn, male?NameGenerator.getRandomMaleName():NameGenerator.getRandomFemaleName(), male);
-	}
-	
-	public EntityVillager(World worldIn, String name, boolean male) {
-		super(worldIn);		
-		
-		this.setSize(0.6F, 1.8F);
-		
-		if(!this.worldObj.isRemote){
-			this.setProfession(Rand.get().nextInt(3));
-		}
-		
-		this.setGender(male);
-		
-		if(!this.hasCustomName()){
-			this.setCustomNameTag(name);
-		}
-		
-		this.initAI();
-	}
-	
-	
-
-	@Nonnull
-	@Override
-	public EntityJumpHelper getJumpHelper() {
-		// TODO Auto-generated method stub
-		return super.getJumpHelper();
-	}
+    public EntityVillager(World worldIn, boolean male) {
+        this(worldIn, male ? NameGenerator.getRandomMaleName() : NameGenerator.getRandomFemaleName(), male);
+    }
 
 
+    public EntityVillager(World worldIn, String name, boolean male) {
+        super(worldIn);
 
-	@Override
-	protected float getJumpUpwardsMotion() {
-		// TODO Auto-generated method stub
-		return super.getJumpUpwardsMotion();
-	}
+        this.setSize(0.6F, 1.8F);
 
-	protected void initAI(){
-		((PathNavigateGround) this.getNavigator()).setBreakDoors(true);
+        if (!this.worldObj.isRemote) {
+            this.setProfession(Rand.get().nextInt(3));
+        }
+
+        this.setGender(male);
+
+        if (!this.hasCustomName()) {
+            this.setCustomNameTag(name);
+        }
+
+        this.initAI();
+    }
+
+    @Nonnull
+    @Override
+    public EntityJumpHelper getJumpHelper() {
+        // TODO Auto-generated method stub
+        return super.getJumpHelper();
+    }
+
+    @Override
+    protected float getJumpUpwardsMotion() {
+        // TODO Auto-generated method stub
+        return super.getJumpUpwardsMotion();
+    }
+
+    protected void initAI() {
+        ((PathNavigateGround) this.getNavigator()).setBreakDoors(true);
 
         this.tasks.addTask(0, new EntityAISwimming(this));
 
@@ -131,7 +126,7 @@ public class EntityVillager
 
         this.tasks.addTask(4, new EntityAIOpenDoor(this, true));
 
-        this.tasks.addTask(5, new VillagerAIFollowing(this,0.6F));
+        this.tasks.addTask(5, new VillagerAIFollowing(this, 0.6F));
 
         this.tasks.addTask(5, new EntityAIMoveTowardsRestriction(this, 0.3D));
 
@@ -140,64 +135,59 @@ public class EntityVillager
         this.tasks.addTask(9, new VillagerAIWander(this, 0.4D));
 
         this.tasks.addTask(10, new EntityAIWatchClosest(this, EntityLiving.class, 8.0F));
-	}
+    }
 
-	protected void applyEntityAttributes()
-    {
+    protected void applyEntityAttributes() {
         super.applyEntityAttributes();
         this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.5D);
     }
-	
-	@Override
-	protected void entityInit() {
-		super.entityInit();
-		// profession id
-		this.getDataManager().register(PROFESSIONID, 0);
 
-		// data flags(interacting.following,etc.)
-		this.getDataManager().register(FLAGS, 0);
+    @Override
+    protected void entityInit() {
+        super.entityInit();
+        // profession id
+        this.getDataManager().register(PROFESSIONID, 0);
 
-		// quest
-		this.getDataManager().register(QUEST, -1);
-	}
+        // data flags(interacting.following,etc.)
+        this.getDataManager().register(FLAGS, 0);
 
-	
-	@Override
-	protected boolean processInteract(EntityPlayer player,
+        // quest
+        this.getDataManager().register(QUEST, -1);
+    }
+
+    @Override
+    protected boolean processInteract(EntityPlayer player,
                                       @Nonnull EnumHand hand,
                                       ItemStack stack) {
-		if (!player.worldObj.isRemote) {
-			if(	(this.isInteracting() && this.interacting.isEntityAlive() && this.interacting != player) ||
-				(this.isFollowing() && this.following.isEntityAlive() && this.following != player)){
-				player.addChatMessage(new TextComponentTranslation(PathHelper.full("message.villager.isbusy")));
-			} else{
-				ItemStack itemstack = player.inventory.getCurrentItem();
+        if (!player.worldObj.isRemote) {
+            if ((this.isInteracting() && this.interacting.isEntityAlive() && this.interacting != player) ||
+                    (this.isFollowing() && this.following.isEntityAlive() && this.following != player)) {
+                player.addChatMessage(new TextComponentTranslation(PathHelper.full("message.villager.isbusy")));
+            } else {
+                ItemStack itemstack = player.inventory.getCurrentItem();
 
-				if(itemstack != null && (itemstack.getItem() == ModItems.resetScroll || itemstack.getItem() == ModItems.dismissalScroll) && itemstack.stackSize > 0){
-					//if the player is using a reset or a dismissal scroll
-					if((itemstack.getItem() == ModItems.resetScroll && this.downgrade()) || 
-						(itemstack.getItem() == ModItems.dismissalScroll && this.dismiss(player))){
-						this.consumeItemFromStack(player,itemstack);
-					}
-				} else{
-					player.openGui(VillageBoxMod.instance, GuiIDs.VillagerMain, player.worldObj, player.dimension, this.getEntityId(), 0);
-					//collections
-					this.addProIDToCollections(player);
-				}
-			}
-		}
-		
-		return true;
-	}
-	
-    protected void consumeItemFromStack(EntityPlayer player, ItemStack stack)
-    {
-        if (!player.capabilities.isCreativeMode)
-        {
+                if (itemstack != null && (itemstack.getItem() == ModItems.resetScroll || itemstack.getItem() == ModItems.dismissalScroll) && itemstack.stackSize > 0) {
+                    //if the player is using a reset or a dismissal scroll
+                    if ((itemstack.getItem() == ModItems.resetScroll && this.downgrade()) ||
+                            (itemstack.getItem() == ModItems.dismissalScroll && this.dismiss(player))) {
+                        this.consumeItemFromStack(player, itemstack);
+                    }
+                } else {
+                    player.openGui(VillageBoxMod.instance, GuiIDs.VillagerMain, player.worldObj, player.dimension, this.getEntityId(), 0);
+                    //collections
+                    this.addProIDToCollections(player);
+                }
+            }
+        }
+
+        return true;
+    }
+
+    protected void consumeItemFromStack(EntityPlayer player, ItemStack stack) {
+        if (!player.capabilities.isCreativeMode) {
             --stack.stackSize;
 
-            if (stack.stackSize <= 0)
-            {
+            if (stack.stackSize <= 0) {
                 player.inventory.setInventorySlotContents(
                         player.inventory.currentItem,
                         null
@@ -206,175 +196,169 @@ public class EntityVillager
         }
     }
 
-	@Override
-	public TradingRecipeList getTradingRecipeList() {
-		return this.profession.getTradingRecipeList();
-	}
-	
-	@Override
-	public void onTrade() {
-	}
-	
-	public Vec3d getWanderCenter(){
-		if(this.wanderCenter == null){
-			this.wanderCenter = new Vec3d(this.posX, this.posY, this.posZ);
-		}
-		return this.wanderCenter;
-	}
-	
-	//data flags
-	
-	/**
-	 * POS: 0=Interacting, 1=Following, 2=Has Home
-	 */
-	protected void setDataFlag(int pos, boolean flag){
-		int data = this.getDataManager().get(FLAGS);
+    @Override
+    public TradingRecipeList getTradingRecipeList() {
+        return this.profession.getTradingRecipeList();
+    }
 
-		data = BitHelper.writeBit(data, pos, flag);
+    @Override
+    public void onTrade() {
+    }
 
-		this.getDataManager().set(FLAGS, data);
-	}
-	
-	/**
-	 * POS: 0=Interacting, 1=Following, 2=Has Home, 3 gender
-	 */
-	protected boolean getDataFlag(int pos){
-		int data = this.getDataManager().get(FLAGS);
+    //data flags
 
-		return BitHelper.readBit(data, pos);
-	}
-	
-	// gender
-	public void setGender(boolean male){
-		this.setDataFlag(3, male);
-	}
-	
-	public boolean isMale(){
-		return this.getDataFlag(3);
-	}
-	
-	public int[] getUpgradingHistory(){
-		if (this.upgradingHistory.size() < 1)
-			return null;
-		int[] upgrades = new int[this.upgradingHistory.size()];
-		for(int i =0;i<upgrades.length;i++){
-			upgrades[i] = this.upgradingHistory.get(i);
-		}
-		return upgrades;
-	}
-	
-	public void setUpgradingHistory(int[] array){
-		this.upgradingHistory.clear();
+    public Vec3d getWanderCenter() {
+        if (this.wanderCenter == null) {
+            this.wanderCenter = new Vec3d(this.posX, this.posY, this.posZ);
+        }
+        return this.wanderCenter;
+    }
 
-		if (array != null && array.length > 0){
+    /**
+     * POS: 0=Interacting, 1=Following, 2=Has Home
+     */
+    protected void setDataFlag(int pos, boolean flag) {
+        int data = this.getDataManager().get(FLAGS);
+
+        data = BitHelper.writeBit(data, pos, flag);
+
+        this.getDataManager().set(FLAGS, data);
+    }
+
+    /**
+     * POS: 0=Interacting, 1=Following, 2=Has Home, 3 gender
+     */
+    protected boolean getDataFlag(int pos) {
+        int data = this.getDataManager().get(FLAGS);
+
+        return BitHelper.readBit(data, pos);
+    }
+
+    // gender
+    public void setGender(boolean male) {
+        this.setDataFlag(3, male);
+    }
+
+    public boolean isMale() {
+        return this.getDataFlag(3);
+    }
+
+    public int[] getUpgradingHistory() {
+        if (this.upgradingHistory.size() < 1)
+            return null;
+        int[] upgrades = new int[this.upgradingHistory.size()];
+        for (int i = 0; i < upgrades.length; i++) {
+            upgrades[i] = this.upgradingHistory.get(i);
+        }
+        return upgrades;
+    }
+
+    public void setUpgradingHistory(int[] array) {
+        this.upgradingHistory.clear();
+
+        if (array != null && array.length > 0) {
             for (int element : array) {
                 this.upgradingHistory.add(element);
             }
-		}
-	}
-	
-	// interacting and following
-	public void setInteracting(EntityPlayer player){
-		if (!this.worldObj.isRemote) {
-			this.interacting = player;
-			this.setDataFlag(0, (this.interacting != null));
-		}
-	}
-	
-	public boolean isInteracting(){
-		return this.getDataFlag(0);
-	}
+        }
+    }
 
-	public EntityPlayer getInteracting(){
-		return this.interacting;
-	}
-	
-	public void setFollowing(EntityPlayer player){
-		if (!this.worldObj.isRemote) {
-			this.following = player;
-			this.setDataFlag(1, (this.following != null));
-			this.wanderCenter = null;
-		}
-	}
-	
-	public boolean isFollowing(){
-		return this.getDataFlag(1);
-	}	
-	
-	public EntityPlayer getFollowing(){
-		return this.following;
-	}
-	
-	//set home
-	public void setCurrentPosAsHome(EntityPlayer player){
-		// server side only
-		if (this.worldObj.isRemote)
-			return;
-		
-		// scan home boundary
-		@Nullable IntBoundary bound = HouseDetector.getClosedField(this.worldObj, new IntVec3(this.posX,this.posY,this.posZ));
+    public boolean isInteracting() {
+        return this.getDataFlag(0);
+    }
 
-		if (bound == null) {
-			player.addChatMessage(new TextComponentTranslation(PathHelper.full("message.villager.home.openspace")));
-		} else{
-			// remove outlines
-			bound = bound.extend(-1,0,-1);
+    public EntityPlayer getInteracting() {
+        return this.interacting;
+    }
 
-			bound.maxy -= 1;
+    // interacting and following
+    public void setInteracting(EntityPlayer player) {
+        if (!this.worldObj.isRemote) {
+            this.interacting = player;
+            this.setDataFlag(0, (this.interacting != null));
+        }
+    }
 
-			// System.out.println(bound.toString());
-			// add home bounday
+    public boolean isFollowing() {
+        return this.getDataFlag(1);
+    }
+
+    public EntityPlayer getFollowing() {
+        return this.following;
+    }
+
+    public void setFollowing(EntityPlayer player) {
+        if (!this.worldObj.isRemote) {
+            this.following = player;
+            this.setDataFlag(1, (this.following != null));
+            this.wanderCenter = null;
+        }
+    }
+
+    //set home
+    public void setCurrentPosAsHome(EntityPlayer player) {
+        // server side only
+        if (this.worldObj.isRemote)
+            return;
+
+        // scan home boundary
+        @Nullable IntBoundary bound = HouseDetector.getClosedField(this.worldObj, new IntVec3(this.posX, this.posY, this.posZ));
+
+        if (bound == null) {
+            player.addChatMessage(new TextComponentTranslation(PathHelper.full("message.villager.home.openspace")));
+        } else {
+            // remove outlines
+            bound = bound.extend(-1, 0, -1);
+
+            bound.maxy -= 1;
+
+            // System.out.println(bound.toString());
+            // add home bounday
 
             @Nullable String oldOwner = null;
             @Nullable final DataVillage villageData = DataVillage.get(this.worldObj);
 
             if (villageData != null) {
-                oldOwner = villageData.addHome(this.getName(),bound);
+                oldOwner = villageData.addHome(this.getName(), bound);
             }
 
-			if (oldOwner != null) {
-				player.addChatMessage(
-				        new TextComponentTranslation(PathHelper.full("message.villager.home.existed"),
+            if (oldOwner != null) {
+                player.addChatMessage(
+                        new TextComponentTranslation(PathHelper.full("message.villager.home.existed"),
                                 oldOwner)
                 );
-			} else{
-				//remove old home
-				if (this.home != null) {
-				    // Are villageData in 14 lines above this and below this comment are the same?
+            } else {
+                //remove old home
+                if (this.home != null) {
+                    // Are villageData in 14 lines above this and below this comment are the same?
                     //DataVillage.get(this.worldObj).removeHome(this.getName(),home);
 
                     if (villageData != null) {
-                        villageData.removeHome(this.getName(),home);
+                        villageData.removeHome(this.getName(), home);
                     }
                 }
-				this.home = bound;
+                this.home = bound;
 
-				//stop following
-				this.setFollowing(null);
+                //stop following
+                this.setFollowing(null);
 
-				player.addChatMessage(
-				        new TextComponentTranslation(PathHelper.full("message.villager.home.movein"),
+                player.addChatMessage(
+                        new TextComponentTranslation(PathHelper.full("message.villager.home.movein"),
                                 this.getName())
                 );
 
-				//update data flag
-				this.setDataFlag(2, true);
-			}
-		}
-	}
-	
-	public void setHome(IntBoundary home){
-		this.home = home;
+                //update data flag
+                this.setDataFlag(2, true);
+            }
+        }
+    }
 
-		this.setDataFlag(2, true);
-	}
-	
-	public void moveOutHome(EntityPlayer player){
-		if (this.home != null) {
+    public void moveOutHome(EntityPlayer player) {
+        if (this.home != null) {
             @Nullable final DataVillage villageData = DataVillage.get(this.worldObj);
 
             if (villageData != null) {
-                villageData.removeHome(this.getName(),home);
+                villageData.removeHome(this.getName(), home);
 
                 this.home = null;
 
@@ -385,48 +369,54 @@ public class EntityVillager
                                 this.getName())
                 );
             }
-		}
-	}
-	
-	public IntBoundary getHome(){
-		return this.home;
-	}
-	
-	public boolean hasHome(){
-		return this.getDataFlag(2);
-	}
-	
-	// profession
-	public Profession getProfession(){
-		if (this.worldObj.isRemote && (this.profession == null
-                || this.getDataManager().get(PROFESSIONID) != this.profession.getRegID())){
-			this.profession = Profession.registry.get(this.getDataManager().get(PROFESSIONID));
+        }
+    }
 
-			this.refreshProfession();
-		}
-		return this.profession;
-	}
-	
-	public void setProfession(int proid){
-		this.getDataManager().set(PROFESSIONID, proid);
+    public IntBoundary getHome() {
+        return this.home;
+    }
 
-		this.refreshProfession();
-	}
-	
-	public void upgrade(int pid){
-		if (!this.worldObj.isRemote) {
-			TextComponentTranslation oldProName = new TextComponentTranslation(this.getProfession().getUnloalizedDisplayName());
+    public void setHome(IntBoundary home) {
+        this.home = home;
 
-			this.upgradingHistory.add(this.getProfession().getRegID());
+        this.setDataFlag(2, true);
+    }
 
-			this.setProfession(pid);
+    public boolean hasHome() {
+        return this.getDataFlag(2);
+    }
 
-			TextComponentTranslation newProName = new TextComponentTranslation(this.getProfession().getUnloalizedDisplayName());
+    // profession
+    public Profession getProfession() {
+        if (this.worldObj.isRemote && (this.profession == null
+                || this.getDataManager().get(PROFESSIONID) != this.profession.getRegID())) {
+            this.profession = Profession.registry.get(this.getDataManager().get(PROFESSIONID));
 
-			@Nullable final MinecraftServer minecraftServer = this.getServer();
+            this.refreshProfession();
+        }
+        return this.profession;
+    }
 
-			if (minecraftServer != null) {
-			    minecraftServer
+    public void setProfession(int proid) {
+        this.getDataManager().set(PROFESSIONID, proid);
+
+        this.refreshProfession();
+    }
+
+    public void upgrade(int pid) {
+        if (!this.worldObj.isRemote) {
+            TextComponentTranslation oldProName = new TextComponentTranslation(this.getProfession().getUnloalizedDisplayName());
+
+            this.upgradingHistory.add(this.getProfession().getRegID());
+
+            this.setProfession(pid);
+
+            TextComponentTranslation newProName = new TextComponentTranslation(this.getProfession().getUnloalizedDisplayName());
+
+            @Nullable final MinecraftServer minecraftServer = this.getServer();
+
+            if (minecraftServer != null) {
+                minecraftServer
                         .getPlayerList()
                         .sendChatMsg(
                                 new TextComponentTranslation(PathHelper.full("message.villager.upgrade"),
@@ -436,332 +426,324 @@ public class EntityVillager
                 // quest
                 this.removeCurrentQuest();
             }
-		}
-	}
-	
-	public boolean downgrade(){
-		if (!this.worldObj.isRemote && this.upgradingHistory.size() > 0) {
-			TextComponentTranslation oldProName = new TextComponentTranslation(this.getProfession().getUnloalizedDisplayName());
+        }
+    }
 
-			int last = this.upgradingHistory.remove(this.upgradingHistory.size() - 1);
+    public boolean downgrade() {
+        if (!this.worldObj.isRemote && this.upgradingHistory.size() > 0) {
+            TextComponentTranslation oldProName = new TextComponentTranslation(this.getProfession().getUnloalizedDisplayName());
 
-			this.setProfession(last);
+            int last = this.upgradingHistory.remove(this.upgradingHistory.size() - 1);
 
-			TextComponentTranslation newProName = new TextComponentTranslation(this.getProfession().getUnloalizedDisplayName());
+            this.setProfession(last);
 
-			@Nullable final MinecraftServer minecraftServer = this.getServer();
+            TextComponentTranslation newProName = new TextComponentTranslation(this.getProfession().getUnloalizedDisplayName());
 
-			if (minecraftServer != null) {
-			    minecraftServer
+            @Nullable final MinecraftServer minecraftServer = this.getServer();
+
+            if (minecraftServer != null) {
+                minecraftServer
                         .getPlayerList()
                         .sendChatMsg(
                                 new TextComponentTranslation(
                                         PathHelper.full("message.villager.downgrade"),
-                                        this.getName(), oldProName,newProName)
+                                        this.getName(), oldProName, newProName)
                         );
 
                 //quest
                 this.removeCurrentQuest();
             }
 
-			return true;
-		} else{
-			return false;
-		}
-	}
-	
-	public boolean dismiss(EntityPlayer player){
-		if (!this.worldObj.isRemote) {
-			this.moveOutHome(player);
+            return true;
+        } else {
+            return false;
+        }
+    }
 
-			this.worldObj.removeEntity(this);
+    public boolean dismiss(EntityPlayer player) {
+        if (!this.worldObj.isRemote) {
+            this.moveOutHome(player);
 
-			@Nullable final MinecraftServer minecraftServer = this.getServer();
+            this.worldObj.removeEntity(this);
 
-			if (minecraftServer != null) {
-			    minecraftServer
+            @Nullable final MinecraftServer minecraftServer = this.getServer();
+
+            if (minecraftServer != null) {
+                minecraftServer
                         .getPlayerList()
                         .sendChatMsg(
                                 new TextComponentTranslation(PathHelper.full("message.villager.dismiss"),
-                                        player.getName(),this.getName(),
+                                        player.getName(), this.getName(),
                                         new TextComponentTranslation(this.getProfession().getUnloalizedDisplayName()))
                         );
             }
 
-			return true;
-		} else{
-			return false;
-		}
-	}
+            return true;
+        } else {
+            return false;
+        }
+    }
 
-	@Nonnull
-	public String getName(){
-		return this.getCustomNameTag();
-	}
+    @Nonnull
+    public String getName() {
+        return this.getCustomNameTag();
+    }
 
-	@Override
-	public void onUpdate() {
-		super.onUpdate();
+    @Override
+    public void onUpdate() {
+        super.onUpdate();
 
-		//update profession
-		if (this.worldObj.isRemote
+        //update profession
+        if (this.worldObj.isRemote
                 && (this.profession == null || this.getDataManager().get(PROFESSIONID) != this.profession.getRegID())) {
-			this.setProfession(this.getDataManager().get(PROFESSIONID));
-		}
+            this.setProfession(this.getDataManager().get(PROFESSIONID));
+        }
 
-		//update quest
-		if(!this.worldObj.isRemote){
-			this.updateQuest();
-		}
-	}
-	
-	@Override
-	public void onDeath(@Nonnull DamageSource cause) {
-		super.onDeath(cause);
+        //update quest
+        if (!this.worldObj.isRemote) {
+            this.updateQuest();
+        }
+    }
 
-		if (!this.worldObj.isRemote) {
-		    @Nullable final DataVillage villageData = DataVillage.get(this.worldObj);
+    @Override
+    public void onDeath(@Nonnull DamageSource cause) {
+        super.onDeath(cause);
 
-		    if (villageData != null) {
-		        villageData.addDeadVillager(this);
+        if (!this.worldObj.isRemote) {
+            @Nullable final DataVillage villageData = DataVillage.get(this.worldObj);
 
-		        @Nullable final MinecraftServer minecraftServer = this.getServer();
+            if (villageData != null) {
+                villageData.addDeadVillager(this);
+
+                @Nullable final MinecraftServer minecraftServer = this.getServer();
                 @Nullable PlayerList listOfPlayers = null;
 
-		        if (minecraftServer != null) {
-		            listOfPlayers = this.getServer().getPlayerList();
+                if (minecraftServer != null) {
+                    listOfPlayers = this.getServer().getPlayerList();
                 }
 
-		        if (listOfPlayers != null) {
+                if (listOfPlayers != null) {
                     listOfPlayers.sendChatMsg(
                             new TextComponentTranslation(PathHelper.full("message.villager.died"),
                                     this.getName())
                     );
                 }
-		    }
-		}
-	}
-	
-	@Override
-	protected void dropEquipment(boolean p_82160_1_, int p_82160_2_){
-		//don't drop any equipment
-	}
+            }
+        }
+    }
 
-	public void refreshProfession(){
-		int proid = this.getDataManager().get(PROFESSIONID);
-		this.profession = Profession.registry.get(proid);
-		if(!this.worldObj.isRemote){
-			//clear both hands
-			this.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, null);
-			this.setItemStackToSlot(EntityEquipmentSlot.OFFHAND, null);
-			//get the item on either left hand or right hand
-			this.setItemStackToSlot(Rand.get().nextBoolean()?EntityEquipmentSlot.MAINHAND:EntityEquipmentSlot.OFFHAND, this.profession.getRandomHoldItem());
-		}
-	}
-	
-	//quests
-	
-	//the quest idx and the left ticks are stored in the same integer
-	//the last one byte are used to store the index
-	//the rest bytes are used to store the time left
-	//e.g.
-	//the integer = 0xFE02
-	//ticks left = 0xFE = 254;
-	//quest index = 0x02 - 1 = 1
-	//* quest index is start from -1, end with 254, -1 means no quest 
-	
-	public void setCurrentQuestIdx(int idx){
-		int data = this.getDataManager().get(QUEST);
+    @Override
+    protected void dropEquipment(boolean p_82160_1_, int p_82160_2_) {
+        //don't drop any equipment
+    }
 
-		data &= 0xFFFFFF00;
+    //quests
 
-		data |= Math.max(0, idx + 1);
+    //the quest idx and the left ticks are stored in the same integer
+    //the last one byte are used to store the index
+    //the rest bytes are used to store the time left
+    //e.g.
+    //the integer = 0xFE02
+    //ticks left = 0xFE = 254;
+    //quest index = 0x02 - 1 = 1
+    //* quest index is start from -1, end with 254, -1 means no quest
 
-		this.getDataManager().set(QUEST, data);
-	}
-	
-	public int getCurrentQuestIdx(){
-		int data = this.getDataManager().get(QUEST);
+    public void refreshProfession() {
+        int proid = this.getDataManager().get(PROFESSIONID);
+        this.profession = Profession.registry.get(proid);
+        if (!this.worldObj.isRemote) {
+            //clear both hands
+            this.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, null);
+            this.setItemStackToSlot(EntityEquipmentSlot.OFFHAND, null);
+            //get the item on either left hand or right hand
+            this.setItemStackToSlot(Rand.get().nextBoolean() ? EntityEquipmentSlot.MAINHAND : EntityEquipmentSlot.OFFHAND, this.profession.getRandomHoldItem());
+        }
+    }
+
+    public int getCurrentQuestIdx() {
+        int data = this.getDataManager().get(QUEST);
 
         return (data & 0x000000FF) - 1;
-	}
-	
-	public int getCurrentQuestTicks(){
-		int data = this.getDataManager().get(QUEST);
+    }
 
-		//return data;
+    public void setCurrentQuestIdx(int idx) {
+        int data = this.getDataManager().get(QUEST);
+
+        data &= 0xFFFFFF00;
+
+        data |= Math.max(0, idx + 1);
+
+        this.getDataManager().set(QUEST, data);
+    }
+
+    public int getCurrentQuestTicks() {
+        int data = this.getDataManager().get(QUEST);
+
+        //return data;
         return data >> 8;
     }
-	
-	public void setCurrentQuestTicks(int ticks){
-		int data = this.getDataManager().get(QUEST);
 
-		data &= 0x000000FF;
+    public void setCurrentQuestTicks(int ticks) {
+        int data = this.getDataManager().get(QUEST);
 
-		data |= (ticks << 8);
+        data &= 0x000000FF;
 
-		this.getDataManager().set(QUEST, data);
-	}
-	
-	public int getCurrentQuestTicksLeft(){
-		return VBConfig.questLifetime - this.getCurrentQuestTicks();
-	}
-	
-	@Override
-	public void removeCurrentQuest(){
-		this.setCurrentQuestIdx(-1);
-		this.setCurrentQuestTicks(0);
-	}
-	
-	@Override
-	public void createNewQuest(){
-		if (this.getProfession() == null)
-			return;
-		List<Quest> quests= this.getProfession().getQuests();
-		//generate a random quest idx
-		int idx = (quests != null && quests.size() > 0)?Rand.get().nextInt(quests.size()):-1;
-		this.setCurrentQuestIdx(idx);
-		this.setCurrentQuestTicks(0);
-	}
-	
-	@Override
-	public Quest getCurrentQuest(){
-		int idx = this.getCurrentQuestIdx();
-		if(idx < 0) 
-			return null;
-		if(this.getProfession() == null) 
-			return null;
-		List<Quest> quests = this.getProfession().getQuests();
-		if(quests == null || idx >= quests.size()) 
-			return null;
-		return quests.get(idx);
-	}
-	
-	@Override
-	public void completeCurrentQuest(EntityPlayer player){
-		Quest q = this.getCurrentQuest();
-		if(q != null && q.complete(player)){
-			this.removeCurrentQuest();
-		}
-	}
-	
-	private void updateQuest(){
-		if(VBConfig.questFrequency <= 0) return;
-		if(this.getCurrentQuest() == null){
-			if(this.hasHome() && this.rand.nextInt(VBConfig.questFrequency) == 0){
-				this.createNewQuest();
-			}
-		}
-		else{
-			int left = this.getCurrentQuestTicks() + 1;
-			if(left > VBConfig.questLifetime) left = VBConfig.questLifetime;
-			this.setCurrentQuestTicks(left);
-			if(!this.isInteracting() && left == VBConfig.questLifetime){
-				this.removeCurrentQuest();
-			}
-		}
-	}
-	
-	//collections
-	private void addProIDToCollections(EntityPlayer player){
-		ExtendedPlayerProperties.get(player).collections.addProfession(this.getProfession());
-	}
-	
-	//-----
-	
-	@Override
-	public boolean canBeLeashedTo(@Nonnull EntityPlayer player) {
-		return false;
-	}
-	
+        data |= (ticks << 8);
+
+        this.getDataManager().set(QUEST, data);
+    }
+
+    public int getCurrentQuestTicksLeft() {
+        return VBConfig.questLifetime - this.getCurrentQuestTicks();
+    }
+
+    @Override
+    public void removeCurrentQuest() {
+        this.setCurrentQuestIdx(-1);
+        this.setCurrentQuestTicks(0);
+    }
+
+    @Override
+    public void createNewQuest() {
+        if (this.getProfession() == null)
+            return;
+        List<Quest> quests = this.getProfession().getQuests();
+        //generate a random quest idx
+        int idx = (quests != null && quests.size() > 0) ? Rand.get().nextInt(quests.size()) : -1;
+        this.setCurrentQuestIdx(idx);
+        this.setCurrentQuestTicks(0);
+    }
+
+    @Override
+    public Quest getCurrentQuest() {
+        int idx = this.getCurrentQuestIdx();
+        if (idx < 0)
+            return null;
+        if (this.getProfession() == null)
+            return null;
+        List<Quest> quests = this.getProfession().getQuests();
+        if (quests == null || idx >= quests.size())
+            return null;
+        return quests.get(idx);
+    }
+
+    @Override
+    public void completeCurrentQuest(EntityPlayer player) {
+        Quest q = this.getCurrentQuest();
+        if (q != null && q.complete(player)) {
+            this.removeCurrentQuest();
+        }
+    }
+
+    private void updateQuest() {
+        if (VBConfig.questFrequency <= 0) return;
+        if (this.getCurrentQuest() == null) {
+            if (this.hasHome() && this.rand.nextInt(VBConfig.questFrequency) == 0) {
+                this.createNewQuest();
+            }
+        } else {
+            int left = this.getCurrentQuestTicks() + 1;
+            if (left > VBConfig.questLifetime) left = VBConfig.questLifetime;
+            this.setCurrentQuestTicks(left);
+            if (!this.isInteracting() && left == VBConfig.questLifetime) {
+                this.removeCurrentQuest();
+            }
+        }
+    }
+
+    //-----
+
+    //collections
+    private void addProIDToCollections(EntityPlayer player) {
+        ExtendedPlayerProperties.get(player).collections.addProfession(this.getProfession());
+    }
+
+    @Override
+    public boolean canBeLeashedTo(@Nonnull EntityPlayer player) {
+        return false;
+    }
+
     @SideOnly(Side.CLIENT)
-    public boolean getAlwaysRenderNameTagForRender()
-    {
+    public boolean getAlwaysRenderNameTagForRender() {
         return true;
     }
-    
-	@Override
-	protected boolean canDespawn() {
-		return false;
-	}
-	
-	@Override
-	public void writeEntityToNBT(@Nonnull NBTTagCompound tagCompound) {
-		super.writeEntityToNBT(tagCompound);
 
-		tagCompound.setInteger(
-		        "proid",
+    @Override
+    protected boolean canDespawn() {
+        return false;
+    }
+
+    @Override
+    public void writeEntityToNBT(@Nonnull NBTTagCompound tagCompound) {
+        super.writeEntityToNBT(tagCompound);
+
+        tagCompound.setInteger(
+                "proid",
                 this.getDataManager().get(PROFESSIONID)
         );
 
-		tagCompound.setBoolean("gender", this.isMale());
+        tagCompound.setBoolean("gender", this.isMale());
 
-		// home
-		if(this.home != null){
-			tagCompound.setIntArray("homebd", new int[]{
-					this.home.minx,
-					this.home.miny,
-					this.home.minz,
-					this.home.maxx,
-					this.home.maxy,
-					this.home.maxz
-					});
-		}
+        // home
+        if (this.home != null) {
+            tagCompound.setIntArray("homebd", new int[]{
+                    this.home.minx,
+                    this.home.miny,
+                    this.home.minz,
+                    this.home.maxx,
+                    this.home.maxy,
+                    this.home.maxz
+            });
+        }
 
-		// upgrading history
-		@Nullable final int[] upgrades = this.getUpgradingHistory();
+        // upgrading history
+        @Nullable final int[] upgrades = this.getUpgradingHistory();
 
-		if (upgrades != null) {
-			tagCompound.setIntArray("upgrades", upgrades);
-		}
+        if (upgrades != null) {
+            tagCompound.setIntArray("upgrades", upgrades);
+        }
 
-		// quest
-		tagCompound.setInteger(
-		        "questinfo",
+        // quest
+        tagCompound.setInteger(
+                "questinfo",
                 this.getDataManager().get(QUEST)
         );
-	}
+    }
 
-	@Override
-	public void readEntityFromNBT(@Nonnull NBTTagCompound tagCompund) {
-		super.readEntityFromNBT(tagCompund);
+    @Override
+    public void readEntityFromNBT(@Nonnull NBTTagCompound tagCompund) {
+        super.readEntityFromNBT(tagCompund);
 
-		int proid = tagCompund.getInteger("proid");
+        int proid = tagCompund.getInteger("proid");
 
-		this.setProfession(proid);
+        this.setProfession(proid);
 
-		this.setGender(tagCompund.getBoolean("gender"));
+        this.setGender(tagCompund.getBoolean("gender"));
 
-		// home
-		int[] array = tagCompund.getIntArray("homebd");
+        // home
+        int[] array = tagCompund.getIntArray("homebd");
 
-		if (array.length == 0) {
-			this.home = null;
+        if (array.length == 0) {
+            this.home = null;
 
-			this.setDataFlag(2,false);
-		} else{
-			this.home = new IntBoundary(array[0],array[1],array[2],array[3],array[4],array[5]);
+            this.setDataFlag(2, false);
+        } else {
+            this.home = new IntBoundary(array[0], array[1], array[2], array[3], array[4], array[5]);
 
-			this.setDataFlag(2,true);
-		}
+            this.setDataFlag(2, true);
+        }
 
-		// upgrading history
-		array = tagCompund.getIntArray("upgrades");
+        // upgrading history
+        array = tagCompund.getIntArray("upgrades");
 
-		this.setUpgradingHistory(array);
+        this.setUpgradingHistory(array);
 
-		// quest
-		if (tagCompund.hasKey("questinfo")) {
-			this.getDataManager().set(
-			        QUEST,
+        // quest
+        if (tagCompund.hasKey("questinfo")) {
+            this.getDataManager().set(
+                    QUEST,
                     tagCompund.getInteger("questinfo")
             );
-		}
-	}
-
-	
-	//----------------------------------
-	//upgrading preview
-	@SideOnly(Side.CLIENT)
-	public Profession previewProfession;
+        }
+    }
 }

@@ -10,21 +10,21 @@ import net.minecraft.entity.EntityLivingBase;
 
 import javax.annotation.Nonnull;
 
-public class LayerVillagerHeldItem extends LayerHeldItem{
-	
-	public LayerVillagerHeldItem(RenderLiving<?> livingEntityRendererIn) {
-		super(livingEntityRendererIn);
-	}
+public class LayerVillagerHeldItem extends LayerHeldItem {
 
-	@Override
-	public void doRenderLayer(@Nonnull EntityLivingBase entitylivingbaseIn, float p_177141_2_,
+    public LayerVillagerHeldItem(RenderLiving<?> livingEntityRendererIn) {
+        super(livingEntityRendererIn);
+    }
+
+    @Override
+    public void doRenderLayer(@Nonnull EntityLivingBase entitylivingbaseIn, float p_177141_2_,
                               float p_177141_3_, float partialTicks, float p_177141_5_,
                               float p_177141_6_, float p_177141_7_, float scale) {
-		
-		if (((EntityVillager) entitylivingbaseIn).previewProfession == null) {
-		    // items should not be displayed in preview/upgradingGui
-			super.doRenderLayer(entitylivingbaseIn, p_177141_2_, p_177141_3_, partialTicks, p_177141_5_,
+
+        if (((EntityVillager) entitylivingbaseIn).previewProfession == null) {
+            // items should not be displayed in preview/upgradingGui
+            super.doRenderLayer(entitylivingbaseIn, p_177141_2_, p_177141_3_, partialTicks, p_177141_5_,
                     p_177141_6_, p_177141_7_, scale);
-		}
-	}
+        }
+    }
 }

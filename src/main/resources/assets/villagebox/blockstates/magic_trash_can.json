@@ -1,5 +1,7 @@
 {
-    "variants": {
-		"normal": { "model": "villagebox:magic_trash_can" }
+  "variants": {
+    "normal": {
+      "model": "villagebox:magic_trash_can"
     }
+  }
 }

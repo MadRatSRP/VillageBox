@@ -1,24 +1,80 @@
 {
-	"parent": "block/block",
-	"textures": {
-        "particle": "#totempolea",
-        "totempolea": "#totempolea",
-        "totempoleb": "#totempoleb"
-    },
-    "elements": [
-        {
-            "from": [ 4.0, 0.0, 4.0 ], 
-            "to": [ 12.0, 16.0, 12.0 ], 
-            "faces": {
-                "north": { "texture": "#totempolea", "uv": [ 0.0, 0.0, 8.0, 16.0 ] },
-                "east": { "texture": "#totempolea", "uv": [ 8.0, 0.0, 16.0, 16.0 ] },
-                "south": { "texture": "#totempolea", "uv": [ 8.0, 0.0, 16.0, 16.0 ] },
-                "west": { "texture": "#totempolea", "uv": [ 8.0, 0.0, 16.0, 16.0 ] },
-                "up": { "texture": "#totempoleb", "uv": [ 0.0, 0.0, 8.0, 8.0 ] },
-                "down": { "texture": "#totempoleb", "uv": [ 0.0, 8.0, 8.0, 16.0 ] }
-            }
+  "parent": "block/block",
+  "textures": {
+    "particle": "#totempolea",
+    "totempolea": "#totempolea",
+    "totempoleb": "#totempoleb"
+  },
+  "elements": [
+    {
+      "from": [
+        4.0,
+        0.0,
+        4.0
+      ],
+      "to": [
+        12.0,
+        16.0,
+        12.0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#totempolea",
+          "uv": [
+            0.0,
+            0.0,
+            8.0,
+            16.0
+          ]
+        },
+        "east": {
+          "texture": "#totempolea",
+          "uv": [
+            8.0,
+            0.0,
+            16.0,
+            16.0
+          ]
+        },
+        "south": {
+          "texture": "#totempolea",
+          "uv": [
+            8.0,
+            0.0,
+            16.0,
+            16.0
+          ]
+        },
+        "west": {
+          "texture": "#totempolea",
+          "uv": [
+            8.0,
+            0.0,
+            16.0,
+            16.0
+          ]
+        },
+        "up": {
+          "texture": "#totempoleb",
+          "uv": [
+            0.0,
+            0.0,
+            8.0,
+            8.0
+          ]
+        },
+        "down": {
+          "texture": "#totempoleb",
+          "uv": [
+            0.0,
+            8.0,
+            8.0,
+            16.0
+          ]
         }
-	]
+      }
+    }
+  ]
 }
 		
 		

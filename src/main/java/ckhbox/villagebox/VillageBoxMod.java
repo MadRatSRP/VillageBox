@@ -22,21 +22,21 @@ public class VillageBoxMod {
     @Instance
     public static VillageBoxMod instance = new VillageBoxMod();
 
-    @SidedProxy(clientSide="ckhbox.villagebox.client.ClientProxy", serverSide="ckhbox.villagebox.common.CommonProxy")
+    @SidedProxy(clientSide = "ckhbox.villagebox.client.ClientProxy", serverSide = "ckhbox.villagebox.common.CommonProxy")
     public static CommonProxy proxy;
-    
+
     @EventHandler
     public void preInit(FMLPreInitializationEvent e) {
-    	this.proxy.preInit(e);
+        this.proxy.preInit(e);
     }
 
     @EventHandler
     public void init(FMLInitializationEvent e) {
-    	this.proxy.init(e);
+        this.proxy.init(e);
     }
 
     @EventHandler
     public void postInit(FMLPostInitializationEvent e) {
-    	this.proxy.postInit(e);
+        this.proxy.postInit(e);
     }
 }

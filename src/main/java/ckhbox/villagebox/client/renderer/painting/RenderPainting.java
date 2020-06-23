@@ -31,8 +31,7 @@ public class RenderPainting
 
     private VertexBuffer vertexBuffer;
 
-    public RenderPainting(RenderManager renderManagerIn)
-    {
+    public RenderPainting(RenderManager renderManagerIn) {
         super(renderManagerIn);
     }
 
@@ -40,8 +39,7 @@ public class RenderPainting
      * Renders the desired {@code T} type Entity.
      */
     public void doRender(@Nonnull EntityPainting entity, double x, double y, double z,
-                         float entityYaw, float partialTicks)
-    {
+                         float entityYaw, float partialTicks) {
         GlStateManager.pushMatrix();
         GlStateManager.translate(x, y, z);
         GlStateManager.rotate(180.0F - entityYaw, 0.0F, 1.0F, 0.0F);
@@ -51,8 +49,7 @@ public class RenderPainting
         float f = 0.0625F;
         GlStateManager.scale(f, f, f);
 
-        if (this.renderOutlines)
-        {
+        if (this.renderOutlines) {
             GlStateManager.enableColorMaterial();
 
             GlStateManager.enableOutlineMode(this.getTeamColor(entity));
@@ -61,8 +58,7 @@ public class RenderPainting
         this.renderPainting(entity, entityPaintingEnumArt.sizeX, entityPaintingEnumArt.sizeY,
                 entityPaintingEnumArt.offsetX, entityPaintingEnumArt.offsetY);
 
-        if (this.renderOutlines)
-        {
+        if (this.renderOutlines) {
             GlStateManager.disableOutlineMode();
             GlStateManager.disableColorMaterial();
         }
@@ -76,15 +72,13 @@ public class RenderPainting
      * Returns the location of an entity's texture. Doesn't seem to be called unless you call Render.bindEntityTexture.
      */
     @Nonnull
-    protected ResourceLocation getEntityTexture(@Nonnull EntityPainting entity)
-    {
+    protected ResourceLocation getEntityTexture(@Nonnull EntityPainting entity) {
         return KRISTOFFER_PAINTING_TEXTURE;
     }
 
-    private void renderPainting(EntityPainting painting, int width, int height, int textureU, int textureV)
-    {
-        float f = (float)(-width) / 2.0F;
-        float f1 = (float)(-height) / 2.0F;
+    private void renderPainting(EntityPainting painting, int width, int height, int textureU, int textureV) {
+        float f = (float) (-width) / 2.0F;
+        float f1 = (float) (-height) / 2.0F;
         float f2 = 0.5F;
         float f3 = 0.75F;
         float f4 = 0.8125F;
@@ -99,19 +93,17 @@ public class RenderPainting
         float f13 = 0.0F;
         float f14 = 0.0625F;
 
-        for (int i = 0; i < width / 16; ++i)
-        {
-            for (int j = 0; j < height / 16; ++j)
-            {
-                float f15 = f + (float)((i + 1) * 16);
-                float f16 = f + (float)(i * 16);
-                float f17 = f1 + (float)((j + 1) * 16);
-                float f18 = f1 + (float)(j * 16);
+        for (int i = 0; i < width / 16; ++i) {
+            for (int j = 0; j < height / 16; ++j) {
+                float f15 = f + (float) ((i + 1) * 16);
+                float f16 = f + (float) (i * 16);
+                float f17 = f1 + (float) ((j + 1) * 16);
+                float f18 = f1 + (float) (j * 16);
                 this.setLightmap(painting, (f15 + f16) / 2.0F, (f17 + f18) / 2.0F);
-                float f19 = (float)(textureU + width - i * 16) / 256.0F;
-                float f20 = (float)(textureU + width - (i + 1) * 16) / 256.0F;
-                float f21 = (float)(textureV + height - j * 16) / 256.0F;
-                float f22 = (float)(textureV + height - (j + 1) * 16) / 256.0F;
+                float f19 = (float) (textureU + width - i * 16) / 256.0F;
+                float f20 = (float) (textureU + width - (i + 1) * 16) / 256.0F;
+                float f21 = (float) (textureV + height - j * 16) / 256.0F;
+                float f22 = (float) (textureV + height - (j + 1) * 16) / 256.0F;
 
                 Tessellator tessellator = Tessellator.getInstance();
 
@@ -184,35 +176,30 @@ public class RenderPainting
                 .endVertex();
     }
 
-    private void setLightmap(EntityPainting painting, float p_77008_2_, float p_77008_3_)
-    {
+    private void setLightmap(EntityPainting painting, float p_77008_2_, float p_77008_3_) {
         int i = MathHelper.floor_double(painting.posX);
 
-        int j = MathHelper.floor_double(painting.posY + (double)(p_77008_3_ / 16.0F));
+        int j = MathHelper.floor_double(painting.posY + (double) (p_77008_3_ / 16.0F));
 
         int k = MathHelper.floor_double(painting.posZ);
 
         @Nullable final EnumFacing enumfacing = painting.facingDirection;
 
         if (enumfacing != null) {
-            if (enumfacing == EnumFacing.NORTH)
-            {
-                i = MathHelper.floor_double(painting.posX + (double)(p_77008_2_ / 16.0F));
+            if (enumfacing == EnumFacing.NORTH) {
+                i = MathHelper.floor_double(painting.posX + (double) (p_77008_2_ / 16.0F));
             }
 
-            if (enumfacing == EnumFacing.WEST)
-            {
-                k = MathHelper.floor_double(painting.posZ - (double)(p_77008_2_ / 16.0F));
+            if (enumfacing == EnumFacing.WEST) {
+                k = MathHelper.floor_double(painting.posZ - (double) (p_77008_2_ / 16.0F));
             }
 
-            if (enumfacing == EnumFacing.SOUTH)
-            {
-                i = MathHelper.floor_double(painting.posX - (double)(p_77008_2_ / 16.0F));
+            if (enumfacing == EnumFacing.SOUTH) {
+                i = MathHelper.floor_double(painting.posX - (double) (p_77008_2_ / 16.0F));
             }
 
-            if (enumfacing == EnumFacing.EAST)
-            {
-                k = MathHelper.floor_double(painting.posZ + (double)(p_77008_2_ / 16.0F));
+            if (enumfacing == EnumFacing.EAST) {
+                k = MathHelper.floor_double(painting.posZ + (double) (p_77008_2_ / 16.0F));
             }
 
             int l = this.renderManager.worldObj.getCombinedLight(new BlockPos(i, j, k), 0);
@@ -221,7 +208,7 @@ public class RenderPainting
 
             int j1 = l / 65536;
 
-            OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float)i1, (float)j1);
+            OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float) i1, (float) j1);
 
             GlStateManager.color(1.0F, 1.0F, 1.0F);
         }

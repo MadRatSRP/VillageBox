@@ -8,31 +8,31 @@ import net.minecraft.item.ItemStack;
 
 import java.util.List;
 
-public class LinkItem extends Link{
+public class LinkItem extends Link {
 
-	public ItemStack itemStack;
-	
-	public LinkItem(Page page, ItemStack itemStack, String link, List<String> tooltips) {
-		super(page,link,tooltips);
+    public ItemStack itemStack;
 
-		this.itemStack = itemStack;
+    public LinkItem(Page page, ItemStack itemStack, String link, List<String> tooltips) {
+        super(page, link, tooltips);
 
-		this.width = 20;
+        this.itemStack = itemStack;
 
-		this.height = 20;
-	}
-	
-	public void onDraw(int mouseX, int mouseY){
-		this.page.guiVillageBook.drawItem(this.itemStack, this.left, this.top);
-	}
-	
-	public void onDrawHover(int mouseX, int mouseY) {
-		this.page.guiVillageBook.drawItem(this.itemStack, this.left, this.top - 2);
-	}
-	
-	public void onDrawToolTip(int mouseX, int mouseY) {
-		if (this.itemStack != null) {
-			this.page.guiVillageBook.renderToolTip(this.itemStack, mouseX, mouseY);
-		}
-	}
+        this.width = 20;
+
+        this.height = 20;
+    }
+
+    public void onDraw(int mouseX, int mouseY) {
+        this.page.guiVillageBook.drawItem(this.itemStack, this.left, this.top);
+    }
+
+    public void onDrawHover(int mouseX, int mouseY) {
+        this.page.guiVillageBook.drawItem(this.itemStack, this.left, this.top - 2);
+    }
+
+    public void onDrawToolTip(int mouseX, int mouseY) {
+        if (this.itemStack != null) {
+            this.page.guiVillageBook.renderToolTip(this.itemStack, mouseX, mouseY);
+        }
+    }
 }

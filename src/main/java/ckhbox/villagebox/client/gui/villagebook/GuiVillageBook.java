@@ -26,166 +26,161 @@ import java.util.List;
 import java.util.Stack;
 
 public class GuiVillageBook
-        extends GuiContainer{
-	public static final ResourceLocation guiBookGuiTextures = new ResourceLocation(
-	        PathHelper.full("textures/gui/villagebook/page.png")
+        extends GuiContainer {
+    public static final ResourceLocation guiBookGuiTextures = new ResourceLocation(
+            PathHelper.full("textures/gui/villagebook/page.png")
     );
-	
-	public VillageBookData villagebookData = null;
-
-	protected Page currentPage;
-
-	private final EntityVillager tempVillager = new EntityVillager(
-	        Minecraft.getMinecraft().thePlayer.getEntityWorld()
+    private final EntityVillager tempVillager = new EntityVillager(
+            Minecraft.getMinecraft().thePlayer.getEntityWorld()
     );
-	
-	public Stack<String> linkStack = new Stack<>();
-	
-	protected int xSize = 176;
-    protected int ySize = 180; 
+    public VillageBookData villagebookData = null;
+    public Stack<String> linkStack = new Stack<>();
+    protected Page currentPage;
+    protected int xSize = 176;
+    protected int ySize = 180;
     protected int offsetx = 18;
     protected int offsety = 18;
-	
-	public GuiVillageBook() {
-		super(new ContainerEmpty());
-		if(villagebookData == null){
-			villagebookData = new VillageBookData();
-		}
-	}
 
-	public int getContentLeft(){
-		return (this.width - this.xSize) / 2 + offsetx;
-	}
-	
-	public int getContentRight(){
-		return (this.width + this.xSize) / 2 - offsetx;
-	}
-	
-	public int getContentTop(){
-		return (this.height - this.ySize) / 2 + offsety;
-	} 
-	public int getContentWidth(){
-		return this.xSize - offsetx * 2;
-	}
-	
-	public int getContentHeight(){
-		return this.ySize - offsety * 2;
-	}
-	
-	@Override
-	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
-		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+    public GuiVillageBook() {
+        super(new ContainerEmpty());
+        if (villagebookData == null) {
+            villagebookData = new VillageBookData();
+        }
+    }
+
+    public int getContentLeft() {
+        return (this.width - this.xSize) / 2 + offsetx;
+    }
+
+    public int getContentRight() {
+        return (this.width + this.xSize) / 2 - offsetx;
+    }
+
+    public int getContentTop() {
+        return (this.height - this.ySize) / 2 + offsety;
+    }
+
+    public int getContentWidth() {
+        return this.xSize - offsetx * 2;
+    }
+
+    public int getContentHeight() {
+        return this.ySize - offsety * 2;
+    }
+
+    @Override
+    protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         this.mc.getTextureManager().bindTexture(guiBookGuiTextures);
         int x = (this.width - this.xSize) / 2;
         int y = (this.height - this.ySize) / 2;
         this.drawTexturedModalRect(x, y, 0, 0, this.xSize, this.ySize);
-	}
-	
-	@Override
-	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-		super.drawScreen(mouseX, mouseY, partialTicks);
+    }
 
-		if (this.currentPage != null)
-			this.currentPage.onDrawScreen(mouseX, mouseY);
-	}
+    @Override
+    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+        super.drawScreen(mouseX, mouseY, partialTicks);
 
-	@Override
-	public void initGui() {
-		super.initGui();
-		this.gotoLink("home=");
-	}
+        if (this.currentPage != null)
+            this.currentPage.onDrawScreen(mouseX, mouseY);
+    }
 
-	@Override
-	protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
-		super.mouseClicked(mouseX, mouseY, mouseButton);
-		if(this.currentPage != null){
-			this.currentPage.onMouseClick(mouseX, mouseY);
-		}
-	}
+    @Override
+    public void initGui() {
+        super.initGui();
+        this.gotoLink("home=");
+    }
 
-	public void drawTexture(int x, int y,int coordx, int coordy, int width, int height){
-		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+    @Override
+    protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
+        super.mouseClicked(mouseX, mouseY, mouseButton);
+        if (this.currentPage != null) {
+            this.currentPage.onMouseClick(mouseX, mouseY);
+        }
+    }
+
+    public void drawTexture(int x, int y, int coordx, int coordy, int width, int height) {
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         this.mc.getTextureManager().bindTexture(guiBookGuiTextures);
         this.drawTexturedModalRect(x, y, coordx, coordy, width, height);
-	}
-	
-	public void drawProHead(int x, int y, Profession pro, boolean isMale){
-		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+    }
+
+    public void drawProHead(int x, int y, Profession pro, boolean isMale) {
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
         this.mc.getTextureManager().bindTexture(pro.getTexture(isMale));
 
         drawModalRectWithCustomSizedTexture(x, y, 8,
                 8, 8,
                 8, 64, 32);
-	}
-	
-	public void drawProEntity(int x, int y, Profession pro, boolean isMale){
-		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-    	this.tempVillager.previewProfession = pro;
-    	this.tempVillager.setGender(isMale);
-    	this.drawEntityOnScreen(x, y, this.tempVillager);
-    	this.tempVillager.previewProfession = null;
-	}
+    }
 
-	private void drawEntityOnScreen(int posX, int posY, EntityLivingBase ent)
-	{
-	    GlStateManager.enableColorMaterial();
-	    GlStateManager.pushMatrix();
-	    GlStateManager.translate((float)posX, (float)posY, 50.0F);
-	    GlStateManager.scale((float)(-20), (float) 20, (float) 20);
-	    GlStateManager.rotate(180.0F, 0.0F, 0.0F, 1.0F);
-	    float f = ent.renderYawOffset;
-	    float f1 = ent.rotationYaw;
-	    float f2 = ent.rotationPitch;
-	    float f3 = ent.prevRotationYawHead;
-	    float f4 = ent.rotationYawHead;
-	    GlStateManager.rotate(135.0F, 0.0F, 1.0F, 0.0F);
-	    RenderHelper.enableStandardItemLighting();
-	    GlStateManager.rotate(-135.0F, 0.0F, 1.0F, 0.0F);
-	    //ent.renderYawOffset = -30.0F * r;
-	    //ent.rotationYaw = -75.0F * r;
-	    ent.renderYawOffset = 45.0F;
-	    ent.rotationYaw = 45.0F;
-	    ent.rotationPitch = 0;
-	    ent.rotationYawHead = ent.rotationYaw;
-	    ent.prevRotationYawHead = ent.rotationYaw;
-	    GlStateManager.translate(0.0F, 0.0F, 0.0F);
-	    RenderManager rendermanager = Minecraft.getMinecraft().getRenderManager();
-	    rendermanager.setPlayerViewY(180.0F);
-	    rendermanager.setRenderShadow(false);
-	    rendermanager.doRenderEntity(ent, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, false);
-	    rendermanager.setRenderShadow(true);
-	    ent.renderYawOffset = f;
-	    ent.rotationYaw = f1;
-	    ent.rotationPitch = f2;
-	    ent.prevRotationYawHead = f3;
-	    ent.rotationYawHead = f4;
-	    GlStateManager.popMatrix();
-	    RenderHelper.disableStandardItemLighting();
-	    GlStateManager.disableRescaleNormal();
-	    GlStateManager.setActiveTexture(OpenGlHelper.lightmapTexUnit);
-	    GlStateManager.disableTexture2D();
-	    GlStateManager.setActiveTexture(OpenGlHelper.defaultTexUnit);
-	}
-	
-	public void gotoLink(String link){
-		if (link == null)
-			return;
-		boolean pushPrevLink = false;
+    public void drawProEntity(int x, int y, Profession pro, boolean isMale) {
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        this.tempVillager.previewProfession = pro;
+        this.tempVillager.setGender(isMale);
+        this.drawEntityOnScreen(x, y, this.tempVillager);
+        this.tempVillager.previewProfession = null;
+    }
+
+    private void drawEntityOnScreen(int posX, int posY, EntityLivingBase ent) {
+        GlStateManager.enableColorMaterial();
+        GlStateManager.pushMatrix();
+        GlStateManager.translate((float) posX, (float) posY, 50.0F);
+        GlStateManager.scale((float) (-20), (float) 20, (float) 20);
+        GlStateManager.rotate(180.0F, 0.0F, 0.0F, 1.0F);
+        float f = ent.renderYawOffset;
+        float f1 = ent.rotationYaw;
+        float f2 = ent.rotationPitch;
+        float f3 = ent.prevRotationYawHead;
+        float f4 = ent.rotationYawHead;
+        GlStateManager.rotate(135.0F, 0.0F, 1.0F, 0.0F);
+        RenderHelper.enableStandardItemLighting();
+        GlStateManager.rotate(-135.0F, 0.0F, 1.0F, 0.0F);
+        //ent.renderYawOffset = -30.0F * r;
+        //ent.rotationYaw = -75.0F * r;
+        ent.renderYawOffset = 45.0F;
+        ent.rotationYaw = 45.0F;
+        ent.rotationPitch = 0;
+        ent.rotationYawHead = ent.rotationYaw;
+        ent.prevRotationYawHead = ent.rotationYaw;
+        GlStateManager.translate(0.0F, 0.0F, 0.0F);
+        RenderManager rendermanager = Minecraft.getMinecraft().getRenderManager();
+        rendermanager.setPlayerViewY(180.0F);
+        rendermanager.setRenderShadow(false);
+        rendermanager.doRenderEntity(ent, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, false);
+        rendermanager.setRenderShadow(true);
+        ent.renderYawOffset = f;
+        ent.rotationYaw = f1;
+        ent.rotationPitch = f2;
+        ent.prevRotationYawHead = f3;
+        ent.rotationYawHead = f4;
+        GlStateManager.popMatrix();
+        RenderHelper.disableStandardItemLighting();
+        GlStateManager.disableRescaleNormal();
+        GlStateManager.setActiveTexture(OpenGlHelper.lightmapTexUnit);
+        GlStateManager.disableTexture2D();
+        GlStateManager.setActiveTexture(OpenGlHelper.defaultTexUnit);
+    }
+
+    public void gotoLink(String link) {
+        if (link == null)
+            return;
+        boolean pushPrevLink = false;
 
         // start with > means pushing old link
-		if (link.startsWith(">")) {
-			link = link.substring(1);
+        if (link.startsWith(">")) {
+            link = link.substring(1);
 
-			pushPrevLink = true;
-		}
-		
-		//reslove links
-		//format: PAGETYPE=PARAMS, examples: 1. item=staff   2.  pro=cook   3. home=
+            pushPrevLink = true;
+        }
 
-		String[] array = link.split("=");
+        //reslove links
+        //format: PAGETYPE=PARAMS, examples: 1. item=staff   2.  pro=cook   3. home=
 
-		@Nullable Page newPage = null;
+        String[] array = link.split("=");
+
+        @Nullable Page newPage = null;
 
         switch (array[0]) {
             case "home":
@@ -250,49 +245,49 @@ public class GuiVillageBook
 
                 return;
         }
-		
-		if (newPage != null) {
-			newPage.currentLink = link;
 
-			this.openPage(newPage,pushPrevLink);
-		}
-	}
-	
-	public void openPage(Page page, boolean pushPrevLink){
-		if(pushPrevLink && this.currentPage != null){
-			this.linkStack.push(this.currentPage.currentLink);
-		}
-		this.currentPage = page;
-		if(this.currentPage != null){
-			this.currentPage.onInit();
-		}
-	}
+        if (newPage != null) {
+            newPage.currentLink = link;
 
-	public String getLastLink(){		
-		if(this.linkStack.isEmpty()){
-			return null;
-		}
-		return this.linkStack.pop();
-	}
-	
-	public void drawHoveringText(@Nonnull List<String> textLines, int x, int y){
-		super.drawHoveringText(textLines, x, y);
-	}
-	
-	public void renderToolTip(@Nonnull ItemStack stack, int x, int y){
-		super.renderToolTip(stack, x, y);
-	}
-	
-	public void drawItem(ItemStack itemstack, int x, int y){
-		GlStateManager.pushMatrix();
+            this.openPage(newPage, pushPrevLink);
+        }
+    }
+
+    public void openPage(Page page, boolean pushPrevLink) {
+        if (pushPrevLink && this.currentPage != null) {
+            this.linkStack.push(this.currentPage.currentLink);
+        }
+        this.currentPage = page;
+        if (this.currentPage != null) {
+            this.currentPage.onInit();
+        }
+    }
+
+    public String getLastLink() {
+        if (this.linkStack.isEmpty()) {
+            return null;
+        }
+        return this.linkStack.pop();
+    }
+
+    public void drawHoveringText(@Nonnull List<String> textLines, int x, int y) {
+        super.drawHoveringText(textLines, x, y);
+    }
+
+    public void renderToolTip(@Nonnull ItemStack stack, int x, int y) {
+        super.renderToolTip(stack, x, y);
+    }
+
+    public void drawItem(ItemStack itemstack, int x, int y) {
+        GlStateManager.pushMatrix();
         RenderHelper.enableGUIStandardItemLighting();
         GlStateManager.enableRescaleNormal();
         GlStateManager.enableColorMaterial();
         GlStateManager.enableLighting();
-        this.itemRender.zLevel = 100.0F;		
-		this.itemRender.renderItemAndEffectIntoGUI(itemstack, x, y);
+        this.itemRender.zLevel = 100.0F;
+        this.itemRender.renderItemAndEffectIntoGUI(itemstack, x, y);
         this.itemRender.renderItemOverlays(this.fontRendererObj, itemstack, x, y);
         GlStateManager.popMatrix();
-	}
-	
+    }
+
 }

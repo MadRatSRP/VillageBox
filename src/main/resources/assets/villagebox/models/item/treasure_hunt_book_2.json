@@ -1,6 +1,6 @@
 {
-    "parent": "item/generated",
-    "textures": {
-        "layer0": "villagebox:items/treasure_hunt_book_2"
-    }
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "villagebox:items/treasure_hunt_book_2"
+  }
 }

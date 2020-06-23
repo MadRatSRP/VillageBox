@@ -16,25 +16,25 @@ import javax.annotation.Nonnull;
 
 @SideOnly(Side.CLIENT)
 public class RenderLargeSnowBall
-        extends RenderSnowball<EntityLargeSnowBall>{
+        extends RenderSnowball<EntityLargeSnowBall> {
 
-	public RenderLargeSnowBall(RenderManager renderManagerIn, Item p_i46137_2_, RenderItem p_i46137_3_) {
-		super(renderManagerIn, p_i46137_2_, p_i46137_3_);
-	}
+    public RenderLargeSnowBall(RenderManager renderManagerIn, Item p_i46137_2_, RenderItem p_i46137_3_) {
+        super(renderManagerIn, p_i46137_2_, p_i46137_3_);
+    }
 
-	@Override
-	public void doRender(@Nonnull EntityLargeSnowBall entity, double x, double y,
+    @Override
+    public void doRender(@Nonnull EntityLargeSnowBall entity, double x, double y,
                          double z, float entityYaw, float partialTicks) {
-		GlStateManager.pushMatrix();
+        GlStateManager.pushMatrix();
 
-		GlStateManager.translate((float)x, (float)y, (float)z);
+        GlStateManager.translate((float) x, (float) y, (float) z);
 
-		GlStateManager.scale(3.0D, 3.0D, 3.0D);
+        GlStateManager.scale(3.0D, 3.0D, 3.0D);
 
-		GlStateManager.translate(-(float)x, -(float)y, -(float)z);
+        GlStateManager.translate(-(float) x, -(float) y, -(float) z);
 
-		super.doRender(entity, x, y, z, entityYaw, partialTicks);
+        super.doRender(entity, x, y, z, entityYaw, partialTicks);
 
-		GlStateManager.popMatrix();
-	}
+        GlStateManager.popMatrix();
+    }
 }

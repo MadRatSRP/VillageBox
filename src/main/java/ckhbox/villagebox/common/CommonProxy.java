@@ -25,46 +25,45 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 
 public class CommonProxy {
-	
-	public void preInit(FMLPreInitializationEvent e) {
-		
-		//configuration
-		VBConfig.load(e.getSuggestedConfigurationFile());
-		
-		//load json data
-		JsonDataManager.LoadData(e.getModConfigurationDirectory());
-		
-		ModBlocks.init();
-		ModItems.init();
-		ModEntities.init();
-		ModTileEntities.init();
-		ModRecipes.init();
-		
-		//capability
-		CapExPlayerProperties.register();
-		
-		//gui
-		NetworkRegistry.INSTANCE.registerGuiHandler(VillageBoxMod.instance, new GuiHandler());
-		
-		//messages
-		ModNetwork.init();
-		
-		//profession
-		Profession.init();
-		
-		//events
-		MinecraftForge.EVENT_BUS.register(new EventEntity());
-		MinecraftForge.EVENT_BUS.register(new EventCoinsFound());
-		MinecraftForge.EVENT_BUS.register(new EventWorld());
+
+    public void preInit(FMLPreInitializationEvent e) {
+
+        //configuration
+        VBConfig.load(e.getSuggestedConfigurationFile());
+
+        //load json data
+        JsonDataManager.LoadData(e.getModConfigurationDirectory());
+
+        ModBlocks.init();
+        ModItems.init();
+        ModEntities.init();
+        ModTileEntities.init();
+        ModRecipes.init();
+
+        //capability
+        CapExPlayerProperties.register();
+
+        //gui
+        NetworkRegistry.INSTANCE.registerGuiHandler(VillageBoxMod.instance, new GuiHandler());
+
+        //messages
+        ModNetwork.init();
+
+        //profession
+        Profession.init();
+
+        //events
+        MinecraftForge.EVENT_BUS.register(new EventEntity());
+        MinecraftForge.EVENT_BUS.register(new EventCoinsFound());
+        MinecraftForge.EVENT_BUS.register(new EventWorld());
     }
 
     public void init(FMLInitializationEvent e) {
-    	
-    	
-    	
+
+
     }
 
     public void postInit(FMLPostInitializationEvent e) {
-    	
+
     }
 }
