@@ -20,11 +20,16 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class BlockTotem extends BlockFacing implements ITileEntityProvider {
+import javax.annotation.Nonnull;
 
-    private static final AxisAlignedBB TOTEM_AABB = new AxisAlignedBB(0.25F, 0.0F, 0.25F, 0.75F, 1.0F, 0.75F);
+public class BlockTotem
+        extends BlockFacing
+        implements ITileEntityProvider {
 
-    private Class<? extends TileEntityTotem> classTotem;
+    private static final AxisAlignedBB TOTEM_AABB = new AxisAlignedBB(0.25F, 0.0F, 0.25F,
+            0.75F, 1.0F, 0.75F);
+
+    private final Class<? extends TileEntityTotem> classTotem;
 
     public BlockTotem(String name, Class<? extends TileEntityTotem> classTotem) {
         super(Material.WOOD);
@@ -36,35 +41,39 @@ public class BlockTotem extends BlockFacing implements ITileEntityProvider {
         this.setSoundType(SoundType.WOOD);
     }
 
+    @Nonnull
     @Override
-    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
+    public AxisAlignedBB getBoundingBox(@Nonnull IBlockState state, @Nonnull IBlockAccess source,
+                                        @Nonnull BlockPos pos) {
         return TOTEM_AABB;
     }
 
     @Override
-    public TileEntity createNewTileEntity(World worldIn, int meta) {
+    public TileEntity createNewTileEntity(@Nonnull World worldIn, int meta) {
         try {
             return this.classTotem.newInstance();
-        } catch (Exception e) {
+        } catch (InstantiationException | IllegalAccessException exception) {
+            exception.printStackTrace();
+            return null;
         }
-        return null;
     }
 
     @Override
-    public void breakBlock(World world, BlockPos pos, IBlockState state) {
+    public void breakBlock(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull IBlockState state) {
         super.breakBlock(world, pos, state);
         world.removeTileEntity(pos);
     }
 
     @Override
-    public boolean isOpaqueCube(IBlockState state) {
+    public boolean isOpaqueCube(@Nonnull IBlockState state) {
         return false;
     }
 
-    public boolean isFullCube(IBlockState state) {
+    public boolean isFullCube(@Nonnull IBlockState state) {
         return false;
     }
 
+    @Nonnull
     @SideOnly(Side.CLIENT)
     public BlockRenderLayer getBlockLayer() {
         return BlockRenderLayer.CUTOUT;

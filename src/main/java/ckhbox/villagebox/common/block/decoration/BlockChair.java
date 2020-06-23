@@ -13,9 +13,12 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 
+import javax.annotation.Nonnull;
+
 public class BlockChair extends BlockFacing {
 
-    private static final AxisAlignedBB CHAIR_AABB = new AxisAlignedBB(0.25F, 0.0F, 0.25F, 0.75F, 0.875F, 0.75F);
+    private static final AxisAlignedBB CHAIR_AABB = new AxisAlignedBB(0.25F, 0.0F, 0.25F,
+            0.75F, 0.875F, 0.75F);
 
     public BlockChair(String name) {
         super(Material.WOOD);
@@ -25,17 +28,19 @@ public class BlockChair extends BlockFacing {
         this.setSoundType(SoundType.WOOD);
     }
 
+    @Nonnull
     @Override
-    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
+    public AxisAlignedBB getBoundingBox(@Nonnull IBlockState state, @Nonnull IBlockAccess source,
+                                        @Nonnull BlockPos pos) {
         return CHAIR_AABB;
     }
 
     @Override
-    public boolean isOpaqueCube(IBlockState state) {
+    public boolean isOpaqueCube(@Nonnull IBlockState state) {
         return false;
     }
 
-    public boolean isFullCube(IBlockState state) {
+    public boolean isFullCube(@Nonnull IBlockState state) {
         return false;
     }
 

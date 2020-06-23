@@ -10,7 +10,10 @@ import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 
-public class BlockTable extends Block {
+import javax.annotation.Nonnull;
+
+public class BlockTable
+        extends Block {
 
     public BlockTable(String name) {
         super(Material.WOOD);
@@ -21,8 +24,7 @@ public class BlockTable extends Block {
     }
 
     @Override
-    public boolean isOpaqueCube(IBlockState state) {
+    public boolean isOpaqueCube(@Nonnull IBlockState state) {
         return false;
     }
-
 }

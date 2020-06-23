@@ -16,9 +16,12 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
+
 public class BlockCarpet extends Block {
 
-    private static final AxisAlignedBB CARPET_AABB = new AxisAlignedBB(0.0F, 0.0F, 0.0F, 1.0F, 0.0625F, 1.0F);
+    private static final AxisAlignedBB CARPET_AABB = new AxisAlignedBB(0.0F, 0.0F, 0.0F,
+            1.0F, 0.0625F, 1.0F);
 
     public BlockCarpet(String name) {
         super(Material.CARPET);
@@ -29,23 +32,27 @@ public class BlockCarpet extends Block {
         this.setLightOpacity(0);
     }
 
+    @Nonnull
     @Override
-    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
+    public AxisAlignedBB getBoundingBox(@Nonnull IBlockState state, @Nonnull IBlockAccess source,
+                                        @Nonnull BlockPos pos) {
         return CARPET_AABB;
     }
 
     @Override
-    public boolean isOpaqueCube(IBlockState state) {
+    public boolean isOpaqueCube(@Nonnull IBlockState state) {
         return false;
     }
 
-    public boolean isFullCube(IBlockState state) {
+    public boolean isFullCube(@Nonnull IBlockState state) {
         return false;
     }
+
 
     @SideOnly(Side.CLIENT)
-    public boolean shouldSideBeRendered(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side) {
-        return side == EnumFacing.UP ? true : super.shouldSideBeRendered(blockState, blockAccess, pos, side);
+    public boolean shouldSideBeRendered(@Nonnull IBlockState blockState, @Nonnull IBlockAccess blockAccess,
+                                        @Nonnull BlockPos pos, @Nonnull EnumFacing side) {
+        return side == EnumFacing.UP || super.shouldSideBeRendered(blockState, blockAccess, pos, side);
     }
 
 }

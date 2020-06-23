@@ -16,23 +16,37 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
-public class BlockBench extends BlockFacing {
+public class BlockBench
+        extends BlockFacing {
 
-    private static final AxisAlignedBB BENCH_AABB_CN0 = new AxisAlignedBB(0.0F, 0.0F, 0.25F, 1.0F, 0.25F, 0.815F);
-    private static final AxisAlignedBB BENCH_AABB_CN1 = new AxisAlignedBB(0.0F, 0.25F, 0.75F, 1.0F, 0.75F, 0.815F);
-    private static final AxisAlignedBB BENCH_AABB_CE0 = new AxisAlignedBB(0.1875F, 0.0F, 0.0F, 0.75F, 0.25F, 1.0F);
-    private static final AxisAlignedBB BENCH_AABB_CE1 = new AxisAlignedBB(0.1875F, 0.25F, 0.0F, 0.25F, 0.75F, 1.0F);
-    private static final AxisAlignedBB BENCH_AABB_CS0 = new AxisAlignedBB(0.0F, 0.0F, 0.1875F, 1.0F, 0.25F, 0.75F);
-    private static final AxisAlignedBB BENCH_AABB_CS1 = new AxisAlignedBB(0.0F, 0.25F, 0.1875F, 1.0F, 0.75F, 0.25F);
-    private static final AxisAlignedBB BENCH_AABB_CW0 = new AxisAlignedBB(0.25F, 0.0F, 0.0F, 0.815F, 0.25F, 1.0F);
-    private static final AxisAlignedBB BENCH_AABB_CW1 = new AxisAlignedBB(0.75F, 0.25F, 0.0F, 0.815F, 0.75F, 1.0F);
+    private static final AxisAlignedBB BENCH_AABB_CN0 = new AxisAlignedBB(0.0F, 0.0F,
+            0.25F, 1.0F, 0.25F, 0.815F);
+    private static final AxisAlignedBB BENCH_AABB_CN1 = new AxisAlignedBB(0.0F, 0.25F,
+            0.75F, 1.0F, 0.75F, 0.815F);
+    private static final AxisAlignedBB BENCH_AABB_CE0 = new AxisAlignedBB(0.1875F, 0.0F,
+            0.0F, 0.75F, 0.25F, 1.0F);
+    private static final AxisAlignedBB BENCH_AABB_CE1 = new AxisAlignedBB(0.1875F, 0.25F,
+            0.0F, 0.25F, 0.75F, 1.0F);
+    private static final AxisAlignedBB BENCH_AABB_CS0 = new AxisAlignedBB(0.0F, 0.0F,
+            0.1875F, 1.0F, 0.25F, 0.75F);
+    private static final AxisAlignedBB BENCH_AABB_CS1 = new AxisAlignedBB(0.0F, 0.25F,
+            0.1875F, 1.0F, 0.75F, 0.25F);
+    private static final AxisAlignedBB BENCH_AABB_CW0 = new AxisAlignedBB(0.25F, 0.0F,
+            0.0F, 0.815F, 0.25F, 1.0F);
+    private static final AxisAlignedBB BENCH_AABB_CW1 = new AxisAlignedBB(0.75F, 0.25F,
+            0.0F, 0.815F, 0.75F, 1.0F);
 
-    private static final AxisAlignedBB BENCH_AABB_N = new AxisAlignedBB(0.0F, 0.0F, 0.25F, 1.0F, 0.75F, 0.815F);
-    private static final AxisAlignedBB BENCH_AABB_E = new AxisAlignedBB(0.1875F, 0.0F, 0.0F, 0.75F, 0.75F, 1.0F);
-    private static final AxisAlignedBB BENCH_AABB_S = new AxisAlignedBB(0.0F, 0.0F, 0.1875F, 1.0F, 0.75F, 0.75F);
-    private static final AxisAlignedBB BENCH_AABB_W = new AxisAlignedBB(0.25F, 0.0F, 0.0F, 0.815F, 0.75F, 1.0F);
+    private static final AxisAlignedBB BENCH_AABB_N = new AxisAlignedBB(0.0F, 0.0F,
+            0.25F, 1.0F, 0.75F, 0.815F);
+    private static final AxisAlignedBB BENCH_AABB_E = new AxisAlignedBB(0.1875F, 0.0F,
+            0.0F, 0.75F, 0.75F, 1.0F);
+    private static final AxisAlignedBB BENCH_AABB_S = new AxisAlignedBB(0.0F, 0.0F,
+            0.1875F, 1.0F, 0.75F, 0.75F);
+    private static final AxisAlignedBB BENCH_AABB_W = new AxisAlignedBB(0.25F, 0.0F,
+            0.0F, 0.815F, 0.75F, 1.0F);
 
     public BlockBench(String name) {
         super(Material.WOOD);
@@ -43,9 +57,11 @@ public class BlockBench extends BlockFacing {
     }
 
     @Override
-    public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB mask,
-                                      List<AxisAlignedBB> list, Entity p_185477_6_) {
+    public void addCollisionBoxToList(@Nonnull IBlockState state, World worldIn, @Nonnull BlockPos pos,
+                                      @Nonnull AxisAlignedBB mask, @Nonnull List<AxisAlignedBB> list,
+                                      Entity p_185477_6_) {
         EnumFacing facing = worldIn.getBlockState(pos).getValue(FACING);
+
         switch (facing) {
             case NORTH:
                 addCollisionBoxToList(pos, mask, list, BENCH_AABB_CN0);
@@ -69,7 +85,7 @@ public class BlockBench extends BlockFacing {
     }
 
     @Override
-    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
+    public AxisAlignedBB getBoundingBox(IBlockState state, @Nonnull IBlockAccess source, @Nonnull BlockPos pos) {
         EnumFacing facing = state.getValue(FACING);
         switch (facing) {
             case NORTH:
@@ -86,13 +102,12 @@ public class BlockBench extends BlockFacing {
     }
 
     @Override
-    public boolean isOpaqueCube(IBlockState state) {
+    public boolean isOpaqueCube(@Nonnull IBlockState state) {
         return false;
     }
 
     @Override
-    public boolean isFullCube(IBlockState state) {
+    public boolean isFullCube(@Nonnull IBlockState state) {
         return false;
     }
-
 }

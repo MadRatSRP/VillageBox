@@ -13,6 +13,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -21,7 +22,11 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 
-public class BlockMailBox extends BlockFacing {
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+public class BlockMailBox
+        extends BlockFacing {
 
     public BlockMailBox() {
         super(Material.WOOD);
@@ -32,20 +37,33 @@ public class BlockMailBox extends BlockFacing {
     }
 
     @Override
-    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn,
-                                    EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
+    public boolean onBlockActivated(World worldIn, @Nonnull BlockPos pos, @Nonnull IBlockState state,
+                                    @Nonnull EntityPlayer playerIn, @Nonnull EnumHand hand, ItemStack heldItem,
+                                    @Nonnull EnumFacing side, float hitX, float hitY, float hitZ) {
 
         if (!worldIn.isRemote) {
-            if (playerIn.getHeldItem(hand) != null && playerIn.getHeldItem(hand).getItem() == ModItems.invitation) {
+            @Nullable final ItemStack currentStackOfHeldItems = playerIn.getHeldItem(hand);
+            @Nullable Item currentItem = null;
+
+            if (currentStackOfHeldItems != null) {
+                currentItem = currentStackOfHeldItems.getItem();
+            }
+
+            if (currentItem != null && currentItem == ModItems.invitation) {
                 if (ExtendedPlayerProperties.get(playerIn).hasSentInvitation) {
                     playerIn.addChatMessage(new TextComponentTranslation(PathHelper.full("message.mail.invitefailed")));
                 } else {
                     if (!playerIn.capabilities.isCreativeMode) {
-                        ItemStack stack = playerIn.getHeldItem(hand);
-                        --stack.stackSize;
+                        @Nullable ItemStack stack = playerIn.getHeldItem(hand);
 
-                        if (stack.stackSize <= 0) {
-                            playerIn.inventory.setInventorySlotContents(playerIn.inventory.currentItem, (ItemStack) null);
+                        if (stack != null) {
+                            --stack.stackSize;
+                        }
+
+                        if (stack != null && stack.stackSize <= 0) {
+                            playerIn.inventory.setInventorySlotContents(
+                                    playerIn.inventory.currentItem, null
+                            );
                         }
                     }
                     ExtendedPlayerProperties.get(playerIn).sendNewVillagerInvitation();
@@ -56,6 +74,7 @@ public class BlockMailBox extends BlockFacing {
                     //get mail
                     ExtendedPlayerProperties.get(playerIn).receiveNewVillagerMail();
                     ItemStack mail = MailGenerator.generate();
+
                     //drop mail
                     double x = (double) pos.getX() + 0.5D;
                     double y = (double) pos.getY() + 0.5D;
@@ -65,7 +84,7 @@ public class BlockMailBox extends BlockFacing {
                     double d1 = playerIn.posX - x;
                     double d3 = playerIn.posY - y;
                     double d5 = playerIn.posZ - z;
-                    double d7 = (double) MathHelper.sqrt_double(d1 * d1 + d3 * d3 + d5 * d5);
+                    double d7 = MathHelper.sqrt_double(d1 * d1 + d3 * d3 + d5 * d5);
                     double d9 = 0.08D;
                     entityitem.motionX = d1 * d9;
                     entityitem.motionY = d3 * d9 + (double) MathHelper.sqrt_double(d7) * 0.05D;
@@ -77,10 +96,7 @@ public class BlockMailBox extends BlockFacing {
                     playerIn.addChatMessage(new TextComponentTranslation(PathHelper.full("message.mail.nomail")));
                 }
             }
-
-
         }
-
         return true;
     }
 

@@ -17,9 +17,12 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class BlockBuildBox extends Block {
+import javax.annotation.Nonnull;
 
-    private BuildSize size;
+public class BlockBuildBox
+        extends Block {
+
+    private final BuildSize size;
 
     public BlockBuildBox(BuildSize size) {
         super(Material.WOOD);
@@ -31,8 +34,10 @@ public class BlockBuildBox extends Block {
     }
 
     @Override
-    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn,
-                                    EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
+    public boolean onBlockActivated(World worldIn, @Nonnull BlockPos pos, @Nonnull IBlockState state,
+                                    @Nonnull EntityPlayer playerIn, @Nonnull EnumHand hand,
+                                    ItemStack heldItem, @Nonnull EnumFacing side,
+                                    float hitX, float hitY, float hitZ) {
 
         if (!worldIn.isRemote) {
             //remove buildbox
@@ -56,33 +61,39 @@ public class BlockBuildBox extends Block {
         IBlockState bsp = Blocks.PLANKS.getDefaultState();
         IBlockState bss = Blocks.STONEBRICK.getDefaultState();
         IBlockState bsw = Blocks.GLASS_PANE.getDefaultState();
-        //		BlockPlanks.EnumType ptRoof = BlockPlanks.EnumType.DARK_OAK;
-        //		BlockPlanks.EnumType ptWall = BlockPlanks.EnumType.BIRCH;
-        //		BlockPlanks.EnumType ptFloor = BlockPlanks.EnumType.OAK;
 
-        int flags = 1 | 2;
+        //	BlockPlanks.EnumType ptRoof = BlockPlanks.EnumType.DARK_OAK;
+        //	BlockPlanks.EnumType ptWall = BlockPlanks.EnumType.BIRCH;
+        //	BlockPlanks.EnumType ptFloor = BlockPlanks.EnumType.OAK;
+
+        //int flags = 1 | 2;
 
         for (int x = xmin; x <= xmax; x++) {
             for (int z = zmin; z <= zmax; z++) {
                 for (int y = ymin; y <= ymax; y++) {
-                    if (y == ymin) {//floor
+                    if (y == ymin) {
+                        //floor
                         if (world.isAirBlock(new BlockPos(x, y, z)) || removeOld)
                             world.setBlockState(new BlockPos(x, y, z), bsp);
-                    } else if (y == ymax)//roof
-                    {
+                    } else if (y == ymax) {
+                        // roof
                         if (world.isAirBlock(new BlockPos(x, y, z)) || removeOld)
                             world.setBlockState(new BlockPos(x, y, z), bsp);
-                    } else if (x != xmin && z != zmin && x != xmax && z != zmax) {//empty space
+                    } else if (x != xmin && z != zmin && x != xmax && z != zmax) {
+                        //empty space
                         if (world.isAirBlock(new BlockPos(x, y, z)) || removeOld)
                             world.setBlockToAir(new BlockPos(x, y, z));
-                    } else {//wall
+                    } else {
+                        //wall
                         if ((y == ymin + 2 || y == ymin + 3) && (x == pos.getX() || z == pos.getZ())) {//window
                             if (world.isAirBlock(new BlockPos(x, y, z)) || removeOld)
                                 world.setBlockState(new BlockPos(x, y, z), bsw);
-                        } else if (y == ymin + 1) {//walls (first layer)
+                        } else if (y == ymin + 1) {
+                            //walls (first layer)
                             if (world.isAirBlock(new BlockPos(x, y, z)) || removeOld)
                                 world.setBlockState(new BlockPos(x, y, z), bss);
-                        } else {//walls (the rest)
+                        } else {
+                            //walls (the rest)
                             if (world.isAirBlock(new BlockPos(x, y, z)) || removeOld)
                                 world.setBlockState(new BlockPos(x, y, z), bsp);
                         }
@@ -94,7 +105,7 @@ public class BlockBuildBox extends Block {
 
     }
 
-    public static enum BuildSize {
+    public enum BuildSize {
 
         ExLarge("buildboxExLarge", 5, 5),
         Large("buildboxLarge", 4, 5),
@@ -105,7 +116,7 @@ public class BlockBuildBox extends Block {
         public final int radius;
         public final int height;
 
-        private BuildSize(String name, int radius, int height) {
+        BuildSize(String name, int radius, int height) {
             this.name = name;
             this.radius = radius;
             this.height = height;
