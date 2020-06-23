@@ -4,7 +4,6 @@
 package ckhbox.villagebox.common.config.jsonData;
 
 public class JsonTradingRecipe {
-
     //input & output item stack string format:
     //domain,itemID,amount,meta
     //example: minecraft,log,1,0 indicates a Oak Wood from Vanillia minecraft

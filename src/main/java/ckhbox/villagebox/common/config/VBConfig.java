@@ -3,6 +3,7 @@
 
 package ckhbox.villagebox.common.config;
 
+import ckhbox.villagebox.Constants;
 import ckhbox.villagebox.VillageBoxMod;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
@@ -26,59 +27,59 @@ public class VBConfig {
     public static boolean disableBookAtStarting;            ////disable the village box at starting
 
     public static void load(File file) {
-        Configuration conf = new Configuration(file, VillageBoxMod.VERSION);
-        Property pt = null;
+        Configuration conf = new Configuration(file, Constants.MOD_VERSION);
+        Property pproperty = null;
 
         conf.load();
 
         //profession ban list
-        pt = conf.get(Configuration.CATEGORY_GENERAL, "BannedProIDList", new int[0]);
-        pt.setComment("Banned profession IDs. One id per line, empty means no banned professions");
-        proIDBanList = pt.getIntList();
+        pproperty = conf.get(Configuration.CATEGORY_GENERAL, "BannedProIDList", new int[0]);
+        pproperty.setComment("Banned profession IDs. One id per line, empty means no banned professions");
+        proIDBanList = pproperty.getIntList();
 
         //coin earning options
-        pt = conf.get(Configuration.CATEGORY_GENERAL, "DestroyBlocksDropCoins", true);
-        pt.setComment("Does destroying blocks drop coins?");
-        destroyBlocksDropCoins = pt.getBoolean();
+        pproperty = conf.get(Configuration.CATEGORY_GENERAL, "DestroyBlocksDropCoins", true);
+        pproperty.setComment("Does destroying blocks drop coins?");
+        destroyBlocksDropCoins = pproperty.getBoolean();
 
-        pt = conf.get(Configuration.CATEGORY_GENERAL, "KillMobsDropCoins", true);
-        pt.setComment("Does killing mobs drop coins?");
-        killMobsDropCoins = pt.getBoolean();
+        pproperty = conf.get(Configuration.CATEGORY_GENERAL, "KillMobsDropCoins", true);
+        pproperty.setComment("Does killing mobs drop coins?");
+        killMobsDropCoins = pproperty.getBoolean();
 
         //display extra information
-        pt = conf.get(Configuration.CATEGORY_GENERAL, "displayExtraInfo", false);
-        pt.setComment("removed");
-        displayExtraInfo = pt.getBoolean();
+        pproperty = conf.get(Configuration.CATEGORY_GENERAL, "displayExtraInfo", false);
+        pproperty.setComment("removed");
+        displayExtraInfo = pproperty.getBoolean();
 
         //villager revive ticks
-        pt = conf.get(Configuration.CATEGORY_GENERAL, "ReviveTicks", 24000);
-        pt.setComment("How many ticks until a dead villager revives again");
-        reviveTicks = pt.getInt();
+        pproperty = conf.get(Configuration.CATEGORY_GENERAL, "ReviveTicks", 24000);
+        pproperty.setComment("How many ticks until a dead villager revives again");
+        reviveTicks = pproperty.getInt();
 
         //free upgrading
-        pt = conf.get(Configuration.CATEGORY_GENERAL, "FreeUpgrading", false);
-        pt.setComment("Set to true when you want nothing be consumed on upgrading villagers");
-        freeUpgrading = pt.getBoolean();
+        pproperty = conf.get(Configuration.CATEGORY_GENERAL, "FreeUpgrading", false);
+        pproperty.setComment("Set to true when you want nothing be consumed on upgrading villagers");
+        freeUpgrading = pproperty.getBoolean();
 
         //one villager one room
-        pt = conf.get(Configuration.CATEGORY_GENERAL, "OneVillagerPerRoom", false);
-        pt.setComment("Set to true to disallow more than one villagers live in the same room");
-        oneVillagerPerRoom = pt.getBoolean();
+        pproperty = conf.get(Configuration.CATEGORY_GENERAL, "OneVillagerPerRoom", false);
+        pproperty.setComment("Set to true to disallow more than one villagers live in the same room");
+        oneVillagerPerRoom = pproperty.getBoolean();
 
         //quest frequency
-        pt = conf.get(Configuration.CATEGORY_GENERAL, "QuestFrequency", 24000);
-        pt.setComment("How fast the new quest appears. e.g. 0 or a number less than 0 means no new quest, 24000 means one new quest per day in average, 72000 means one new quest every three days in average");
-        questFrequency = pt.getInt();
+        pproperty = conf.get(Configuration.CATEGORY_GENERAL, "QuestFrequency", 24000);
+        pproperty.setComment("How fast the new quest appears. e.g. 0 or a number less than 0 means no new quest, 24000 means one new quest per day in average, 72000 means one new quest every three days in average");
+        questFrequency = pproperty.getInt();
 
         //quest lifetime
-        pt = conf.get(Configuration.CATEGORY_GENERAL, "QuestLifetime", 48000);
-        pt.setComment("The life time of a quest. e.g. 48000 means the quest will exist 2 minecraft days");
-        questLifetime = pt.getInt();
+        pproperty = conf.get(Configuration.CATEGORY_GENERAL, "QuestLifetime", 48000);
+        pproperty.setComment("The life time of a quest. e.g. 48000 means the quest will exist 2 minecraft days");
+        questLifetime = pproperty.getInt();
 
         //disable the village box at starting
-        pt = conf.get(Configuration.CATEGORY_GENERAL, "DisableBookAtStarting", false);
-        pt.setComment("Disable the village box at starting");
-        disableBookAtStarting = pt.getBoolean();
+        pproperty = conf.get(Configuration.CATEGORY_GENERAL, "DisableBookAtStarting", false);
+        pproperty.setComment("Disable the village box at starting");
+        disableBookAtStarting = pproperty.getBoolean();
 
         conf.save();
     }

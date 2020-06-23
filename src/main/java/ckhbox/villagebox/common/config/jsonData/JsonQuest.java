@@ -4,7 +4,6 @@
 package ckhbox.villagebox.common.config.jsonData;
 
 public class JsonQuest {
-
     //objectives & rewards item stack string format:
     //domain,itemID,amount,meta
     //example: minecraft,log,1,0 indicates a Oak Wood from Vanillia minecraft

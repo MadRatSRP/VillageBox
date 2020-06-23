@@ -6,10 +6,9 @@ package ckhbox.villagebox.common.config.jsonData;
 import java.util.ArrayList;
 
 public class JsonVBData {
-
-    public ArrayList<JsonProfession> professions;
+    public ArrayList<JsonProfession> listOfProfessions;
 
     public JsonVBData() {
-        professions = new ArrayList<JsonProfession>();
+        listOfProfessions = new ArrayList<>();
     }
 }

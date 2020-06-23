@@ -21,7 +21,7 @@ import java.util.List;
 
 public class ExtendedPlayerProperties {
 
-    public static final ResourceLocation key = new ResourceLocation(VillageBoxMod.MODID + ".expp");
+    public static final ResourceLocation key = new ResourceLocation(VillageBoxMod.MOD_ID + ".expp");
 
     public static final int NewMailTimerTotal = 2000;
     public EntityPlayer player;

@@ -51,8 +51,8 @@ public class Profession implements IRegistrable {
 
         JsonVBData data = JsonDataManager.GetVBData();
 
-        for (JsonProfession pro : data.professions) {
-            registry.register(pro.id, new Profession(pro));
+        for (JsonProfession pro : data.listOfProfessions) {
+            registry.register(pro.professionId, new Profession(pro));
         }
     }
 
@@ -72,8 +72,8 @@ public class Profession implements IRegistrable {
 
         //trading
         tradingRecipeList = new TradingRecipeList();
-        if (proData.tradingRecipes != null) {
-            for (JsonTradingRecipe recipe : proData.tradingRecipes) {
+        if (proData.listOfTradingRecipes != null) {
+            for (JsonTradingRecipe recipe : proData.listOfTradingRecipes) {
                 this.tradingRecipeList.add(new TradingRecipe(
                         JsonHelper.stringsToItemStacks(recipe.inputs),
                         JsonHelper.stringToItemStack(recipe.output)));
@@ -89,8 +89,8 @@ public class Profession implements IRegistrable {
 
         //quests
         this.quests = new ArrayList<Quest>();
-        if (proData.quests != null) {
-            for (JsonQuest quest : proData.quests) {
+        if (proData.listOfQuests != null) {
+            for (JsonQuest quest : proData.listOfQuests) {
                 this.quests.add(new Quest(
                         JsonHelper.stringsToItemStacks(quest.objectives),
                         JsonHelper.stringsToItemStacks(quest.rewards)));

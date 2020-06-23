@@ -291,7 +291,7 @@ public class ModItems {
     }
 
     public static void register(Item item, String name) {
-        GameRegistry.register(item, new ResourceLocation(VillageBoxMod.MODID, name));
+        GameRegistry.register(item, new ResourceLocation(VillageBoxMod.MOD_ID, name));
     }
 
     public static class ToolMaterials {

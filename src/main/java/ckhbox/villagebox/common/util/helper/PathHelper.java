@@ -7,6 +7,6 @@ import ckhbox.villagebox.VillageBoxMod;
 
 public class PathHelper {
     public static String full(String path) {
-        return VillageBoxMod.MODID + ":" + path;
+        return VillageBoxMod.MOD_ID + ":" + path;
     }
 }

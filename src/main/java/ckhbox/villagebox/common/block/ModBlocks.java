@@ -223,7 +223,7 @@ public class ModBlocks {
     }
 
     public static void register(Block block, String name, ItemBlock item) {
-        GameRegistry.register(block, new ResourceLocation(VillageBoxMod.MODID, name));
-        GameRegistry.register(item, new ResourceLocation(VillageBoxMod.MODID, name));
+        GameRegistry.register(block, new ResourceLocation(VillageBoxMod.MOD_ID, name));
+        GameRegistry.register(item, new ResourceLocation(VillageBoxMod.MOD_ID, name));
     }
 }

@@ -18,17 +18,19 @@ import net.minecraft.item.ItemStack;
 
 public class PageTutorial extends Page {
 
-    private Profession expample = null;
+    private Profession example = null;
 
     public PageTutorial(GuiVillageBook guiVillageBook) {
         super(guiVillageBook, I18n.format(PathHelper.full("villageBook.tutorial")));
-        if (expample == null) {
-            //fake a profession data
+        if (example == null) {
+            // fake a profession data
             JsonProfession proData = new JsonProfession();
             proData.texture = "villager0";
-            expample = new Profession(proData);
+            example = new Profession(proData);
         }
     }
+
+
 
     @Override
     public void onInit() {
@@ -65,7 +67,7 @@ public class PageTutorial extends Page {
 
         int top = this.guiVillageBook.getContentTop() + 120;
         //int left = this.guiVillageBook.getContentLeft() + 20;
-        this.guiVillageBook.drawProEntity(this.guiVillageBook.getContentLeft() + 50, top, this.expample, true);
+        this.guiVillageBook.drawProEntity(this.guiVillageBook.getContentLeft() + 50, top, this.example, true);
     }
 
 }
