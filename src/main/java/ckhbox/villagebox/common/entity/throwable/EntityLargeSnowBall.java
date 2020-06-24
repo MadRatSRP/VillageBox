@@ -15,23 +15,26 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.RayTraceResult.Type;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 public class EntityLargeSnowBall extends EntityThrowable {
-    public EntityLargeSnowBall(World worldIn) {
+    /*public EntityLargeSnowBall(World worldIn) {
         super(worldIn);
-    }
+    }*/
 
     public EntityLargeSnowBall(World worldIn, EntityLivingBase throwerIn) {
         super(worldIn, throwerIn);
     }
 
-    public EntityLargeSnowBall(World worldIn, double x, double y, double z) {
+    /*public EntityLargeSnowBall(World worldIn, double x, double y, double z) {
         super(worldIn, x, y, z);
-    }
+    }*/
 
     /**
      * Called when this EntityThrowable hits a block or entity.
      */
-    protected void onImpact(RayTraceResult result) {
+    protected void onImpact(@Nonnull RayTraceResult result) {
         if (!this.worldObj.isRemote) {
             if (result.entityHit != null) {
                 int i = 0;
@@ -45,18 +48,25 @@ public class EntityLargeSnowBall extends EntityThrowable {
 
 
             if (result.typeOfHit != Type.MISS) {
-                BlockPos pos;
+                @Nullable BlockPos pos = null;
+
                 if (result.typeOfHit == Type.BLOCK) {
                     pos = result.getBlockPos();
                 } else {
-                    pos = new BlockPos(result.entityHit);
+                    if (result.entityHit != null) {
+                        pos = new BlockPos(result.entityHit);
+                    }
                 }
-                updateNearbyBlocks(pos);
+
+                if (pos != null) {
+                    updateNearbyBlocks(pos);
+                }
             }
         }
 
         for (int j = 0; j < 16; ++j) {
-            this.worldObj.spawnParticle(EnumParticleTypes.SNOWBALL, this.posX, this.posY, this.posZ, 0.0D, 0.0D, 0.0D, new int[0]);
+            this.worldObj.spawnParticle(EnumParticleTypes.SNOWBALL, this.posX, this.posY, this.posZ,
+                    0.0D, 0.0D, 0.0D, new int[0]);
         }
 
         if (!this.worldObj.isRemote) {

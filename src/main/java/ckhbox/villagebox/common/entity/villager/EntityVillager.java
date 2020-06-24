@@ -120,7 +120,7 @@ public class EntityVillager
 
         this.tasks.addTask(0, new EntityAISwimming(this));
 
-        this.tasks.addTask(1, new EntityAIAvoidEntity(this, EntityZombie.class, 8.0F, 0.6D, 0.6D));
+        this.tasks.addTask(1, new EntityAIAvoidEntity<>(this, EntityZombie.class, 8.0F, 0.6D, 0.6D));
 
         this.tasks.addTask(1, new VillagerAILookAtInteractPlayer(this));
 

@@ -6,14 +6,16 @@ package ckhbox.villagebox.common.entity.ai;
 import ckhbox.villagebox.common.entity.villager.EntityVillager;
 import net.minecraft.entity.ai.EntityAIBase;
 
-public class VillagerAIFollowing extends EntityAIBase {
+public class VillagerAIFollowing
+        extends EntityAIBase {
     private static final double maxDisSq = 144.0F;
     private static final double minDisSq = 9.0F;
+
     /**
      * The child that is following its parent.
      */
-    private EntityVillager villager;
-    private float moveSpeed;
+    private final EntityVillager villager;
+    private final float moveSpeed;
     private int delayCounter;
 
     public VillagerAIFollowing(EntityVillager villager, float speed) {

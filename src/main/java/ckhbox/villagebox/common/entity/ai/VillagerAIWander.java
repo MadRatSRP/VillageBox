@@ -9,12 +9,12 @@ import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.util.math.Vec3d;
 
 public class VillagerAIWander extends EntityAIBase {
-    private EntityVillager villager;
-    private double speed;
+    private final EntityVillager villager;
+    private final double speed;
     private double xPosition;
     private double yPosition;
     private double zPosition;
-    private int executionChance;
+    private final int executionChance;
 
     public VillagerAIWander(EntityVillager villagerIn, double speedIn) {
         this(villagerIn, speedIn, 50);
@@ -44,7 +44,7 @@ public class VillagerAIWander extends EntityAIBase {
             return false;
         }
 
-        Vec3d vec3 = null;
+        Vec3d vec3;
 
         if (this.villager.getHome() == null) {
             vec3 = new Vec3d(
@@ -54,10 +54,10 @@ public class VillagerAIWander extends EntityAIBase {
             );
         } else {
             if (this.villager.worldObj.isDaytime() && !this.villager.worldObj.isRaining()) {
-                //if now is day time and not raining, the villager will randomly walking near home
+                // if now is day time and not raining, the villager will randomly walking near home
                 vec3 = this.villager.getHome().extend(5, 2, 5).getRandomPosInsideBoundary();
             } else {
-                //if is raining or at night, the villager will stay at home
+                // if is raining or at night, the villager will stay at home
                 vec3 = this.villager.getHome().getRandomPosInsideBoundary();
             }
         }

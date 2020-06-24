@@ -18,34 +18,34 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 import java.util.UUID;
 
-public class EntityPainting extends EntityHanging implements IEntityAdditionalSpawnData {
+public class EntityPainting
+        extends EntityHanging
+        implements IEntityAdditionalSpawnData {
     public EntityPainting.EnumArt art;
 
-    public EntityPainting(World worldIn) {
+    /*public EntityPainting(World worldIn) {
         super(worldIn);
-    }
+    }*/
 
     public EntityPainting(World worldIn, BlockPos pos, EnumFacing facing) {
         super(worldIn, pos);
-        List<EntityPainting.EnumArt> list = Lists.<EntityPainting.EnumArt>newArrayList();
+        List<EntityPainting.EnumArt> list = Lists.newArrayList();
 
-        for (EntityPainting.EnumArt entitypainting$enumart : EntityPainting.EnumArt.values()) {
-            this.art = entitypainting$enumart;
+        for (EntityPainting.EnumArt entityPaintingEnumArt : EntityPainting.EnumArt.values()) {
+            this.art = entityPaintingEnumArt;
             this.updateFacingWithBoundingBox(facing);
 
             if (this.onValidSurface()) {
-                list.add(entitypainting$enumart);
+                list.add(entityPaintingEnumArt);
             }
         }
 
         if (!list.isEmpty()) {
-            this.art = (EntityPainting.EnumArt) list.get(this.rand.nextInt(list.size()));
+            this.art = list.get(this.rand.nextInt(list.size()));
         }
 
         this.updateFacingWithBoundingBox(facing);
@@ -96,7 +96,10 @@ public class EntityPainting extends EntityHanging implements IEntityAdditionalSp
         buffer.writeInt(this.getHangingPosition().getX());
         buffer.writeInt(this.getHangingPosition().getY());
         buffer.writeInt(this.getHangingPosition().getZ());
-        buffer.writeByte(this.facingDirection.getHorizontalIndex());
+
+        if (this.facingDirection != null) {
+            buffer.writeByte(this.facingDirection.getHorizontalIndex());
+        }
     }
 
     @Override
@@ -148,16 +151,20 @@ public class EntityPainting extends EntityHanging implements IEntityAdditionalSp
      */
     public void setLocationAndAngles(double x, double y, double z, float yaw, float pitch) {
         BlockPos blockpos = this.hangingPosition.add(x - this.posX, y - this.posY, z - this.posZ);
-        this.setPosition((double) blockpos.getX(), (double) blockpos.getY(), (double) blockpos.getZ());
+
+        this.setPosition(blockpos.getX(), blockpos.getY(), blockpos.getZ());
     }
 
+    /*
     @SideOnly(Side.CLIENT)
-    public void setPositionAndRotation2(double x, double y, double z, float yaw, float pitch, int posRotationIncrements, boolean p_180426_10_) {
+    public void setPositionAndRotation2(double x, double y, double z, float yaw, float pitch,
+                                        int posRotationIncrements, boolean p_180426_10_) {
         BlockPos blockpos = this.hangingPosition.add(x - this.posX, y - this.posY, z - this.posZ);
-        this.setPosition((double) blockpos.getX(), (double) blockpos.getY(), (double) blockpos.getZ());
-    }
 
-    public static enum EnumArt {
+        this.setPosition(blockpos.getX(), blockpos.getY(), blockpos.getZ());
+    }*/
+
+    public enum EnumArt {
         TREE("Tree", 16, 16, 0, 0),
         TAVERN("Tavern", 16, 16, 16, 0),
         CHURCH("Church", 16, 16, 32, 0),
@@ -188,7 +195,8 @@ public class EntityPainting extends EntityHanging implements IEntityAdditionalSp
         HOUSE2("House2", 64, 48, 192, 160),
         TREE2("Tree2", 64, 48, 192, 208);
 
-        public static final int MAX_NAME_LENGTH = "SkullAndRoses".length();
+        //public static final int MAX_NAME_LENGTH = "SkullAndRoses".length();
+
         /**
          * Painting Title.
          */
@@ -198,7 +206,7 @@ public class EntityPainting extends EntityHanging implements IEntityAdditionalSp
         public final int offsetX;
         public final int offsetY;
 
-        private EnumArt(String titleIn, int width, int height, int textureU, int textureV) {
+        EnumArt(String titleIn, int width, int height, int textureU, int textureV) {
             this.title = titleIn;
             this.sizeX = width;
             this.sizeY = height;

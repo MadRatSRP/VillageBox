@@ -7,7 +7,8 @@ import ckhbox.villagebox.common.entity.villager.EntityVillager;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.player.EntityPlayer;
 
-public class VillagerAILookAtInteractPlayer extends EntityAIWatchClosest {
+public class VillagerAILookAtInteractPlayer
+        extends EntityAIWatchClosest {
     private final EntityVillager villager;
 
     public VillagerAILookAtInteractPlayer(EntityVillager villager) {
