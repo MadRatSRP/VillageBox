@@ -10,10 +10,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 public class ItemDismissalScroll extends Item {
-
     public ItemDismissalScroll() {
         this.setUnlocalizedName(PathHelper.full("dismissalScroll"));
         this.setCreativeTab(ModItems.tabVB);
@@ -21,13 +21,12 @@ public class ItemDismissalScroll extends Item {
     }
 
     @Override
-    public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
+    public void addInformation(@Nonnull ItemStack stack, @Nonnull EntityPlayer playerIn,
+                               @Nonnull List<String> tooltip, boolean advanced) {
         super.addInformation(stack, playerIn, tooltip, advanced);
         String info = I18n.format(PathHelper.full("info.item.dismissalScroll.line0"));
         String info1 = I18n.format(PathHelper.full("info.item.dismissalScroll.line1"));
         tooltip.add(info);
         tooltip.add(info1);
     }
-
-
 }

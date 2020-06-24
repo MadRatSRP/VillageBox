@@ -35,7 +35,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ModItems {
-
     public static final CreativeTabs tabVB = new CreativeTabs("tabVillageBox") {
         @SideOnly(Side.CLIENT)
         public Item getTabIconItem() {
@@ -47,6 +46,7 @@ public class ModItems {
             return 0;
         }
     };
+
     public static ItemTreasureBook treasureHuntBookI;
     public static ItemTreasureBook treasureHuntBookII;
     public static ItemTreasureBook treasureHuntBookIII;
@@ -294,16 +294,27 @@ public class ModItems {
         GameRegistry.register(item, new ResourceLocation(VillageBoxMod.MOD_ID, name));
     }
 
+    //public static void registerAndSetUnlocalizedName(Item item, )
+
+
+    //register(steelShovel = (new ItemShovel(ModItems.ToolMaterials.STEEL).setUnlocalizedName(PathHelper.full("steelShovel"))), "steel_shovel");
+
     public static class ToolMaterials {
-        public static ToolMaterial STEEL = EnumHelper.addToolMaterial("VB:STEEL", 2, 500, 7.0F, 3.0F, 15);
-        public static ToolMaterial RUNESTEEL = EnumHelper.addToolMaterial("VB:RUNESTEEL", 3, 1000, 8.0F, 3.0F, 18);
+        public static ToolMaterial STEEL = EnumHelper.addToolMaterial("VB:STEEL",
+                2, 500, 7.0F, 3.0F, 15);
+        public static ToolMaterial RUNESTEEL = EnumHelper.addToolMaterial("VB:RUNESTEEL",
+                3, 1000, 8.0F, 3.0F, 18);
     }
 
     public static class ArmorMaterials {
-        public static ArmorMaterial WOOD = EnumHelper.addArmorMaterial("VB:WOOD", PathHelper.full("wooden"), 7, new int[]{2, 4, 3, 2}, 10, SoundEvents.ITEM_ARMOR_EQUIP_LEATHER, 0.0F);
-        public static ArmorMaterial STEEL = EnumHelper.addArmorMaterial("VB:STEEL", PathHelper.full("steel"), 15, new int[]{3, 7, 6, 3}, 12, SoundEvents.ITEM_ARMOR_EQUIP_IRON, 2.0F);
-        public static ArmorMaterial RUNESTEEL = EnumHelper.addArmorMaterial("VB:RUNESTEEL", PathHelper.full("steel"), 30, new int[]{3, 8, 7, 3}, 15, SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, 2.0F);
+        public static ArmorMaterial WOOD = EnumHelper.addArmorMaterial("VB:WOOD",
+                PathHelper.full("wooden"), 7, new int[]{2, 4, 3, 2}, 10,
+                SoundEvents.ITEM_ARMOR_EQUIP_LEATHER, 0.0F);
+        public static ArmorMaterial STEEL = EnumHelper.addArmorMaterial("VB:STEEL",
+                PathHelper.full("steel"), 15, new int[]{3, 7, 6, 3}, 12,
+                SoundEvents.ITEM_ARMOR_EQUIP_IRON, 2.0F);
+        public static ArmorMaterial RUNESTEEL = EnumHelper.addArmorMaterial("VB:RUNESTEEL",
+                PathHelper.full("steel"), 30, new int[]{3, 8, 7, 3}, 15,
+                SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, 2.0F);
     }
-
-
 }

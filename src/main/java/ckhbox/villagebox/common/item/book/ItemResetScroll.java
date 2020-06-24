@@ -10,10 +10,11 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
-public class ItemResetScroll extends Item {
-
+public class ItemResetScroll
+        extends Item {
     public ItemResetScroll() {
         this.setUnlocalizedName(PathHelper.full("resetScroll"));
         this.setCreativeTab(ModItems.tabVB);
@@ -21,11 +22,10 @@ public class ItemResetScroll extends Item {
     }
 
     @Override
-    public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
+    public void addInformation(@Nonnull ItemStack stack, @Nonnull EntityPlayer playerIn,
+                               @Nonnull List<String> tooltip, boolean advanced) {
         super.addInformation(stack, playerIn, tooltip, advanced);
         String info = I18n.format(PathHelper.full("item.resetScroll.item.info"));
         tooltip.add(info);
     }
-
-
 }
