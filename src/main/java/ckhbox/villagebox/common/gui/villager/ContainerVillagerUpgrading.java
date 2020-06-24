@@ -15,16 +15,17 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 public class ContainerVillagerUpgrading extends Container {
     /**
      * Instance of World.
      */
     private final World world;
-    private EntityVillager villager;
-    private InventoryUpgrading upgradingInventory;
+    private final InventoryUpgrading upgradingInventory;
 
     public ContainerVillagerUpgrading(InventoryPlayer playerInventory, EntityVillager villager, World world) {
-        this.villager = villager;
         this.world = world;
         this.upgradingInventory = new InventoryUpgrading(playerInventory.player, villager);
         this.addSlotToContainer(new Slot(this.upgradingInventory, 0, 20, 49));
@@ -56,7 +57,7 @@ public class ContainerVillagerUpgrading extends Container {
     /**
      * Callback for when the crafting matrix is changed.
      */
-    public void onCraftMatrixChanged(IInventory inventoryIn) {
+    public void onCraftMatrixChanged(@Nonnull IInventory inventoryIn) {
         this.upgradingInventory.resetUpgradeOptionAndSlots();
         super.onCraftMatrixChanged(inventoryIn);
     }
@@ -69,7 +70,7 @@ public class ContainerVillagerUpgrading extends Container {
     public void updateProgressBar(int id, int data) {
     }
 
-    public boolean canInteractWith(EntityPlayer playerIn) {
+    public boolean canInteractWith(@Nonnull EntityPlayer playerIn) {
         return this.upgradingInventory.isUseableByPlayer(playerIn);
     }
 
@@ -78,38 +79,48 @@ public class ContainerVillagerUpgrading extends Container {
     }
 
     @Override
-    public ItemStack transferStackInSlot(EntityPlayer playerIn, int index) {
-        //NEED CHANGES
-        ItemStack itemstack = null;
-        Slot slot = (Slot) this.inventorySlots.get(index);
+    public ItemStack transferStackInSlot(@Nonnull EntityPlayer playerIn, int index) {
+        // NEED CHANGES
+        @Nullable ItemStack itemstack = null;
+        Slot slot = this.inventorySlots.get(index);
 
         if (slot != null && slot.getHasStack()) {
-            ItemStack itemstack1 = slot.getStack();
-            itemstack = itemstack1.copy();
+            @Nullable final ItemStack itemstack1 = slot.getStack();
+
+            if (itemstack1 != null) {
+                itemstack = itemstack1.copy();
+            }
 
             if (index >= 3) {
-                if (index >= 3 && index < 30) {
-                    if (!this.mergeItemStack(itemstack1, 30, 39, false)) {
+                if (index < 30) {
+                    if (itemstack1 != null && !this.mergeItemStack(itemstack1, 30,
+                            39, false)) {
                         return null;
                     }
-                } else if (index >= 30 && index < 39 && !this.mergeItemStack(itemstack1, 3, 30, false)) {
+                } else if (itemstack1 != null && index < 39 && !this.mergeItemStack(itemstack1, 3,
+                        30, false)) {
                     return null;
                 }
-            } else if (!this.mergeItemStack(itemstack1, 3, 39, false)) {
+            } else if (itemstack1 != null && !this.mergeItemStack(itemstack1, 3, 39,
+                    false)) {
                 return null;
             }
 
-            if (itemstack1.stackSize == 0) {
-                slot.putStack((ItemStack) null);
-            } else {
-                slot.onSlotChanged();
+            if (itemstack1 != null) {
+                if (itemstack1.stackSize == 0) {
+                    slot.putStack(null);
+                } else {
+                    slot.onSlotChanged();
+                }
             }
 
-            if (itemstack1.stackSize == itemstack.stackSize) {
+            if (itemstack1 != null && itemstack1.stackSize == itemstack.stackSize) {
                 return null;
             }
 
-            slot.onPickupFromSlot(playerIn, itemstack1);
+            if (itemstack1 != null) {
+                slot.onPickupFromSlot(playerIn, itemstack1);
+            }
         }
 
         return itemstack;
@@ -118,7 +129,7 @@ public class ContainerVillagerUpgrading extends Container {
     /**
      * Called when the container is closed.
      */
-    public void onContainerClosed(EntityPlayer playerIn) {
+    public void onContainerClosed(@Nonnull EntityPlayer playerIn) {
         super.onContainerClosed(playerIn);
 
         if (!this.world.isRemote) {

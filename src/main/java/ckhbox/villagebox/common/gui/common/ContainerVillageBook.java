@@ -10,8 +10,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
 
-public class ContainerVillageBook extends Container {
+import javax.annotation.Nonnull;
 
+public class ContainerVillageBook extends Container {
     public ContainerVillageBook(EntityPlayer player) {
         if (player instanceof EntityPlayerMP) {
             ExtendedPlayerProperties properties = ExtendedPlayerProperties.get(player);
@@ -21,8 +22,7 @@ public class ContainerVillageBook extends Container {
     }
 
     @Override
-    public boolean canInteractWith(EntityPlayer playerIn) {
+    public boolean canInteractWith(@Nonnull EntityPlayer playerIn) {
         return true;
     }
-
 }

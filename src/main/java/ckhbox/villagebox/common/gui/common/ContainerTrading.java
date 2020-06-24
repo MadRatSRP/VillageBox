@@ -16,23 +16,24 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
+
 public class ContainerTrading extends Container {
     /**
      * Instance of World.
      */
     private final World world;
-    private ITrading trader;
-    private InventoryTrading tradingInventory;
+    private final InventoryTrading tradingInventory;
 
     public ContainerTrading(InventoryPlayer playerInventory, ITrading trader, World world) {
-        this.trader = trader;
         this.world = world;
         this.tradingInventory = new InventoryTrading(playerInventory.player, trader);
         this.addSlotToContainer(new Slot(this.tradingInventory, 0, 23, 53));
         this.addSlotToContainer(new Slot(this.tradingInventory, 1, 41, 53));
         this.addSlotToContainer(new Slot(this.tradingInventory, 2, 59, 53));
         this.addSlotToContainer(new Slot(this.tradingInventory, 3, 77, 53));
-        this.addSlotToContainer(new SlotTradingOutput(playerInventory.player, trader, this.tradingInventory, 4, 132, 53));
+        this.addSlotToContainer(new SlotTradingOutput(playerInventory.player, trader, this.tradingInventory,
+                4, 132, 53));
 
         for (int i = 0; i < 3; ++i) {
             for (int j = 0; j < 9; ++j) {
@@ -45,9 +46,9 @@ public class ContainerTrading extends Container {
         }
     }
 
-    public InventoryTrading getTradingInventory() {
+    /*public InventoryTrading getTradingInventory() {
         return this.tradingInventory;
-    }
+    }*/
 
     /**
      * Looks for changes made in the container, sends them to every listener.
@@ -59,7 +60,7 @@ public class ContainerTrading extends Container {
     /**
      * Callback for when the crafting matrix is changed.
      */
-    public void onCraftMatrixChanged(IInventory inventoryIn) {
+    public void onCraftMatrixChanged(@Nonnull IInventory inventoryIn) {
         this.tradingInventory.resetRecipeAndSlots();
         super.onCraftMatrixChanged(inventoryIn);
     }
@@ -72,48 +73,58 @@ public class ContainerTrading extends Container {
     public void updateProgressBar(int id, int data) {
     }
 
-    public boolean canInteractWith(EntityPlayer playerIn) {
+    public boolean canInteractWith(@Nonnull EntityPlayer playerIn) {
         return this.tradingInventory.isUseableByPlayer(playerIn);
     }
 
     @Override
-    public ItemStack transferStackInSlot(EntityPlayer playerIn, int index) {
+    public ItemStack transferStackInSlot(@Nonnull EntityPlayer playerIn, int index) {
         ItemStack itemstack = null;
-        Slot slot = (Slot) this.inventorySlots.get(index);
+        Slot slot = this.inventorySlots.get(index);
 
         if (slot != null && slot.getHasStack()) {
             ItemStack itemstack1 = slot.getStack();
-            itemstack = itemstack1.copy();
+            if (itemstack1 != null) {
+                itemstack = itemstack1.copy();
+            }
 
             if (index == 4) {
-                if (!this.mergeItemStack(itemstack1, 5, 41, true)) {
+                if (itemstack1 != null && !this.mergeItemStack(itemstack1, 5, 41, true)) {
                     return null;
                 }
 
-                slot.onSlotChange(itemstack1, itemstack);
+                if (itemstack1 != null) {
+                    slot.onSlotChange(itemstack1, itemstack);
+                }
             } else if (index >= 4) {
-                if (index >= 5 && index < 32) {
-                    if (!this.mergeItemStack(itemstack1, 32, 41, false)) {
+                if (index < 32) {
+                    if (itemstack1 != null && !this.mergeItemStack(itemstack1, 32, 41,
+                            false)) {
                         return null;
                     }
-                } else if (index >= 32 && index < 41 && !this.mergeItemStack(itemstack1, 5, 32, false)) {
+                } else if (itemstack1 != null && index < 41 && !this.mergeItemStack(itemstack1, 5,
+                        32, false)) {
                     return null;
                 }
-            } else if (!this.mergeItemStack(itemstack1, 5, 41, false)) {
+            } else if (itemstack1 != null && !this.mergeItemStack(itemstack1, 5, 41, false)) {
                 return null;
             }
 
-            if (itemstack1.stackSize == 0) {
-                slot.putStack((ItemStack) null);
-            } else {
-                slot.onSlotChanged();
+            if (itemstack1 != null) {
+                if (itemstack1.stackSize == 0) {
+                    slot.putStack(null);
+                } else {
+                    slot.onSlotChanged();
+                }
             }
 
-            if (itemstack1.stackSize == itemstack.stackSize) {
+            if (itemstack1 != null && itemstack1.stackSize == itemstack.stackSize) {
                 return null;
             }
 
-            slot.onPickupFromSlot(playerIn, itemstack1);
+            if (itemstack1 != null) {
+                slot.onPickupFromSlot(playerIn, itemstack1);
+            }
         }
 
         return itemstack;
@@ -122,7 +133,7 @@ public class ContainerTrading extends Container {
     /**
      * Called when the container is closed.
      */
-    public void onContainerClosed(EntityPlayer playerIn) {
+    public void onContainerClosed(@Nonnull EntityPlayer playerIn) {
         super.onContainerClosed(playerIn);
 
         if (!this.world.isRemote) {

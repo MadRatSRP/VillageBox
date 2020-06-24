@@ -19,17 +19,19 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.IGuiHandler;
 
-public class GuiHandler implements IGuiHandler {
+import javax.annotation.Nullable;
 
+public class GuiHandler
+        implements IGuiHandler {
     @Override
     public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
 
         //villager gui
         if (ID >= 100 && ID < 200) {
-            int dimension = x;
-            int entityID = y;
-            if (world.provider.getDimension() == dimension) {
-                EntityVillager villager = (EntityVillager) world.getEntityByID(entityID);
+
+            if (world.provider.getDimension() == x) {
+                @Nullable final EntityVillager villager = (EntityVillager) world.getEntityByID(y);
+
                 if (villager != null) {
                     switch (ID) {
                         case GuiIDs.VillagerMain:
@@ -61,13 +63,11 @@ public class GuiHandler implements IGuiHandler {
 
     @Override
     public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
-
-        //villager gui
+        // villager gui
         if (ID >= 100 && ID < 200) {
-            int dimension = x;
-            int entityID = y;
-            if (world.provider.getDimension() == dimension) {
-                EntityVillager villager = (EntityVillager) world.getEntityByID(entityID);
+            if (world.provider.getDimension() == x) {
+                @Nullable final EntityVillager villager = (EntityVillager) world.getEntityByID(y);
+
                 if (villager != null) {
                     switch (ID) {
                         case GuiIDs.VillagerMain:
