@@ -7,6 +7,8 @@ import ckhbox.villagebox.common.village.data.DataVillage;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
+import javax.annotation.Nullable;
+
 public class EventWorld {
 
     @SubscribeEvent
@@ -14,7 +16,11 @@ public class EventWorld {
 
         if (!event.world.isRemote && event.phase == TickEvent.Phase.END) {
             if (event.world.getTotalWorldTime() % 1000 == 0) {
-                DataVillage.get(event.world).updateDeadVillagers(1000);
+                @Nullable final DataVillage villageData = DataVillage.get(event.world);
+
+                if (villageData != null) {
+                    villageData.updateDeadVillagers(1000);
+                }
             }
         }
     }
