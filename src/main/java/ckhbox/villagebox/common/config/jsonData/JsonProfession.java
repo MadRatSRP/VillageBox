@@ -3,6 +3,7 @@
 
 package ckhbox.villagebox.common.config.jsonData;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 
 public class JsonProfession {
@@ -11,6 +12,7 @@ public class JsonProfession {
     public ArrayList<JsonTradingRecipe> listOfTradingRecipes;
     public ArrayList<JsonQuest> listOfQuests;
 
+    @Nullable
     public int[] upgradeProfessionIDs;
 
     public String[] upgradeRequirements;
@@ -24,8 +26,8 @@ public class JsonProfession {
         listOfQuests = new ArrayList<>();
     }
     public JsonProfession(int professionId, ArrayList<JsonTradingRecipe> listOfTradingRecipes,
-                          ArrayList<JsonQuest> listOfQuests, int[] upgradeProfessionIDs, String[] upgradeRequirements,
-                          String[] holdItems, String texture, String name) {
+                          ArrayList<JsonQuest> listOfQuests, @Nullable int[] upgradeProfessionIDs,
+                          String[] upgradeRequirements, String[] holdItems, String texture, String name) {
         this.professionId = professionId;
         this.listOfTradingRecipes = listOfTradingRecipes;
         this.listOfQuests = listOfQuests;
