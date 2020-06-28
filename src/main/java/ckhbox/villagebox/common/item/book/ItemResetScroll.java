@@ -14,7 +14,7 @@ import javax.annotation.Nonnull;
 import java.util.List;
 
 public class ItemResetScroll
-        extends Item {
+    extends Item {
     public ItemResetScroll() {
         this.setUnlocalizedName(PathHelper.full("resetScroll"));
         this.setCreativeTab(ModItems.tabVB);

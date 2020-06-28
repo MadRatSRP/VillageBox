@@ -25,9 +25,10 @@ public class JsonProfession {
         listOfTradingRecipes = new ArrayList<>();
         listOfQuests = new ArrayList<>();
     }
+
     public JsonProfession(int professionId, ArrayList<JsonTradingRecipe> listOfTradingRecipes,
-                          ArrayList<JsonQuest> listOfQuests, @Nullable int[] upgradeProfessionIDs,
-                          String[] upgradeRequirements, String[] holdItems, String texture, String name) {
+                          @Nullable ArrayList<JsonQuest> listOfQuests, @Nullable int[] upgradeProfessionIDs,
+                          @Nullable String[] upgradeRequirements, String[] holdItems, String texture, String name) {
         this.professionId = professionId;
         this.listOfTradingRecipes = listOfTradingRecipes;
         this.listOfQuests = listOfQuests;

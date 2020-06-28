@@ -23,8 +23,8 @@ import java.util.List;
 import java.util.UUID;
 
 public class EntityPainting
-        extends EntityHanging
-        implements IEntityAdditionalSpawnData {
+    extends EntityHanging
+    implements IEntityAdditionalSpawnData {
     public EntityPainting.EnumArt art;
 
     /*public EntityPainting(World worldIn) {

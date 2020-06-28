@@ -39,7 +39,7 @@ public class EventEntity {
         if (ec == EntityZombie.class) {
             EntityZombie entity = (EntityZombie) event.getEntityLiving();
             entity.targetTasks.addTask(3,
-                    new EntityAINearestAttackableTarget<>(entity, EntityVillager.class, true));
+                new EntityAINearestAttackableTarget<>(entity, EntityVillager.class, true));
         }
 
     }
@@ -55,7 +55,7 @@ public class EventEntity {
                 if (playerProperties.hasSentInvitation && playerProperties.newMailTimer > 0) {
                     if (--playerProperties.newMailTimer == 0) {
                         event.getEntity().addChatMessage(
-                                new TextComponentTranslation(PathHelper.full("message.mail.newmail"))
+                            new TextComponentTranslation(PathHelper.full("message.mail.newmail"))
                         );
                     }
                 }

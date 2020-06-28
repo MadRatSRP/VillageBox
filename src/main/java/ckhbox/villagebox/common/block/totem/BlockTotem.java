@@ -23,11 +23,11 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import javax.annotation.Nonnull;
 
 public class BlockTotem
-        extends BlockFacing
-        implements ITileEntityProvider {
+    extends BlockFacing
+    implements ITileEntityProvider {
 
     private static final AxisAlignedBB TOTEM_AABB = new AxisAlignedBB(0.25F, 0.0F, 0.25F,
-            0.75F, 1.0F, 0.75F);
+        0.75F, 1.0F, 0.75F);
 
     private final Class<? extends TileEntityTotem> classTotem;
 

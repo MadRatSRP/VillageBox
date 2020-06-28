@@ -39,8 +39,8 @@ public class EntityFlameBall extends EntityThrowable {
 
                 if (thrower != null) {
                     flag = result.entityHit.attackEntityFrom(
-                            DamageSource.causeThrownDamage(this,
-                                    thrower), 5.0F);
+                        DamageSource.causeThrownDamage(this,
+                            thrower), 5.0F);
                 }
 
                 if (flag != null && flag) {
@@ -65,10 +65,10 @@ public class EntityFlameBall extends EntityThrowable {
 
         for (int k = 0; k < 3; ++k) {
             this.worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_LARGE, this.posX, this.posY, this.posZ,
-                    ((double) this.rand.nextFloat() - 0.5D) * 0.08D,
-                    ((double) this.rand.nextFloat() - 0.5D) * 0.08D,
-                    ((double) this.rand.nextFloat() - 0.5D) * 0.08D,
-                    Item.getIdFromItem(Items.EGG));
+                ((double) this.rand.nextFloat() - 0.5D) * 0.08D,
+                ((double) this.rand.nextFloat() - 0.5D) * 0.08D,
+                ((double) this.rand.nextFloat() - 0.5D) * 0.08D,
+                Item.getIdFromItem(Items.EGG));
         }
     }
 
@@ -77,11 +77,11 @@ public class EntityFlameBall extends EntityThrowable {
         super.onUpdate();
         if (this.worldObj.isRemote) {
             this.worldObj.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, this.posX, this.posY + 0.5D,
-                    this.posZ, 0.0D, 0.0D, 0.0D, new int[0]);
+                this.posZ, 0.0D, 0.0D, 0.0D, new int[0]);
 
             if (this.rand.nextBoolean()) {
                 this.worldObj.spawnParticle(EnumParticleTypes.FLAME, this.posX, this.posY + 0.5D,
-                        this.posZ, 0.0D, 0.0D, 0.0D, new int[0]);
+                    this.posZ, 0.0D, 0.0D, 0.0D, new int[0]);
             }
         }
     }

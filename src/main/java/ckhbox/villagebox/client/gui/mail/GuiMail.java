@@ -23,9 +23,9 @@ import javax.annotation.Nullable;
 import java.io.IOException;
 
 public class GuiMail
-        extends GuiContainer {
+    extends GuiContainer {
     private static final ResourceLocation mailGuiTextures = new ResourceLocation(
-            PathHelper.full("textures/gui/mail/mail.png")
+        PathHelper.full("textures/gui/mail/mail.png")
     );
     private final EntityPlayer player;
     protected int xSize = 143;

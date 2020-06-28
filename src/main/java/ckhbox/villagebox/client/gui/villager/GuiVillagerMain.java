@@ -32,10 +32,10 @@ import java.util.ArrayList;
 
 @SideOnly(Side.CLIENT)
 public class GuiVillagerMain
-        extends GuiContainer {
+    extends GuiContainer {
 
     private static final ResourceLocation VillagerMainGuiTexture = new ResourceLocation(
-            PathHelper.full("textures/gui/villager/main.png")
+        PathHelper.full("textures/gui/villager/main.png")
     );
     private final EntityPlayer player;
     private final EntityVillager villager;
@@ -72,7 +72,7 @@ public class GuiVillagerMain
         refreshChatContent();
 
         ModNetwork.getInstance().sendToServer(
-                new MessageGuiSetInteracting(this.villager.getEntityId(), this.villager.dimension, true)
+            new MessageGuiSetInteracting(this.villager.getEntityId(), this.villager.dimension, true)
         );
     }
 
@@ -86,19 +86,19 @@ public class GuiVillagerMain
         String strTrade = I18n.format(PathHelper.full("gui.villagermain.menu.trade"));
 
         this.buttonList.add(buttonTrade = new GuiTextButton(
-                this.mc, 0, x + offsetX, y + playerChatOptionsOffsetY, strTrade)
+            this.mc, 0, x + offsetX, y + playerChatOptionsOffsetY, strTrade)
         );
 
         this.buttonList.add(buttonUpgrade = new GuiTextButton(
-                this.mc, 1, x + offsetX, y + playerChatOptionsOffsetY + playerChatOptionHeight, strUpgrade)
+            this.mc, 1, x + offsetX, y + playerChatOptionsOffsetY + playerChatOptionHeight, strUpgrade)
         );
 
         this.buttonList.add(buttonFollow = new GuiTextButton(
-                this.mc, 2, x + offsetX, y + playerChatOptionsOffsetY + 2 * playerChatOptionHeight, "")
+            this.mc, 2, x + offsetX, y + playerChatOptionsOffsetY + 2 * playerChatOptionHeight, "")
         );
 
         this.buttonList.add(buttonHome = new GuiTextButton(
-                this.mc, 3, x + offsetX, y + playerChatOptionsOffsetY + 3 * playerChatOptionHeight, "")
+            this.mc, 3, x + offsetX, y + playerChatOptionsOffsetY + 3 * playerChatOptionHeight, "")
         );
 
         this.buttonList.add(buttonQuest = new QuestButton(100, x + 153, y + 4));
@@ -210,25 +210,25 @@ public class GuiVillagerMain
 
         if (!this.buttonTrade.enabled) {
             this.drawButtonHoverText(this.buttonTrade, mouseX, mouseY,
-                    I18n.format(PathHelper.full("gui.villagermain.button.lock.title")),
-                    I18n.format(PathHelper.full("gui.villagermain.button.lock.desc")));
+                I18n.format(PathHelper.full("gui.villagermain.button.lock.title")),
+                I18n.format(PathHelper.full("gui.villagermain.button.lock.desc")));
         }
 
         if (!this.buttonUpgrade.enabled) {
             if (!this.villager.hasHome())
                 this.drawButtonHoverText(this.buttonUpgrade, mouseX, mouseY,
-                        I18n.format(PathHelper.full("gui.villagermain.button.lock.title")),
-                        I18n.format(PathHelper.full("gui.villagermain.button.lock.desc")));
+                    I18n.format(PathHelper.full("gui.villagermain.button.lock.title")),
+                    I18n.format(PathHelper.full("gui.villagermain.button.lock.desc")));
             else
                 this.drawButtonHoverText(this.buttonUpgrade, mouseX, mouseY,
-                        I18n.format(PathHelper.full("gui.villagermain.button.maxupgrade.title")),
-                        I18n.format(PathHelper.full("gui.villagermain.button.maxupgrade.desc")));
+                    I18n.format(PathHelper.full("gui.villagermain.button.maxupgrade.title")),
+                    I18n.format(PathHelper.full("gui.villagermain.button.maxupgrade.desc")));
         }
 
         if (this.buttonQuest.enabled) {
             this.drawButtonHoverText(this.buttonQuest, mouseX, mouseY,
-                    I18n.format(PathHelper.full("gui.villagermain.button.newquest.title")),
-                    I18n.format(PathHelper.full("gui.villagermain.button.newquest.desc")));
+                I18n.format(PathHelper.full("gui.villagermain.button.newquest.title")),
+                I18n.format(PathHelper.full("gui.villagermain.button.newquest.desc")));
         }
 
     }
@@ -249,24 +249,24 @@ public class GuiVillagerMain
     protected void actionPerformed(@Nonnull GuiButton button) throws IOException {
         if (button == buttonUpgrade) {
             ModNetwork.getInstance().sendToServer(
-                    new MessageGuiVillagerOpen(GuiIDs.VillagerUpgrading, villager.dimension, villager.getEntityId())
+                new MessageGuiVillagerOpen(GuiIDs.VillagerUpgrading, villager.dimension, villager.getEntityId())
             );
         } else if (button == buttonTrade) {
             ModNetwork.getInstance().sendToServer(
-                    new MessageGuiVillagerOpen(GuiIDs.VillagerTrading, villager.dimension, villager.getEntityId())
+                new MessageGuiVillagerOpen(GuiIDs.VillagerTrading, villager.dimension, villager.getEntityId())
             );
         } else if (button == buttonFollow) {
             boolean enable = !this.villager.isFollowing();
             ModNetwork.getInstance().sendToServer(
-                    new MessageGuiSetFollowing(this.villager.getEntityId(), this.villager.dimension, enable)
+                new MessageGuiSetFollowing(this.villager.getEntityId(), this.villager.dimension, enable)
             );
         } else if (button == buttonHome) {
             ModNetwork.getInstance().sendToServer(
-                    new MessageGuiSetHome(this.villager.getEntityId(), this.villager.dimension, !this.villager.hasHome())
+                new MessageGuiSetHome(this.villager.getEntityId(), this.villager.dimension, !this.villager.hasHome())
             );
         } else if (button == buttonQuest) {
             ModNetwork.getInstance().sendToServer(
-                    new MessageGuiVillagerOpen(GuiIDs.VillagerQuest, villager.dimension, villager.getEntityId())
+                new MessageGuiVillagerOpen(GuiIDs.VillagerQuest, villager.dimension, villager.getEntityId())
             );
         }
 
@@ -310,8 +310,8 @@ public class GuiVillagerMain
                 GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
                 boolean flag = mouseX >= this.xPosition && mouseY >= this.yPosition
-                        && mouseX < this.xPosition + this.width
-                        && mouseY < this.yPosition + this.height;
+                    && mouseX < this.xPosition + this.width
+                    && mouseY < this.yPosition + this.height;
 
                 int x = 176;
                 int y = 0;

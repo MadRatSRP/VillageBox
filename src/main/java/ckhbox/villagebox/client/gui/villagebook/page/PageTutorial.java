@@ -4,7 +4,6 @@
 package ckhbox.villagebox.client.gui.villagebook.page;
 
 import ckhbox.villagebox.client.gui.villagebook.GuiVillageBook;
-import ckhbox.villagebox.client.gui.villagebook.page.link.Link;
 import ckhbox.villagebox.client.gui.villagebook.page.link.LinkImg;
 import ckhbox.villagebox.client.gui.villagebook.page.link.LinkItem;
 import ckhbox.villagebox.common.block.ModBlocks;
@@ -16,8 +15,6 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-
-import java.util.ArrayList;
 
 public class PageTutorial extends Page {
 

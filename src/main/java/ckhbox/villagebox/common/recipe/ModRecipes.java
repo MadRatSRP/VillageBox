@@ -20,6 +20,6 @@ public class ModRecipes {
         }
         //invitation
         GameRegistry.addShapelessRecipe(new ItemStack(ModItems.invitation),
-                new ItemStack(Items.PAPER), new ItemStack(Items.FEATHER), new ItemStack(Items.DYE));
+            new ItemStack(Items.PAPER), new ItemStack(Items.FEATHER), new ItemStack(Items.DYE));
     }
 }

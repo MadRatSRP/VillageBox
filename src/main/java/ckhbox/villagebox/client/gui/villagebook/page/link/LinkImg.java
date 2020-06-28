@@ -10,7 +10,7 @@ import net.minecraft.util.ResourceLocation;
 import java.util.List;
 
 public class LinkImg
-        extends Link {
+    extends Link {
     public int coordX;
 
     public int coordY;
@@ -60,8 +60,8 @@ public class LinkImg
         this.mc.getTextureManager().bindTexture(this.resource);
 
         this.page.guiVillageBook.drawTexturedModalRect(this.left, this.top,
-                this.coordX + this.hoverOffsetX,
-                this.coordY + this.hoverOffsetY, this.width, this.height);
+            this.coordX + this.hoverOffsetX,
+            this.coordY + this.hoverOffsetY, this.width, this.height);
 
         GlStateManager.enableLighting();
     }

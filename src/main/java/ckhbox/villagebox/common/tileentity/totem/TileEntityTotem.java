@@ -31,7 +31,7 @@ public abstract class TileEntityTotem extends TileEntity implements ITickable {
         double hs = size / 2;
         double hh = height / 2;
         return new AxisAlignedBB(this.pos.getX() - hs, this.pos.getY() - hh, this.pos.getZ() - hs,
-                this.pos.getX() + hs, this.pos.getY() + hh, this.pos.getZ() + hs);
+            this.pos.getX() + hs, this.pos.getY() + hh, this.pos.getZ() + hs);
     }
 
     protected abstract void updateTotonEffect();

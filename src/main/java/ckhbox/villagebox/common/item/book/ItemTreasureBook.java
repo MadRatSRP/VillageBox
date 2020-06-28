@@ -21,7 +21,7 @@ import javax.annotation.Nonnull;
 import java.util.List;
 
 public class ItemTreasureBook
-        extends Item {
+    extends Item {
     private final int level;
 
     public ItemTreasureBook(int lvl) {
@@ -41,13 +41,13 @@ public class ItemTreasureBook
             if (ExtendedPlayerProperties.get(playerIn).upgradeTreasureHuntLevelTo(this.level)) {
                 playerIn.playSound(SoundEvents.ENTITY_PLAYER_LEVELUP, 1.0F, 1.0F);
                 playerIn.addChatMessage(new TextComponentTranslation(
-                        PathHelper.full("message.player.treasurelvlupgrade.success"), this.level)
+                    PathHelper.full("message.player.treasurelvlupgrade.success"), this.level)
                 );
                 itemStackIn.stackSize -= 1;
                 return new ActionResult<>(EnumActionResult.SUCCESS, itemStackIn);
             } else {
                 playerIn.addChatMessage(new TextComponentTranslation(
-                        PathHelper.full("message.player.treasurelvlupgrade.failed"))
+                    PathHelper.full("message.player.treasurelvlupgrade.failed"))
                 );
                 return new ActionResult<>(EnumActionResult.FAIL, itemStackIn);
             }

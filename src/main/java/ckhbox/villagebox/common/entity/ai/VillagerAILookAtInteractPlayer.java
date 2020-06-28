@@ -8,7 +8,7 @@ import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.player.EntityPlayer;
 
 public class VillagerAILookAtInteractPlayer
-        extends EntityAIWatchClosest {
+    extends EntityAIWatchClosest {
     private final EntityVillager villager;
 
     public VillagerAILookAtInteractPlayer(EntityVillager villager) {

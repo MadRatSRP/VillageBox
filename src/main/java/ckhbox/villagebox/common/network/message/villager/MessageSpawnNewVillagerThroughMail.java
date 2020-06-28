@@ -59,7 +59,7 @@ public class MessageSpawnNewVillagerThroughMail implements IMessage {
                     ctx.getServerHandler().playerEntity.worldObj.spawnEntityInWorld(villager);
 
                     player.addChatMessage(
-                            new TextComponentTranslation(PathHelper.full("message.villager.newjoined"), villager.getName())
+                        new TextComponentTranslation(PathHelper.full("message.villager.newjoined"), villager.getName())
                     );
 
                     //remove hold

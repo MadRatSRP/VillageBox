@@ -12,7 +12,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class RenderFactoryPainting
-        implements IRenderFactory<EntityPainting> {
+    implements IRenderFactory<EntityPainting> {
 
     @Override
     public Render<? super EntityPainting> createRenderFor(RenderManager manager) {

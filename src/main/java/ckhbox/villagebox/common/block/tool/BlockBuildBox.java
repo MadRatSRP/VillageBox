@@ -20,7 +20,7 @@ import net.minecraft.world.World;
 import javax.annotation.Nonnull;
 
 public class BlockBuildBox
-        extends Block {
+    extends Block {
 
     private final BuildSize size;
 

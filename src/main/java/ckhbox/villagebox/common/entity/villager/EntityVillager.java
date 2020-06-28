@@ -54,8 +54,8 @@ import java.util.Collections;
 import java.util.List;
 
 public class EntityVillager
-        extends EntityCreature
-        implements ITrading, IQuestProvider {
+    extends EntityCreature
+    implements ITrading, IQuestProvider {
     private static final DataParameter<Integer> PROFESSIONID = EntityDataManager.createKey(EntityVillager.class, DataSerializers.VARINT);
 
     private static final DataParameter<Integer> FLAGS = EntityDataManager.createKey(EntityVillager.class, DataSerializers.VARINT);
@@ -161,7 +161,7 @@ public class EntityVillager
                                       ItemStack stack) {
         if (!player.worldObj.isRemote) {
             if ((this.isInteracting() && this.interacting.isEntityAlive() && this.interacting != player) ||
-                    (this.isFollowing() && this.following.isEntityAlive() && this.following != player)) {
+                (this.isFollowing() && this.following.isEntityAlive() && this.following != player)) {
                 player.addChatMessage(new TextComponentTranslation(PathHelper.full("message.villager.isbusy")));
             } else {
                 ItemStack itemstack = player.inventory.getCurrentItem();
@@ -169,7 +169,7 @@ public class EntityVillager
                 if (itemstack != null && (itemstack.getItem() == ModItems.resetScroll || itemstack.getItem() == ModItems.dismissalScroll) && itemstack.stackSize > 0) {
                     //if the player is using a reset or a dismissal scroll
                     if ((itemstack.getItem() == ModItems.resetScroll && this.downgrade()) ||
-                            (itemstack.getItem() == ModItems.dismissalScroll && this.dismiss(player))) {
+                        (itemstack.getItem() == ModItems.dismissalScroll && this.dismiss(player))) {
                         this.consumeItemFromStack(player, itemstack);
                     }
                 } else {
@@ -189,8 +189,8 @@ public class EntityVillager
 
             if (stack.stackSize <= 0) {
                 player.inventory.setInventorySlotContents(
-                        player.inventory.currentItem,
-                        null
+                    player.inventory.currentItem,
+                    null
                 );
             }
         }
@@ -324,8 +324,8 @@ public class EntityVillager
 
             if (oldOwner != null) {
                 player.addChatMessage(
-                        new TextComponentTranslation(PathHelper.full("message.villager.home.existed"),
-                                oldOwner)
+                    new TextComponentTranslation(PathHelper.full("message.villager.home.existed"),
+                        oldOwner)
                 );
             } else {
                 //remove old home
@@ -343,8 +343,8 @@ public class EntityVillager
                 this.setFollowing(null);
 
                 player.addChatMessage(
-                        new TextComponentTranslation(PathHelper.full("message.villager.home.movein"),
-                                this.getName())
+                    new TextComponentTranslation(PathHelper.full("message.villager.home.movein"),
+                        this.getName())
                 );
 
                 //update data flag
@@ -365,8 +365,8 @@ public class EntityVillager
                 this.setDataFlag(2, false);
 
                 player.addChatMessage(
-                        new TextComponentTranslation(PathHelper.full("message.villager.home.moveout"),
-                                this.getName())
+                    new TextComponentTranslation(PathHelper.full("message.villager.home.moveout"),
+                        this.getName())
                 );
             }
         }
@@ -389,7 +389,7 @@ public class EntityVillager
     // profession
     public Profession getProfession() {
         if (this.worldObj.isRemote && (this.profession == null
-                || this.getDataManager().get(PROFESSIONID) != this.profession.getRegID())) {
+            || this.getDataManager().get(PROFESSIONID) != this.profession.getRegID())) {
             this.profession = Profession.registry.get(this.getDataManager().get(PROFESSIONID));
 
             this.refreshProfession();
@@ -417,11 +417,11 @@ public class EntityVillager
 
             if (minecraftServer != null) {
                 minecraftServer
-                        .getPlayerList()
-                        .sendChatMsg(
-                                new TextComponentTranslation(PathHelper.full("message.villager.upgrade"),
-                                        this.getName(), oldProName, newProName)
-                        );
+                    .getPlayerList()
+                    .sendChatMsg(
+                        new TextComponentTranslation(PathHelper.full("message.villager.upgrade"),
+                            this.getName(), oldProName, newProName)
+                    );
 
                 // quest
                 this.removeCurrentQuest();
@@ -443,12 +443,12 @@ public class EntityVillager
 
             if (minecraftServer != null) {
                 minecraftServer
-                        .getPlayerList()
-                        .sendChatMsg(
-                                new TextComponentTranslation(
-                                        PathHelper.full("message.villager.downgrade"),
-                                        this.getName(), oldProName, newProName)
-                        );
+                    .getPlayerList()
+                    .sendChatMsg(
+                        new TextComponentTranslation(
+                            PathHelper.full("message.villager.downgrade"),
+                            this.getName(), oldProName, newProName)
+                    );
 
                 //quest
                 this.removeCurrentQuest();
@@ -470,12 +470,12 @@ public class EntityVillager
 
             if (minecraftServer != null) {
                 minecraftServer
-                        .getPlayerList()
-                        .sendChatMsg(
-                                new TextComponentTranslation(PathHelper.full("message.villager.dismiss"),
-                                        player.getName(), this.getName(),
-                                        new TextComponentTranslation(this.getProfession().getUnloalizedDisplayName()))
-                        );
+                    .getPlayerList()
+                    .sendChatMsg(
+                        new TextComponentTranslation(PathHelper.full("message.villager.dismiss"),
+                            player.getName(), this.getName(),
+                            new TextComponentTranslation(this.getProfession().getUnloalizedDisplayName()))
+                    );
             }
 
             return true;
@@ -495,7 +495,7 @@ public class EntityVillager
 
         //update profession
         if (this.worldObj.isRemote
-                && (this.profession == null || this.getDataManager().get(PROFESSIONID) != this.profession.getRegID())) {
+            && (this.profession == null || this.getDataManager().get(PROFESSIONID) != this.profession.getRegID())) {
             this.setProfession(this.getDataManager().get(PROFESSIONID));
         }
 
@@ -524,8 +524,8 @@ public class EntityVillager
 
                 if (listOfPlayers != null) {
                     listOfPlayers.sendChatMsg(
-                            new TextComponentTranslation(PathHelper.full("message.villager.died"),
-                                    this.getName())
+                        new TextComponentTranslation(PathHelper.full("message.villager.died"),
+                            this.getName())
                     );
                 }
             }
@@ -678,8 +678,8 @@ public class EntityVillager
         super.writeEntityToNBT(tagCompound);
 
         tagCompound.setInteger(
-                "proid",
-                this.getDataManager().get(PROFESSIONID)
+            "proid",
+            this.getDataManager().get(PROFESSIONID)
         );
 
         tagCompound.setBoolean("gender", this.isMale());
@@ -687,12 +687,12 @@ public class EntityVillager
         // home
         if (this.home != null) {
             tagCompound.setIntArray("homebd", new int[]{
-                    this.home.minx,
-                    this.home.miny,
-                    this.home.minz,
-                    this.home.maxx,
-                    this.home.maxy,
-                    this.home.maxz
+                this.home.minx,
+                this.home.miny,
+                this.home.minz,
+                this.home.maxx,
+                this.home.maxy,
+                this.home.maxz
             });
         }
 
@@ -705,8 +705,8 @@ public class EntityVillager
 
         // quest
         tagCompound.setInteger(
-                "questinfo",
-                this.getDataManager().get(QUEST)
+            "questinfo",
+            this.getDataManager().get(QUEST)
         );
     }
 
@@ -741,8 +741,8 @@ public class EntityVillager
         // quest
         if (tagCompund.hasKey("questinfo")) {
             this.getDataManager().set(
-                    QUEST,
-                    tagCompund.getInteger("questinfo")
+                QUEST,
+                tagCompund.getInteger("questinfo")
             );
         }
     }

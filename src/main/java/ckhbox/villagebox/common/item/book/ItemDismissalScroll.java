@@ -13,7 +13,8 @@ import net.minecraft.item.ItemStack;
 import javax.annotation.Nonnull;
 import java.util.List;
 
-public class ItemDismissalScroll extends Item {
+public class ItemDismissalScroll
+    extends Item {
     public ItemDismissalScroll() {
         this.setUnlocalizedName(PathHelper.full("dismissalScroll"));
         this.setCreativeTab(ModItems.tabVB);

@@ -31,15 +31,15 @@ public class EventCoinsFound {
     @SubscribeEvent
     public void onLivingDeath(LivingDeathEvent event) {
         if (!event.getEntityLiving().worldObj.isRemote &&
-                event.getEntityLiving() instanceof EntityMob &&
-                event.getSource().getSourceOfDamage() instanceof EntityPlayer) {
+            event.getEntityLiving() instanceof EntityMob &&
+            event.getSource().getSourceOfDamage() instanceof EntityPlayer) {
             if (VBConfig.killMobsDropCoins) {
                 int l = ExtendedPlayerProperties.get((EntityPlayer) event.getSource()
-                        .getSourceOfDamage()).treasureHuntLevel;
+                    .getSourceOfDamage()).treasureHuntLevel;
                 int base = l * 2 + 1;
                 int add = l + 3;
                 dropCoins(Rand.get().nextInt(add) + base, event.getEntityLiving().worldObj,
-                        event.getEntityLiving().posX, event.getEntityLiving().posY, event.getEntityLiving().posZ);
+                    event.getEntityLiving().posX, event.getEntityLiving().posY, event.getEntityLiving().posZ);
             }
         }
     }
@@ -53,7 +53,7 @@ public class EventCoinsFound {
                 // int add = l * 2;
 
                 dropCoins(Rand.get().nextInt(3), event.getWorld(), event.getPos().getX() + 0.5D,
-                        event.getPos().getY() + 0.5D, event.getPos().getZ() + 0.5D);
+                    event.getPos().getY() + 0.5D, event.getPos().getZ() + 0.5D);
             }
         }
     }

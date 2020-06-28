@@ -7,7 +7,7 @@ import ckhbox.villagebox.common.entity.villager.EntityVillager;
 import net.minecraft.entity.ai.EntityAIBase;
 
 public class VillagerAIFollowing
-        extends EntityAIBase {
+    extends EntityAIBase {
     private static final double maxDisSq = 144.0F;
     private static final double minDisSq = 9.0F;
 

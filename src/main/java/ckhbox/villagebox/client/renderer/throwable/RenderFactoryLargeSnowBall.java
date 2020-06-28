@@ -14,7 +14,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class RenderFactoryLargeSnowBall
-        implements IRenderFactory<EntityLargeSnowBall> {
+    implements IRenderFactory<EntityLargeSnowBall> {
 
     @Override
     public Render<? super EntityLargeSnowBall> createRenderFor(RenderManager manager) {

@@ -28,7 +28,7 @@ public class JsonHelper {
         }
 
         return new ItemStack(item, Integer.parseInt(arrs[2]),
-                Integer.parseInt(arrs[3]));
+            Integer.parseInt(arrs[3]));
     }
 
     public static ItemStack[] stringsToItemStacks(String[] texts) {
@@ -47,7 +47,7 @@ public class JsonHelper {
         @Nullable ResourceLocation location = Item.REGISTRY.getNameForObject(stack.getItem());
 
         return String.format("%s,%s,%d,%d", location.getResourceDomain(),
-                location.getResourcePath(), stack.stackSize, stack.getItemDamage());
+            location.getResourcePath(), stack.stackSize, stack.getItemDamage());
     }
 
     public static String[] itemStacksToStrings(ItemStack[] stacks) {

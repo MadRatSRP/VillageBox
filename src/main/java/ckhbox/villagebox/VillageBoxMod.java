@@ -13,7 +13,7 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 @Mod(modid = VillageBoxMod.MOD_ID, name = VillageBoxMod.MOD_NAME,
-        version = VillageBoxMod.MOD_VERSION)
+    version = VillageBoxMod.MOD_VERSION)
 public class VillageBoxMod {
     public static final String MOD_ID = "villagebox";
     public static final String MOD_NAME = "Village Box";
@@ -23,7 +23,7 @@ public class VillageBoxMod {
     public static VillageBoxMod instance = new VillageBoxMod();
 
     @SidedProxy(clientSide = "ckhbox.villagebox.client.ClientProxy",
-            serverSide = "ckhbox.villagebox.common.CommonProxy")
+        serverSide = "ckhbox.villagebox.common.CommonProxy")
     public static CommonProxy proxy;
 
     @EventHandler

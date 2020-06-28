@@ -67,7 +67,7 @@ public class HouseDetector {
 
     private static boolean isOutOfRadius(IntVec3 pos, IntVec3 start) {
         if (Math.abs(pos.x - start.x) > SearchRadius ||
-                Math.abs(pos.z - start.z) > SearchRadius)
+            Math.abs(pos.z - start.z) > SearchRadius)
             return true;
         return false;
     }

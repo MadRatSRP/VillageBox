@@ -26,7 +26,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class BlockMailBox
-        extends BlockFacing {
+    extends BlockFacing {
 
     public BlockMailBox() {
         super(Material.WOOD);
@@ -62,7 +62,7 @@ public class BlockMailBox
 
                         if (stack != null && stack.stackSize <= 0) {
                             playerIn.inventory.setInventorySlotContents(
-                                    playerIn.inventory.currentItem, null
+                                playerIn.inventory.currentItem, null
                             );
                         }
                     }

@@ -94,15 +94,15 @@ public class ContainerVillagerUpgrading extends Container {
             if (index >= 3) {
                 if (index < 30) {
                     if (itemstack1 != null && !this.mergeItemStack(itemstack1, 30,
-                            39, false)) {
+                        39, false)) {
                         return null;
                     }
                 } else if (itemstack1 != null && index < 39 && !this.mergeItemStack(itemstack1, 3,
-                        30, false)) {
+                    30, false)) {
                     return null;
                 }
             } else if (itemstack1 != null && !this.mergeItemStack(itemstack1, 3, 39,
-                    false)) {
+                false)) {
                 return null;
             }
 

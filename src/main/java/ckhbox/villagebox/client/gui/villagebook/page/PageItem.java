@@ -39,7 +39,7 @@ public class PageItem extends Page {
 
         top = this.guiVillageBook.getContentTop() + this.guiVillageBook.getContentHeight() - 16;
         this.addLink(new LinkImg(this, GuiVillageBook.guiBookGuiTextures,
-                240, 0, 0, 16, 16, 16, "back=", null), top, 1);
+            240, 0, 0, 16, 16, 16, "back=", null), top, 1);
     }
 
     @Override

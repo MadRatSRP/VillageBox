@@ -26,12 +26,12 @@ import java.util.List;
 import java.util.Stack;
 
 public class GuiVillageBook
-        extends GuiContainer {
+    extends GuiContainer {
     public static final ResourceLocation guiBookGuiTextures = new ResourceLocation(
-            PathHelper.full("textures/gui/villagebook/page.png")
+        PathHelper.full("textures/gui/villagebook/page.png")
     );
     private final EntityVillager tempVillager = new EntityVillager(
-            Minecraft.getMinecraft().thePlayer.getEntityWorld()
+        Minecraft.getMinecraft().thePlayer.getEntityWorld()
     );
     public VillageBookData villagebookData = null;
     public Stack<String> linkStack = new Stack<>();
@@ -111,8 +111,8 @@ public class GuiVillageBook
         this.mc.getTextureManager().bindTexture(pro.getTexture(isMale));
 
         drawModalRectWithCustomSizedTexture(x, y, 8,
-                8, 8,
-                8, 64, 32);
+            8, 8,
+            8, 64, 32);
     }
 
     public void drawProEntity(int x, int y, Profession pro, boolean isMale) {

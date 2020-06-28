@@ -9,7 +9,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import java.util.List;
 
 public class LinkText
-        extends Link {
+    extends Link {
     public String text;
 
     public LinkText(Page page, String text, String link, List<String> tooltips) {

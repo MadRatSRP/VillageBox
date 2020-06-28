@@ -49,7 +49,7 @@ public class GuiTextButton extends GuiButton {
             FontRenderer fontrenderer = minecraft.fontRendererObj;
 
             this.hovered = p_146112_2_ >= this.xPosition && p_146112_3_ >= this.yPosition
-                    && p_146112_2_ < this.xPosition + this.width && p_146112_3_ < this.yPosition + this.height;
+                && p_146112_2_ < this.xPosition + this.width && p_146112_3_ < this.yPosition + this.height;
 
             int k = this.getHoverState(this.hovered);
 

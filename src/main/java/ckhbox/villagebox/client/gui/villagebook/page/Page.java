@@ -104,7 +104,7 @@ public abstract class Page {
             int top = this.guiVillageBook.getContentTop();
 
             int left = this.guiVillageBook.getContentLeft()
-                    + (this.guiVillageBook.getContentWidth() - this.guiVillageBook.mc.fontRendererObj.getStringWidth(this.title)) / 2;
+                + (this.guiVillageBook.getContentWidth() - this.guiVillageBook.mc.fontRendererObj.getStringWidth(this.title)) / 2;
 
             this.guiVillageBook.mc.fontRendererObj.drawString(this.title, left, top, 0xFF555500, false);
 

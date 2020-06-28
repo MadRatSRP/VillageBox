@@ -16,7 +16,7 @@ import javax.annotation.Nonnull;
 
 @SideOnly(Side.CLIENT)
 public class RenderLargeSnowBall
-        extends RenderSnowball<EntityLargeSnowBall> {
+    extends RenderSnowball<EntityLargeSnowBall> {
 
     public RenderLargeSnowBall(RenderManager renderManagerIn, Item p_i46137_2_, RenderItem p_i46137_3_) {
         super(renderManagerIn, p_i46137_2_, p_i46137_3_);

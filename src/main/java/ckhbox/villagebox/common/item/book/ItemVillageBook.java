@@ -18,7 +18,7 @@ import net.minecraft.world.World;
 import javax.annotation.Nonnull;
 
 public class ItemVillageBook
-        extends Item {
+    extends Item {
     public ItemVillageBook() {
         this.setUnlocalizedName(PathHelper.full("villageBook"));
         this.setCreativeTab(ModItems.tabVB);
@@ -31,7 +31,7 @@ public class ItemVillageBook
                                                     @Nonnull EntityPlayer playerIn, @Nonnull EnumHand hand) {
         if (!worldIn.isRemote) {
             playerIn.openGui(VillageBoxMod.instance, GuiIDs.VillageBook, worldIn,
-                    0, 0, 0);
+                0, 0, 0);
         }
 
         return new ActionResult<>(EnumActionResult.SUCCESS, itemStackIn);

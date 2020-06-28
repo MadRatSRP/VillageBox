@@ -13,7 +13,7 @@ import net.minecraft.block.state.IBlockState;
 import javax.annotation.Nonnull;
 
 public class BlockTable
-        extends Block {
+    extends Block {
 
     public BlockTable(String name) {
         super(Material.WOOD);

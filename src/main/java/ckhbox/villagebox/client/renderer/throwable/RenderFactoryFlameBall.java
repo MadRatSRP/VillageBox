@@ -14,7 +14,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class RenderFactoryFlameBall
-        implements IRenderFactory<EntityFlameBall> {
+    implements IRenderFactory<EntityFlameBall> {
 
     @Override
     public Render<? super EntityFlameBall> createRenderFor(RenderManager manager) {

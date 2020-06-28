@@ -21,13 +21,13 @@ import javax.annotation.Nonnull;
 
 @SideOnly(Side.CLIENT)
 public class RenderVillager
-        extends RenderBiped<EntityVillager> {
+    extends RenderBiped<EntityVillager> {
     private final AxisAlignedBB questMarkBoundBot = new AxisAlignedBB(
-            -0.05D, 2.3D, -0.05D, 0.05D, 2.4D, 0.05D
+        -0.05D, 2.3D, -0.05D, 0.05D, 2.4D, 0.05D
     );
 
     private final AxisAlignedBB questMarkBoundTop = new AxisAlignedBB(
-            -0.05D, 2.5D, -0.05D, 0.05D, 2.8D, 0.05D
+        -0.05D, 2.5D, -0.05D, 0.05D, 2.8D, 0.05D
     );
 
     private VertexBuffer vertexBuffer;
@@ -83,53 +83,53 @@ public class RenderVillager
 
         // Tasks with vertex buffer
         doTaskWithVertexBuffer(boundingBox.minX, boundingBox.maxY, boundingBox.minZ,
-                (float) 1.0);
+            (float) 1.0);
         doTaskWithVertexBuffer(boundingBox.maxX, boundingBox.maxY, boundingBox.minZ,
-                (float) 1.0);
+            (float) 1.0);
         doTaskWithVertexBuffer(boundingBox.maxX, boundingBox.minY, boundingBox.minZ,
-                (float) 0.6);
+            (float) 0.6);
         doTaskWithVertexBuffer(boundingBox.minX, boundingBox.minY, boundingBox.minZ,
-                (float) 0.6);
+            (float) 0.6);
         doTaskWithVertexBuffer(boundingBox.minX, boundingBox.minY, boundingBox.maxZ,
-                (float) 0.6);
+            (float) 0.6);
         doTaskWithVertexBuffer(boundingBox.maxX, boundingBox.minY, boundingBox.maxZ,
-                (float) 0.6);
+            (float) 0.6);
         doTaskWithVertexBuffer(boundingBox.maxX, boundingBox.maxY, boundingBox.maxZ,
-                (float) 1.0);
+            (float) 1.0);
         doTaskWithVertexBuffer(boundingBox.minX, boundingBox.maxY, boundingBox.maxZ,
-                (float) 1.0);
+            (float) 1.0);
         doTaskWithVertexBuffer(boundingBox.minX, boundingBox.minY, boundingBox.minZ,
-                (float) 0.6);
+            (float) 0.6);
         doTaskWithVertexBuffer(boundingBox.maxX, boundingBox.minY, boundingBox.minZ,
-                (float) 0.6);
+            (float) 0.6);
         doTaskWithVertexBuffer(boundingBox.maxX, boundingBox.minY, boundingBox.maxZ,
-                (float) 0.6);
+            (float) 0.6);
         doTaskWithVertexBuffer(boundingBox.minX, boundingBox.minY, boundingBox.maxZ,
-                (float) 0.6);
+            (float) 0.6);
         doTaskWithVertexBuffer(boundingBox.minX, boundingBox.maxY, boundingBox.maxZ,
-                (float) 1.0);
+            (float) 1.0);
         doTaskWithVertexBuffer(boundingBox.maxX, boundingBox.maxY, boundingBox.maxZ,
-                (float) 1.0);
+            (float) 1.0);
         doTaskWithVertexBuffer(boundingBox.maxX, boundingBox.maxY, boundingBox.minZ,
-                (float) 1.0);
+            (float) 1.0);
         doTaskWithVertexBuffer(boundingBox.minX, boundingBox.maxY, boundingBox.minZ,
-                (float) 1.0);
+            (float) 1.0);
         doTaskWithVertexBuffer(boundingBox.minX, boundingBox.minY, boundingBox.maxZ,
-                (float) 0.6);
+            (float) 0.6);
         doTaskWithVertexBuffer(boundingBox.minX, boundingBox.maxY, boundingBox.maxZ,
-                (float) 1.0);
+            (float) 1.0);
         doTaskWithVertexBuffer(boundingBox.minX, boundingBox.maxY, boundingBox.minZ,
-                (float) 1.0);
+            (float) 1.0);
         doTaskWithVertexBuffer(boundingBox.minX, boundingBox.minY, boundingBox.minZ,
-                (float) 0.6);
+            (float) 0.6);
         doTaskWithVertexBuffer(boundingBox.maxX, boundingBox.minY, boundingBox.minZ,
-                (float) 0.6);
+            (float) 0.6);
         doTaskWithVertexBuffer(boundingBox.maxX, boundingBox.maxY, boundingBox.minZ,
-                (float) 1.0);
+            (float) 1.0);
         doTaskWithVertexBuffer(boundingBox.maxX, boundingBox.maxY, boundingBox.maxZ,
-                (float) 1.0);
+            (float) 1.0);
         doTaskWithVertexBuffer(boundingBox.maxX, boundingBox.minY, boundingBox.maxZ,
-                (float) 0.6);
+            (float) 0.6);
 
         tessellator.draw();
 
@@ -145,9 +145,9 @@ public class RenderVillager
     void doTaskWithVertexBuffer(double boundingBoxPositionFirst, double boundingBoxPositionSecond,
                                 double boundingBoxPositionThird, float colorValue) {
         vertexBuffer
-                .pos(boundingBoxPositionFirst, boundingBoxPositionSecond, boundingBoxPositionThird)
-                .color((float) 1.0, colorValue, (float) 0.0, (float) 1.0)
-                .endVertex();
+            .pos(boundingBoxPositionFirst, boundingBoxPositionSecond, boundingBoxPositionThird)
+            .color((float) 1.0, colorValue, (float) 0.0, (float) 1.0)
+            .endVertex();
     }
 
     @Nonnull

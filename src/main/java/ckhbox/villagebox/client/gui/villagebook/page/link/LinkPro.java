@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LinkPro
-        extends Link {
+    extends Link {
     private final boolean unknownPro;
     public Profession profession;
     private List<String> stringUnknownPro;
@@ -29,9 +29,9 @@ public class LinkPro
         this.height = 16;
 
         this.unknownPro = !ExtendedPlayerProperties
-                .get(page.guiVillageBook.mc.thePlayer)
-                .collections
-                .hasProfession(this.profession.getRegID());
+            .get(page.guiVillageBook.mc.thePlayer)
+            .collections
+            .hasProfession(this.profession.getRegID());
 
         if (this.unknownPro) {
             this.link = null;
@@ -43,10 +43,10 @@ public class LinkPro
 
         if (unknownPro) {
             mc.fontRendererObj.drawString("????", this.left, this.top,
-                    0xFF000000, false);
+                0xFF000000, false);
         } else {
             mc.fontRendererObj.drawString(I18n.format(this.profession.getUnloalizedDisplayName()),
-                    this.left + 18, this.top, 0xFF000000, false);
+                this.left + 18, this.top, 0xFF000000, false);
 
             this.page.guiVillageBook.drawProHead(this.left, this.top, profession, false);
 
@@ -61,10 +61,10 @@ public class LinkPro
 
         if (unknownPro) {
             mc.fontRendererObj.drawString("????", this.left + 2,
-                    this.top, 0xFF000000, false);
+                this.top, 0xFF000000, false);
         } else {
             mc.fontRendererObj.drawString(I18n.format(this.profession.getUnloalizedDisplayName()),
-                    this.left + 20, this.top, 0xFF555555, false);
+                this.left + 20, this.top, 0xFF555555, false);
 
             this.page.guiVillageBook.drawProHead(this.left, this.top + 2, profession, false);
 

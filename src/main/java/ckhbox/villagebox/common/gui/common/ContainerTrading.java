@@ -33,7 +33,7 @@ public class ContainerTrading extends Container {
         this.addSlotToContainer(new Slot(this.tradingInventory, 2, 59, 53));
         this.addSlotToContainer(new Slot(this.tradingInventory, 3, 77, 53));
         this.addSlotToContainer(new SlotTradingOutput(playerInventory.player, trader, this.tradingInventory,
-                4, 132, 53));
+            4, 132, 53));
 
         for (int i = 0; i < 3; ++i) {
             for (int j = 0; j < 9; ++j) {
@@ -99,11 +99,11 @@ public class ContainerTrading extends Container {
             } else if (index >= 4) {
                 if (index < 32) {
                     if (itemstack1 != null && !this.mergeItemStack(itemstack1, 32, 41,
-                            false)) {
+                        false)) {
                         return null;
                     }
                 } else if (itemstack1 != null && index < 41 && !this.mergeItemStack(itemstack1, 5,
-                        32, false)) {
+                    32, false)) {
                     return null;
                 }
             } else if (itemstack1 != null && !this.mergeItemStack(itemstack1, 5, 41, false)) {

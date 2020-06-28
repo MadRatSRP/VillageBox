@@ -35,10 +35,10 @@ import java.util.List;
 
 @SideOnly(Side.CLIENT)
 public class GuiVillagerUpgrading
-        extends GuiContainer {
+    extends GuiContainer {
 
     private static final ResourceLocation UpgradeGuiTexture = new ResourceLocation(
-            PathHelper.full("textures/gui/villager/upgrade.png")
+        PathHelper.full("textures/gui/villager/upgrade.png")
     );
 
     private final EntityVillager villager;
@@ -110,8 +110,8 @@ public class GuiVillagerUpgrading
         super.drawScreen(mouseX, mouseY, partialTicks);
         if (this.noUpgradeOption) {
             this.drawCenteredString(
-                    this.fontRendererObj, "No upgrading for next...",
-                    this.width / 2, this.height / 2, 0);
+                this.fontRendererObj, "No upgrading for next...",
+                this.width / 2, this.height / 2, 0);
         } else {
             Profession[] nextUpgradeOptions = this.villager.getProfession().getUpgradeToNextOptions();
 
@@ -164,19 +164,19 @@ public class GuiVillagerUpgrading
 
             // profession hover text
             String proname = I18n.format(
-                    PathHelper.full("gui.villagerupgrade.proname"), I18n.format(currentOption.getUnloalizedDisplayName())
+                PathHelper.full("gui.villagerupgrade.proname"), I18n.format(currentOption.getUnloalizedDisplayName())
             );
 
             this.drawFieldHoverText(i + 122, j + 27, 35, 49, mouseX, mouseY, proname,
-                    I18n.format(currentOption.getUnloalizedDescription()));
+                I18n.format(currentOption.getUnloalizedDescription()));
 
             // upgrade button hover text
             ArrayList<String> list = new ArrayList<>();
 
             if (this.meetItemsNeed) {
                 this.drawButtonHoverText(this.upgradeButton, mouseX, mouseY,
-                        I18n.format(PathHelper.full("gui.villagerupgrade.buttonupgrade.title")),
-                        I18n.format(PathHelper.full("gui.villagerupgrade.buttonupgrade.desc")));
+                    I18n.format(PathHelper.full("gui.villagerupgrade.buttonupgrade.title")),
+                    I18n.format(PathHelper.full("gui.villagerupgrade.buttonupgrade.desc")));
             } else {
                 list.add(I18n.format(PathHelper.full("gui.villagerupgrade.buttonupgrade.title.disable")));
                 list.add(I18n.format(PathHelper.full("gui.villagerupgrade.buttonupgrade.desc.disable")));
@@ -204,7 +204,7 @@ public class GuiVillagerUpgrading
 
     private void drawButtonHoverText(GuiButton button, int mouseX, int mouseY, String title, String desc) {
         this.drawFieldHoverText(button.xPosition, button.yPosition, button.width, button.height,
-                mouseX, mouseY, title, desc);
+            mouseX, mouseY, title, desc);
     }
 
     private void drawButtonHoverText(GuiButton button, int mouseX, int mouseY, List<String> list) {
@@ -314,7 +314,7 @@ public class GuiVillagerUpgrading
 
         if (keyCode == 1 || keyCode == this.mc.gameSettings.keyBindInventory.getKeyCode()) {
             ModNetwork.getInstance().sendToServer(
-                    new MessageGuiSetInteracting(this.villager.getEntityId(), this.villager.dimension, false)
+                new MessageGuiSetInteracting(this.villager.getEntityId(), this.villager.dimension, false)
             );
         }
     }
@@ -369,7 +369,7 @@ public class GuiVillagerUpgrading
                 minecraft.getTextureManager().bindTexture(UpgradeGuiTexture);
                 GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
                 boolean flag = mouseX >= this.xPosition && mouseY >= this.yPosition
-                        && mouseX < this.xPosition + this.width && mouseY < this.yPosition + this.height;
+                    && mouseX < this.xPosition + this.width && mouseY < this.yPosition + this.height;
                 int i = 38;
                 int j = 177;
 

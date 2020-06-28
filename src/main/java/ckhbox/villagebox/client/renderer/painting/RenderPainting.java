@@ -24,9 +24,9 @@ import javax.annotation.Nullable;
 
 @SideOnly(Side.CLIENT)
 public class RenderPainting
-        extends Render<EntityPainting> {
+    extends Render<EntityPainting> {
     private static final ResourceLocation KRISTOFFER_PAINTING_TEXTURE = new ResourceLocation(
-            PathHelper.full("textures/painting/paintings.png")
+        PathHelper.full("textures/painting/paintings.png")
     );
 
     private VertexBuffer vertexBuffer;
@@ -56,7 +56,7 @@ public class RenderPainting
         }
 
         this.renderPainting(entity, entityPaintingEnumArt.sizeX, entityPaintingEnumArt.sizeY,
-                entityPaintingEnumArt.offsetX, entityPaintingEnumArt.offsetY);
+            entityPaintingEnumArt.offsetX, entityPaintingEnumArt.offsetY);
 
         if (this.renderOutlines) {
             GlStateManager.disableOutlineMode();
@@ -113,53 +113,53 @@ public class RenderPainting
 
                 // Tasks with VertexBuffer
                 doTaskWithVertexBuffer(f15, f18, -f2, f20, f21,
-                        0.0F, 0.0F, -1.0F);
+                    0.0F, 0.0F, -1.0F);
                 doTaskWithVertexBuffer(f16, f18, -f2, f19, f21,
-                        0.0F, 0.0F, -1.0F);
+                    0.0F, 0.0F, -1.0F);
                 doTaskWithVertexBuffer(f16, f17, -f2, f19, f22,
-                        0.0F, 0.0F, -1.0F);
+                    0.0F, 0.0F, -1.0F);
                 doTaskWithVertexBuffer(f15, f17, -f2, f20, f22,
-                        0.0F, 0.0F, -1.0F);
+                    0.0F, 0.0F, -1.0F);
                 doTaskWithVertexBuffer(f15, f17, f2, f3, f5,
-                        0.0F, 0.0F, 1.0F);
+                    0.0F, 0.0F, 1.0F);
                 doTaskWithVertexBuffer(f16, f17, f2, f4, f5,
-                        0.0F, 0.0F, 1.0F);
+                    0.0F, 0.0F, 1.0F);
                 doTaskWithVertexBuffer(f16, f18, f2, f4, f6,
-                        0.0F, 0.0F, 1.0F);
+                    0.0F, 0.0F, 1.0F);
                 doTaskWithVertexBuffer(f15, f18, f2, f3, f6,
-                        0.0F, 0.0F, 1.0F);
+                    0.0F, 0.0F, 1.0F);
                 doTaskWithVertexBuffer(f15, f17, -f2, f7, f9,
-                        0.0F, 1.0F, 0.0F);
+                    0.0F, 1.0F, 0.0F);
                 doTaskWithVertexBuffer(f16, f17, -f2, f8, f9,
-                        0.0F, 1.0F, 0.0F);
+                    0.0F, 1.0F, 0.0F);
                 doTaskWithVertexBuffer(f16, f17, f2, f8, f10,
-                        0.0F, 1.0F, 0.0F);
+                    0.0F, 1.0F, 0.0F);
                 doTaskWithVertexBuffer(f15, f17, f2, f7, f10,
-                        0.0F, 1.0F, 0.0F);
+                    0.0F, 1.0F, 0.0F);
                 doTaskWithVertexBuffer(f15, f18, f2, f7, f9,
-                        0.0F, -1.0F, 0.0F);
+                    0.0F, -1.0F, 0.0F);
                 doTaskWithVertexBuffer(f16, f18, f2, f8, f9,
-                        0.0F, -1.0F, 0.0F);
+                    0.0F, -1.0F, 0.0F);
                 doTaskWithVertexBuffer(f16, f18, -f2, f8, f10,
-                        0.0F, -1.0F, 0.0F);
+                    0.0F, -1.0F, 0.0F);
                 doTaskWithVertexBuffer(f15, f18, -f2, f7, f10,
-                        0.0F, -1.0F, 0.0F);
+                    0.0F, -1.0F, 0.0F);
                 doTaskWithVertexBuffer(f15, f17, f2, f12, f13,
-                        -1.0F, 0.0F, 0.0F);
+                    -1.0F, 0.0F, 0.0F);
                 doTaskWithVertexBuffer(f15, f18, f2, f12, f14,
-                        -1.0F, 0.0F, 0.0F);
+                    -1.0F, 0.0F, 0.0F);
                 doTaskWithVertexBuffer(f15, f18, -f2, f11, f14,
-                        -1.0F, 0.0F, 0.0F);
+                    -1.0F, 0.0F, 0.0F);
                 doTaskWithVertexBuffer(f15, f17, -f2, f11, f13,
-                        -1.0F, 0.0F, 0.0F);
+                    -1.0F, 0.0F, 0.0F);
                 doTaskWithVertexBuffer(f16, f17, -f2, f12, f13,
-                        1.0F, 0.0F, 0.0F);
+                    1.0F, 0.0F, 0.0F);
                 doTaskWithVertexBuffer(f16, f18, -f2, f12, f14,
-                        1.0F, 0.0F, 0.0F);
+                    1.0F, 0.0F, 0.0F);
                 doTaskWithVertexBuffer(f16, f18, f2, f11, f14,
-                        1.0F, 0.0F, 0.0F);
+                    1.0F, 0.0F, 0.0F);
                 doTaskWithVertexBuffer(f16, f17, f2, f11, f13,
-                        1.0F, 0.0F, 0.0F);
+                    1.0F, 0.0F, 0.0F);
 
                 tessellator.draw();
             }
@@ -170,10 +170,10 @@ public class RenderPainting
                                         double texFirst, double texSecond, float normalFirst,
                                         float normalSecond, float normalThird) {
         vertexBuffer
-                .pos(firstPosition, secondPosition, thirdPosition)
-                .tex(texFirst, texSecond)
-                .normal(normalFirst, normalSecond, normalThird)
-                .endVertex();
+            .pos(firstPosition, secondPosition, thirdPosition)
+            .tex(texFirst, texSecond)
+            .normal(normalFirst, normalSecond, normalThird)
+            .endVertex();
     }
 
     private void setLightmap(EntityPainting painting, float p_77008_2_, float p_77008_3_) {

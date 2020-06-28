@@ -75,8 +75,8 @@ public class Profession implements IRegistrable {
         if (proData.listOfTradingRecipes != null) {
             for (JsonTradingRecipe recipe : proData.listOfTradingRecipes) {
                 this.tradingRecipeList.add(new TradingRecipe(
-                        JsonHelper.stringsToItemStacks(recipe.inputs),
-                        JsonHelper.stringToItemStack(recipe.output)));
+                    JsonHelper.stringsToItemStacks(recipe.inputs),
+                    JsonHelper.stringToItemStack(recipe.output)));
             }
         }
 
@@ -92,8 +92,8 @@ public class Profession implements IRegistrable {
         if (proData.listOfQuests != null) {
             for (JsonQuest quest : proData.listOfQuests) {
                 this.quests.add(new Quest(
-                        JsonHelper.stringsToItemStacks(quest.objectives),
-                        JsonHelper.stringsToItemStacks(quest.rewards)));
+                    JsonHelper.stringsToItemStacks(quest.objectives),
+                    JsonHelper.stringsToItemStacks(quest.rewards)));
             }
         }
     }

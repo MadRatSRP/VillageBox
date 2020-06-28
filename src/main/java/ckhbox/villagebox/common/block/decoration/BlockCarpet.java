@@ -21,7 +21,7 @@ import javax.annotation.Nonnull;
 public class BlockCarpet extends Block {
 
     private static final AxisAlignedBB CARPET_AABB = new AxisAlignedBB(0.0F, 0.0F, 0.0F,
-            1.0F, 0.0625F, 1.0F);
+        1.0F, 0.0625F, 1.0F);
 
     public BlockCarpet(String name) {
         super(Material.CARPET);

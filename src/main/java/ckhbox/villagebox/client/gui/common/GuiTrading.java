@@ -29,14 +29,14 @@ import java.io.IOException;
 
 @SideOnly(Side.CLIENT)
 public class GuiTrading
-        extends GuiContainer {
+    extends GuiContainer {
 
     private static final ResourceLocation TradeGuiTexture = new ResourceLocation(
-            PathHelper.full("textures/gui/villager/trade.png")
+        PathHelper.full("textures/gui/villager/trade.png")
     );
 
     private static final ResourceLocation TradeAllRecipesGuiTexture = new ResourceLocation(
-            PathHelper.full("textures/gui/villager/trade_allrecipes.png")
+        PathHelper.full("textures/gui/villager/trade_allrecipes.png")
     );
 
     private final ITrading trader;
@@ -175,7 +175,7 @@ public class GuiTrading
                     ry = 15 + (recipeIdx / allRecipesColumns) * 18;
 
                     if (this.isPointInRegion(rx + 1, ry + 1, 16,
-                            16, mouseX, mouseY) && itemstack != null) {
+                        16, mouseX, mouseY) && itemstack != null) {
                         this.renderToolTip(itemstack, mouseX, mouseY);
                     }
                 }

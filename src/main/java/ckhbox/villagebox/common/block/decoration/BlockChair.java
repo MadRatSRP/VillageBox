@@ -18,7 +18,7 @@ import javax.annotation.Nonnull;
 public class BlockChair extends BlockFacing {
 
     private static final AxisAlignedBB CHAIR_AABB = new AxisAlignedBB(0.25F, 0.0F, 0.25F,
-            0.75F, 0.875F, 0.75F);
+        0.75F, 0.875F, 0.75F);
 
     public BlockChair(String name) {
         super(Material.WOOD);

@@ -9,7 +9,7 @@ import net.minecraft.inventory.Container;
 import javax.annotation.Nonnull;
 
 public class ContainerVillagerMain
-        extends Container {
+    extends Container {
     public ContainerVillagerMain() {
     }
 

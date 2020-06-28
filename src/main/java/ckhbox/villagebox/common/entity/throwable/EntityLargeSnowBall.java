@@ -66,7 +66,7 @@ public class EntityLargeSnowBall extends EntityThrowable {
 
         for (int j = 0; j < 16; ++j) {
             this.worldObj.spawnParticle(EnumParticleTypes.SNOWBALL, this.posX, this.posY, this.posZ,
-                    0.0D, 0.0D, 0.0D, new int[0]);
+                0.0D, 0.0D, 0.0D, new int[0]);
         }
 
         if (!this.worldObj.isRemote) {

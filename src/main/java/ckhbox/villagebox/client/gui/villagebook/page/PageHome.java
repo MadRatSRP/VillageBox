@@ -10,7 +10,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 
 public class PageHome
-        extends Page {
+    extends Page {
     public PageHome(GuiVillageBook guiVillageBook) {
         super(guiVillageBook, I18n.format(PathHelper.full("villageBook.title")));
     }

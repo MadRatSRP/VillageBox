@@ -20,10 +20,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import javax.annotation.Nonnull;
 
 public class BlockFlowerInPot
-        extends Block {
+    extends Block {
 
     private static final AxisAlignedBB FLOWER_POT_AABB = new AxisAlignedBB(0.3125D, 0.0D,
-            0.3125D, 0.6875D, 0.375D, 0.6875D);
+        0.3125D, 0.6875D, 0.375D, 0.6875D);
 
     public BlockFlowerInPot(String name) {
         super(Material.CIRCUITS);

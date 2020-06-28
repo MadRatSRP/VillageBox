@@ -23,10 +23,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class GuiQuest
-        extends GuiContainer {
+    extends GuiContainer {
 
     private static final ResourceLocation questGuiTextures = new ResourceLocation(
-            PathHelper.full("textures/gui/quest/quest.png")
+        PathHelper.full("textures/gui/quest/quest.png")
     );
 
     private final EntityPlayer player;
@@ -141,7 +141,7 @@ public abstract class GuiQuest
         x -= this.guiLeft;
         for (int i = 0; i < this.required.length; i++) {
             if (this.isPointInRegion(x + i * 20, y1, 16, 16,
-                    mouseX, mouseY) && required[i] != null) {
+                mouseX, mouseY) && required[i] != null) {
                 this.renderToolTip(this.required[i], mouseX, mouseY);
 
                 this.renderProgress(this.required[i], mouseX, mouseY - 16);
@@ -150,7 +150,7 @@ public abstract class GuiQuest
 
         for (int i = 0; i < this.rewards.length; i++) {
             if (this.isPointInRegion(x + i * 20, y2, 16, 16,
-                    mouseX, mouseY) && rewards[i] != null) {
+                mouseX, mouseY) && rewards[i] != null) {
                 this.renderToolTip(this.rewards[i], mouseX, mouseY);
             }
         }
@@ -170,9 +170,9 @@ public abstract class GuiQuest
             this.cacheProgressString.clear();
 
             this.cacheProgressString.add(I18n.format(
-                    PathHelper.full("gui.quest.progress." + state),
-                    num,
-                    itemstack.stackSize)
+                PathHelper.full("gui.quest.progress." + state),
+                num,
+                itemstack.stackSize)
             );
         }
         this.drawHoveringText(this.cacheProgressString, mouseX, mouseY);

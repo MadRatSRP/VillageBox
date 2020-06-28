@@ -30,9 +30,9 @@ public abstract class Link {
 
     public boolean isMouseHover(int mouseX, int mouseY) {
         return mouseX > this.left &&
-                mouseX < this.left + this.width &&
-                mouseY > this.top &&
-                mouseY < this.top + this.height;
+            mouseX < this.left + this.width &&
+            mouseY > this.top &&
+            mouseY < this.top + this.height;
     }
 
     public void onDraw(int mouseX, int mouseY) {

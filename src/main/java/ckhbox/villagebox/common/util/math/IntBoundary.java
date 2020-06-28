@@ -30,11 +30,11 @@ public class IntBoundary {
 
     public boolean equalTo(IntBoundary other) {
         if (this.maxx != other.maxx ||
-                this.minx != other.minx ||
-                this.maxy != other.maxy ||
-                this.miny != other.miny ||
-                this.maxz != other.maxz ||
-                this.minz != other.minz) {
+            this.minx != other.minx ||
+            this.maxy != other.maxy ||
+            this.miny != other.miny ||
+            this.maxz != other.maxz ||
+            this.minz != other.minz) {
             return false;
         }
         return true;
@@ -42,11 +42,11 @@ public class IntBoundary {
 
     public boolean contact(IntBoundary other) {
         if (this.maxx < other.minx ||
-                this.minx > other.maxx ||
-                this.maxy < other.miny ||
-                this.miny > other.maxy ||
-                this.maxz < other.minz ||
-                this.minz > other.maxz) {
+            this.minx > other.maxx ||
+            this.maxy < other.miny ||
+            this.miny > other.maxy ||
+            this.maxz < other.minz ||
+            this.minz > other.maxz) {
             return false;
         }
         return true;
@@ -54,11 +54,11 @@ public class IntBoundary {
 
     public boolean contact(IntVec3 vec) {
         if (this.maxx < vec.x ||
-                this.minx > vec.x ||
-                this.maxy < vec.y ||
-                this.miny > vec.y ||
-                this.maxz < vec.z ||
-                this.minz > vec.z) {
+            this.minx > vec.x ||
+            this.maxy < vec.y ||
+            this.miny > vec.y ||
+            this.maxz < vec.z ||
+            this.minz > vec.z) {
             return false;
         }
         return true;
@@ -96,7 +96,7 @@ public class IntBoundary {
     @Override
     public String toString() {
         return String.format("from:[%d,%d,%d] to:[%d,%d,%d] size:[%d,%d,%d]",
-                this.minx, this.miny, this.minz, this.maxx, this.maxy, this.maxz, this.maxx - this.minx + 1, this.maxy - this.miny + 1, this.maxz - this.minz + 1);
+            this.minx, this.miny, this.minz, this.maxx, this.maxy, this.maxz, this.maxx - this.minx + 1, this.maxy - this.miny + 1, this.maxz - this.minz + 1);
     }
 
 

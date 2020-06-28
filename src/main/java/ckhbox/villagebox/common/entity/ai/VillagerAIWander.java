@@ -11,10 +11,10 @@ import net.minecraft.util.math.Vec3d;
 public class VillagerAIWander extends EntityAIBase {
     private final EntityVillager villager;
     private final double speed;
+    private final int executionChance;
     private double xPosition;
     private double yPosition;
     private double zPosition;
-    private final int executionChance;
 
     public VillagerAIWander(EntityVillager villagerIn, double speedIn) {
         this(villagerIn, speedIn, 50);
@@ -48,9 +48,9 @@ public class VillagerAIWander extends EntityAIBase {
 
         if (this.villager.getHome() == null) {
             vec3 = new Vec3d(
-                    this.villager.getWanderCenter().xCoord + Rand.get().nextDouble() * 6.0D - 3.0D,
-                    this.villager.getWanderCenter().yCoord,
-                    this.villager.getWanderCenter().zCoord + Rand.get().nextDouble() * 6.0D - 3.0D
+                this.villager.getWanderCenter().xCoord + Rand.get().nextDouble() * 6.0D - 3.0D,
+                this.villager.getWanderCenter().yCoord,
+                this.villager.getWanderCenter().zCoord + Rand.get().nextDouble() * 6.0D - 3.0D
             );
         } else {
             if (this.villager.worldObj.isDaytime() && !this.villager.worldObj.isRaining()) {
