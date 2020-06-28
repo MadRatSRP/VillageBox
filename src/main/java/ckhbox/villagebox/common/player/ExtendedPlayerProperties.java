@@ -109,7 +109,7 @@ public class ExtendedPlayerProperties {
                 this.proIDs.add(profession.getRegID());
                 ItemStack villageBook = new ItemStack(ModItems.villageBook);
                 this.player.addChatMessage(new TextComponentTranslation(PathHelper.full("message.player.collections.addproid"),
-                    new TextComponentTranslation(profession.getUnloalizedDisplayName()),
+                    new TextComponentTranslation(profession.getUnlocalizedDisplayName()),
                     new TextComponentTranslation(villageBook.getUnlocalizedName() + ".name")));
             }
         }

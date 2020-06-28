@@ -405,13 +405,13 @@ public class EntityVillager
 
     public void upgrade(int pid) {
         if (!this.worldObj.isRemote) {
-            TextComponentTranslation oldProName = new TextComponentTranslation(this.getProfession().getUnloalizedDisplayName());
+            TextComponentTranslation oldProName = new TextComponentTranslation(this.getProfession().getUnlocalizedDisplayName());
 
             this.upgradingHistory.add(this.getProfession().getRegID());
 
             this.setProfession(pid);
 
-            TextComponentTranslation newProName = new TextComponentTranslation(this.getProfession().getUnloalizedDisplayName());
+            TextComponentTranslation newProName = new TextComponentTranslation(this.getProfession().getUnlocalizedDisplayName());
 
             @Nullable final MinecraftServer minecraftServer = this.getServer();
 
@@ -431,13 +431,13 @@ public class EntityVillager
 
     public boolean downgrade() {
         if (!this.worldObj.isRemote && this.upgradingHistory.size() > 0) {
-            TextComponentTranslation oldProName = new TextComponentTranslation(this.getProfession().getUnloalizedDisplayName());
+            TextComponentTranslation oldProName = new TextComponentTranslation(this.getProfession().getUnlocalizedDisplayName());
 
             int last = this.upgradingHistory.remove(this.upgradingHistory.size() - 1);
 
             this.setProfession(last);
 
-            TextComponentTranslation newProName = new TextComponentTranslation(this.getProfession().getUnloalizedDisplayName());
+            TextComponentTranslation newProName = new TextComponentTranslation(this.getProfession().getUnlocalizedDisplayName());
 
             @Nullable final MinecraftServer minecraftServer = this.getServer();
 
@@ -474,7 +474,7 @@ public class EntityVillager
                     .sendChatMsg(
                         new TextComponentTranslation(PathHelper.full("message.villager.dismiss"),
                             player.getName(), this.getName(),
-                            new TextComponentTranslation(this.getProfession().getUnloalizedDisplayName()))
+                            new TextComponentTranslation(this.getProfession().getUnlocalizedDisplayName()))
                     );
             }
 

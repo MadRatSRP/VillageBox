@@ -30,7 +30,7 @@ public class PageProList extends Page {
         int to = Math.min(pros.size(), (pageIdx + 1) * prosPerPage);
         for (int i = from; i < to; i++) {
             List<String> hovertext = new ArrayList<>();
-            hovertext.add(I18n.format(pros.get(i).getUnloalizedDescription()));
+            hovertext.add(I18n.format(pros.get(i).getUnlocalizedDescription()));
             this.addLink(new LinkPro(this, pros.get(i), ">pro=" + pros.get(i).getRegID(), hovertext), true);
         }
 

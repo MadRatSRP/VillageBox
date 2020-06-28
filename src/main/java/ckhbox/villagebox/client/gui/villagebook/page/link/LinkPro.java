@@ -24,7 +24,7 @@ public class LinkPro
 
         this.profession = profession;
 
-        this.width = this.mc.fontRendererObj.getStringWidth(I18n.format(this.profession.getUnloalizedDisplayName())) + 20;
+        this.width = this.mc.fontRendererObj.getStringWidth(I18n.format(this.profession.getUnlocalizedDisplayName())) + 20;
 
         this.height = 16;
 
@@ -45,7 +45,7 @@ public class LinkPro
             mc.fontRendererObj.drawString("????", this.left, this.top,
                 0xFF000000, false);
         } else {
-            mc.fontRendererObj.drawString(I18n.format(this.profession.getUnloalizedDisplayName()),
+            mc.fontRendererObj.drawString(I18n.format(this.profession.getUnlocalizedDisplayName()),
                 this.left + 18, this.top, 0xFF000000, false);
 
             this.page.guiVillageBook.drawProHead(this.left, this.top, profession, false);
@@ -63,7 +63,7 @@ public class LinkPro
             mc.fontRendererObj.drawString("????", this.left + 2,
                 this.top, 0xFF000000, false);
         } else {
-            mc.fontRendererObj.drawString(I18n.format(this.profession.getUnloalizedDisplayName()),
+            mc.fontRendererObj.drawString(I18n.format(this.profession.getUnlocalizedDisplayName()),
                 this.left + 20, this.top, 0xFF555555, false);
 
             this.page.guiVillageBook.drawProHead(this.left, this.top + 2, profession, false);

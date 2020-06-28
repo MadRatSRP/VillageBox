@@ -21,7 +21,7 @@ public class PageTrading extends Page {
     private final int pageIdx;
 
     public PageTrading(GuiVillageBook guiVillageBook, Profession pro, int pageIdx) {
-        super(guiVillageBook, I18n.format(pro.getUnloalizedDisplayName()));
+        super(guiVillageBook, I18n.format(pro.getUnlocalizedDisplayName()));
         this.pageIdx = pageIdx;
         this.pro = pro;
     }

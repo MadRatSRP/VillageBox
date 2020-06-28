@@ -164,11 +164,11 @@ public class GuiVillagerUpgrading
 
             // profession hover text
             String proname = I18n.format(
-                PathHelper.full("gui.villagerupgrade.proname"), I18n.format(currentOption.getUnloalizedDisplayName())
+                PathHelper.full("gui.villagerupgrade.proname"), I18n.format(currentOption.getUnlocalizedDisplayName())
             );
 
             this.drawFieldHoverText(i + 122, j + 27, 35, 49, mouseX, mouseY, proname,
-                I18n.format(currentOption.getUnloalizedDescription()));
+                I18n.format(currentOption.getUnlocalizedDescription()));
 
             // upgrade button hover text
             ArrayList<String> list = new ArrayList<>();

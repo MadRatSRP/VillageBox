@@ -19,13 +19,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Profession implements IRegistrable {
-
     //---------------------------------
-    //registry
-    public static Registry<Profession> registry = new Registry<Profession>();
-    //trading recipe list
+    // registry
+    public static Registry<Profession> registry = new Registry<>();
+    // trading recipe list
     protected TradingRecipeList tradingRecipeList;
-    //texture
+    // texture
     protected ResourceLocation texturem;
     protected ResourceLocation texturef;
 
@@ -51,8 +50,8 @@ public class Profession implements IRegistrable {
 
         JsonVBData data = JsonDataManager.GetVBData();
 
-        for (JsonProfession pro : data.listOfProfessions) {
-            registry.register(pro.professionId, new Profession(pro));
+        for (JsonProfession profession : data.listOfProfessions) {
+            registry.register(profession.professionId, new Profession(profession));
         }
     }
 
@@ -67,10 +66,10 @@ public class Profession implements IRegistrable {
     }
 
     private void loadProfessionData(JsonProfession proData) {
-        //skin texture
+        // skin texture
         this.createTextures(proData.texture);
 
-        //trading
+        // trading
         tradingRecipeList = new TradingRecipeList();
         if (proData.listOfTradingRecipes != null) {
             for (JsonTradingRecipe recipe : proData.listOfTradingRecipes) {
@@ -80,20 +79,24 @@ public class Profession implements IRegistrable {
             }
         }
 
-        //upgrading
+        // upgrading
         upgradeToNextOptionIDs = proData.upgradeProfessionIDs == null ? null : proData.upgradeProfessionIDs.clone();
         upgradeToCurentNeeds = JsonHelper.stringsToItemStacks(proData.upgradeRequirements);
 
-        //items on hands
+        // items on hands
         this.holdItems = JsonHelper.stringsToItemStacks(proData.holdItems);
 
-        //quests
-        this.quests = new ArrayList<Quest>();
+        // quests
+        this.quests = new ArrayList<>();
+
         if (proData.listOfQuests != null) {
             for (JsonQuest quest : proData.listOfQuests) {
-                this.quests.add(new Quest(
-                    JsonHelper.stringsToItemStacks(quest.objectives),
-                    JsonHelper.stringsToItemStacks(quest.rewards)));
+                this.quests.add(
+                    new Quest(
+                        JsonHelper.stringsToItemStacks(quest.objectives),
+                        JsonHelper.stringsToItemStacks(quest.rewards)
+                    )
+                );
             }
         }
     }
@@ -101,13 +104,16 @@ public class Profession implements IRegistrable {
     public Profession[] getUpgradeToNextOptions() {
         if (this.upgradeToNextOptions == null) {
             if (this.upgradeToNextOptionIDs != null && this.upgradeToNextOptionIDs.length > 0) {
-                ArrayList<Profession> list = new ArrayList<Profession>();
-                for (int i = 0; i < this.upgradeToNextOptionIDs.length; i++) {
-                    Profession p = registry.get(this.upgradeToNextOptionIDs[i]);
-                    if (!isProIDBanned(p.getRegID())) {
-                        list.add(p);
+                ArrayList<Profession> list = new ArrayList<>();
+
+                for (int upgradeToNextOptionID : this.upgradeToNextOptionIDs) {
+                    Profession profession = registry.get(upgradeToNextOptionID);
+
+                    if (!isProIDBanned(profession.getRegID())) {
+                        list.add(profession);
                     }
                 }
+
                 if (list.size() > 0) {
                     this.upgradeToNextOptions = list.toArray(new Profession[list.size()]);
                 }
@@ -147,11 +153,11 @@ public class Profession implements IRegistrable {
             return this.holdItems[Rand.get().nextInt(this.holdItems.length)];
     }
 
-    public String getUnloalizedDisplayName() {
+    public String getUnlocalizedDisplayName() {
         return this.getUnlocalized() + ".name";
     }
 
-    public String getUnloalizedDescription() {
+    public String getUnlocalizedDescription() {
         return this.getUnlocalized() + ".desc";
     }
 
@@ -167,5 +173,4 @@ public class Profession implements IRegistrable {
     protected String getUnlocalized() {
         return unlocalized;
     }
-
 }
