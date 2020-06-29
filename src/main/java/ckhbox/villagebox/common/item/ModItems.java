@@ -19,7 +19,6 @@ import ckhbox.villagebox.common.item.tool.ItemShovel;
 import ckhbox.villagebox.common.item.tool.ItemWeatherStone;
 import ckhbox.villagebox.common.item.weapon.*;
 import ckhbox.villagebox.common.util.helper.PathHelper;
-import com.sun.istack.internal.Nullable;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -34,6 +33,8 @@ import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import javax.annotation.Nullable;
 
 public class ModItems {
     public static final CreativeTabs tabVB = new CreativeTabs("tabVillageBox") {

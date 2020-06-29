@@ -21,7 +21,9 @@ public class ItemVillageBook
     extends Item {
     public ItemVillageBook() {
         this.setUnlocalizedName(PathHelper.full("villageBook"));
+
         this.setCreativeTab(ModItems.tabVB);
+
         this.setMaxStackSize(1);
     }
 

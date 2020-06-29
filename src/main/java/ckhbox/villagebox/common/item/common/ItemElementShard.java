@@ -7,12 +7,14 @@ import ckhbox.villagebox.common.item.ModItems;
 import ckhbox.villagebox.common.util.helper.PathHelper;
 import net.minecraft.item.Item;
 
-public class ItemElementShard extends Item {
+public class ItemElementShard
+    extends Item {
 
     public ItemElementShard(String element) {
         this.setUnlocalizedName(PathHelper.full(element + "Shard"));
+
         this.setCreativeTab(ModItems.tabVB);
+
         this.setMaxStackSize(16);
     }
-
 }

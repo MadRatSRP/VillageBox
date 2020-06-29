@@ -14,27 +14,33 @@ import net.minecraft.item.ItemSword;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
-public class ItemWaterSword extends ItemSword {
+public class ItemWaterSword
+    extends ItemSword {
 
     public ItemWaterSword() {
         super(ModItems.ToolMaterials.STEEL);
+
         this.setUnlocalizedName(PathHelper.full("waterSword"));
+
         this.setCreativeTab(ModItems.tabVB);
     }
 
     @Override
-    public void onUpdate(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
+    public void onUpdate(@Nonnull ItemStack stack, @Nonnull World worldIn,
+                         @Nonnull Entity entityIn, int itemSlot, boolean isSelected) {
         super.onUpdate(stack, worldIn, entityIn, itemSlot, isSelected);
         if (entityIn instanceof EntityPlayer) {
-            EntityPlayer p = (EntityPlayer) entityIn;
-            if (p.getHeldItemMainhand() == stack || p.getHeldItemOffhand() == stack) {
-                if (!p.isPotionActive(MobEffects.WATER_BREATHING)) {
-                    p.addPotionEffect(new PotionEffect(MobEffects.WATER_BREATHING, 40));
+            EntityPlayer player = (EntityPlayer) entityIn;
+
+            if (player.getHeldItemMainhand() == stack || player.getHeldItemOffhand() == stack) {
+                if (!player.isPotionActive(MobEffects.WATER_BREATHING)) {
+                    player.addPotionEffect(new PotionEffect(MobEffects.WATER_BREATHING, 40));
                 }
-                if (!p.isPotionActive(MobEffects.SPEED)) {
-                    p.addPotionEffect(new PotionEffect(MobEffects.SPEED, 40, 1));
+                if (!player.isPotionActive(MobEffects.SPEED)) {
+                    player.addPotionEffect(new PotionEffect(MobEffects.SPEED, 40, 1));
                 }
             }
         }
@@ -42,9 +48,12 @@ public class ItemWaterSword extends ItemSword {
 
 
     @Override
-    public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
+    public void addInformation(@Nonnull ItemStack stack, @Nonnull EntityPlayer playerIn,
+                               @Nonnull List<String> tooltip, boolean advanced) {
         super.addInformation(stack, playerIn, tooltip, advanced);
+
         String info = I18n.format(PathHelper.full("info.item.waterSword"));
+
         tooltip.add(info);
     }
 }

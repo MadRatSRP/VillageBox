@@ -17,7 +17,9 @@ public class ItemDismissalScroll
     extends Item {
     public ItemDismissalScroll() {
         this.setUnlocalizedName(PathHelper.full("dismissalScroll"));
+
         this.setCreativeTab(ModItems.tabVB);
+
         this.setMaxStackSize(16);
     }
 
@@ -25,9 +27,13 @@ public class ItemDismissalScroll
     public void addInformation(@Nonnull ItemStack stack, @Nonnull EntityPlayer playerIn,
                                @Nonnull List<String> tooltip, boolean advanced) {
         super.addInformation(stack, playerIn, tooltip, advanced);
+
         String info = I18n.format(PathHelper.full("info.item.dismissalScroll.line0"));
+
         String info1 = I18n.format(PathHelper.full("info.item.dismissalScroll.line1"));
+
         tooltip.add(info);
+
         tooltip.add(info1);
     }
 }

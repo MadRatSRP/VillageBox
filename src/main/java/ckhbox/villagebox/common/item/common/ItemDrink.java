@@ -12,27 +12,34 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.world.World;
 
-public class ItemDrink extends ItemFood {
+import javax.annotation.Nonnull;
 
-    private int drunkticks;
+public class ItemDrink
+    extends ItemFood {
 
-    public ItemDrink(int amount, float saturation, int drunktime) {
+    private final int drunkTicks;
+
+    public ItemDrink(int amount, float saturation, int drunkTime) {
         super(amount, saturation, false);
+
         this.setCreativeTab(ModItems.tabVB);
-        this.drunkticks = drunktime * 20;
+
+        this.drunkTicks = drunkTime * 20;
+
         this.setAlwaysEdible();
     }
 
+    @Nonnull
     @Override
-    public EnumAction getItemUseAction(ItemStack stack) {
+    public EnumAction getItemUseAction(@Nonnull ItemStack stack) {
         return EnumAction.DRINK;
     }
 
     @Override
-    protected void onFoodEaten(ItemStack stack, World worldIn, EntityPlayer player) {
+    protected void onFoodEaten(@Nonnull ItemStack stack,
+                               @Nonnull World worldIn, @Nonnull EntityPlayer player) {
         super.onFoodEaten(stack, worldIn, player);
-        player.addPotionEffect(new PotionEffect(MobEffects.NAUSEA, this.drunkticks));
+
+        player.addPotionEffect(new PotionEffect(MobEffects.NAUSEA, this.drunkTicks));
     }
-
-
 }

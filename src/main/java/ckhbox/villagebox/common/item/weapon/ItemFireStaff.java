@@ -17,45 +17,57 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
-public class ItemFireStaff extends Item {
+public class ItemFireStaff
+    extends Item {
     public ItemFireStaff() {
         this.setUnlocalizedName(PathHelper.full("fireStaff"));
+
         this.maxStackSize = 1;
+
         this.setMaxDamage(20);
+
         this.setCreativeTab(ModItems.tabVB);
     }
 
+    @Nonnull
     @Override
-    public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn,
-                                                    EnumHand hand) {
+    public ActionResult<ItemStack> onItemRightClick(@Nonnull ItemStack itemStackIn, @Nonnull World worldIn,
+                                                    EntityPlayer playerIn, @Nonnull EnumHand hand) {
 
         if (!playerIn.capabilities.isCreativeMode) {
             itemStackIn.damageItem(1, playerIn);
+
             if (itemStackIn.getItemDamage() == 0) {
                 itemStackIn = new ItemStack(ModItems.staff);
             }
         }
 
-        worldIn.playSound((EntityPlayer) null, playerIn.posX, playerIn.posY, playerIn.posZ, SoundEvents.ENTITY_GHAST_SHOOT, SoundCategory.NEUTRAL, 0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
+        worldIn.playSound(null, playerIn.posX, playerIn.posY, playerIn.posZ,
+            SoundEvents.ENTITY_GHAST_SHOOT, SoundCategory.NEUTRAL, 0.5F,
+            0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
 
         if (!worldIn.isRemote) {
-            EntityFlameBall flameball = new EntityFlameBall(worldIn, playerIn);
-            flameball.setHeadingFromThrower(playerIn, playerIn.rotationPitch, playerIn.rotationYaw, 0.0F, 1.5F, 1.0F);
-            worldIn.spawnEntityInWorld(flameball);
+            EntityFlameBall flameBall = new EntityFlameBall(worldIn, playerIn);
+
+            flameBall.setHeadingFromThrower(playerIn, playerIn.rotationPitch, playerIn.rotationYaw,
+                0.0F, 1.5F, 1.0F);
+
+            worldIn.spawnEntityInWorld(flameBall);
         }
 
-        return new ActionResult(EnumActionResult.SUCCESS, itemStackIn);
-
+        return new ActionResult<>(EnumActionResult.SUCCESS, itemStackIn);
     }
 
     @Override
-    public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
+    public void addInformation(@Nonnull ItemStack stack, @Nonnull EntityPlayer playerIn,
+                               @Nonnull List<String> tooltip, boolean advanced) {
         super.addInformation(stack, playerIn, tooltip, advanced);
+
         String info = I18n.format(PathHelper.full("info.item.fireStaff"));
+
         tooltip.add(info);
     }
-
-
 }

@@ -13,31 +13,41 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
-public class ItemLightSword extends ItemSword {
+public class ItemLightSword
+    extends ItemSword {
 
     public ItemLightSword() {
         super(ModItems.ToolMaterials.STEEL);
+
         this.setUnlocalizedName(PathHelper.full("lightSword"));
+
         this.setCreativeTab(ModItems.tabVB);
     }
 
     @Override
-    public boolean hitEntity(ItemStack stack, EntityLivingBase target, EntityLivingBase attacker) {
+    public boolean hitEntity(@Nonnull ItemStack stack, EntityLivingBase target,
+                             @Nonnull EntityLivingBase attacker) {
         if (!target.worldObj.isRemote) {
-            Class c = target.getClass();
-            if (c == EntityZombie.class || c == EntitySkeleton.class) {
-                target.setHealth(0); // one hit kill
+            Class<?> classInstance = target.getClass();
+
+            if (classInstance == EntityZombie.class || classInstance == EntitySkeleton.class) {
+                // one hit kill
+                target.setHealth(0);
             }
         }
         return super.hitEntity(stack, target, attacker);
     }
 
     @Override
-    public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
+    public void addInformation(@Nonnull ItemStack stack, @Nonnull EntityPlayer playerIn,
+                               @Nonnull List<String> tooltip, boolean advanced) {
         super.addInformation(stack, playerIn, tooltip, advanced);
+
         String info = I18n.format(PathHelper.full("info.item.lightSword"));
+
         tooltip.add(info);
     }
 }

@@ -26,8 +26,11 @@ public class ItemTreasureBook
 
     public ItemTreasureBook(int lvl) {
         this.setUnlocalizedName(PathHelper.full("treasurebook" + lvl));
+
         this.setCreativeTab(ModItems.tabVB);
+
         this.setMaxStackSize(1);
+
         this.level = lvl;
     }
 
@@ -40,15 +43,19 @@ public class ItemTreasureBook
             // increase treasure hunt level
             if (ExtendedPlayerProperties.get(playerIn).upgradeTreasureHuntLevelTo(this.level)) {
                 playerIn.playSound(SoundEvents.ENTITY_PLAYER_LEVELUP, 1.0F, 1.0F);
+
                 playerIn.addChatMessage(new TextComponentTranslation(
                     PathHelper.full("message.player.treasurelvlupgrade.success"), this.level)
                 );
+
                 itemStackIn.stackSize -= 1;
+
                 return new ActionResult<>(EnumActionResult.SUCCESS, itemStackIn);
             } else {
                 playerIn.addChatMessage(new TextComponentTranslation(
                     PathHelper.full("message.player.treasurelvlupgrade.failed"))
                 );
+
                 return new ActionResult<>(EnumActionResult.FAIL, itemStackIn);
             }
         }
@@ -60,7 +67,9 @@ public class ItemTreasureBook
     public void addInformation(@Nonnull ItemStack stack, @Nonnull EntityPlayer playerIn,
                                @Nonnull List<String> tooltip, boolean advanced) {
         super.addInformation(stack, playerIn, tooltip, advanced);
+
         String info = I18n.format(PathHelper.full("book.treasure.item.info"), this.level);
+
         tooltip.add(info);
     }
 }

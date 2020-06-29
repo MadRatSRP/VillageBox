@@ -11,7 +11,9 @@ public class ItemArmor
     extends net.minecraft.item.ItemArmor {
     public ItemArmor(String name, ArmorMaterial material, int renderIndex, EntityEquipmentSlot equipmentSlotIn) {
         super(material, renderIndex, equipmentSlotIn);
+
         this.setUnlocalizedName(PathHelper.full(name));
+
         this.setCreativeTab(ModItems.tabVB);
     }
 }

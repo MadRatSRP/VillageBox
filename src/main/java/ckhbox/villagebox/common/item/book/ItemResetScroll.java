@@ -17,7 +17,9 @@ public class ItemResetScroll
     extends Item {
     public ItemResetScroll() {
         this.setUnlocalizedName(PathHelper.full("resetScroll"));
+
         this.setCreativeTab(ModItems.tabVB);
+
         this.setMaxStackSize(16);
     }
 
@@ -25,7 +27,9 @@ public class ItemResetScroll
     public void addInformation(@Nonnull ItemStack stack, @Nonnull EntityPlayer playerIn,
                                @Nonnull List<String> tooltip, boolean advanced) {
         super.addInformation(stack, playerIn, tooltip, advanced);
+
         String info = I18n.format(PathHelper.full("item.resetScroll.item.info"));
+
         tooltip.add(info);
     }
 }

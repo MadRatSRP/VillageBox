@@ -16,33 +16,40 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.WorldInfo;
 
+import javax.annotation.Nonnull;
 import java.util.Random;
 
-public class ItemWeatherStone extends Item {
+public class ItemWeatherStone
+    extends Item {
 
-    private boolean sunny;
+    private final boolean sunny;
 
     public ItemWeatherStone(boolean sunny) {
-
         this.sunny = sunny;
 
         this.setUnlocalizedName(PathHelper.full(sunny ? "sunStone" : "rainStone"));
+
         this.setCreativeTab(ModItems.tabVB);
+
         this.maxStackSize = 1;
+
         this.setMaxDamage(1);
     }
 
+    @Nonnull
     @Override
-    public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn, EnumHand hand) {
+    public ActionResult<ItemStack> onItemRightClick(@Nonnull ItemStack itemStackIn, @Nonnull World worldIn,
+                                                    EntityPlayer playerIn, @Nonnull EnumHand hand) {
         if (!playerIn.capabilities.isCreativeMode) {
             if (this.sunny == worldIn.isRaining()) {
                 itemStackIn.damageItem(2, playerIn);
             }
         }
 
-        playerIn.playSound(SoundEvents.ENTITY_PLAYER_LEVELUP, 0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
+        playerIn.playSound(SoundEvents.ENTITY_PLAYER_LEVELUP, 0.5F,
+            0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
 
-        //changes weather
+        // changes weather
         if (!worldIn.isRemote) {
             if (this.sunny && !worldIn.isRaining()) {
                 playerIn.addChatMessage(new TextComponentTranslation(PathHelper.full("message.player.weatherstone.alreadysunny")));
@@ -69,6 +76,6 @@ public class ItemWeatherStone extends Item {
 
         }
 
-        return new ActionResult(EnumActionResult.PASS, itemStackIn);
+        return new ActionResult<>(EnumActionResult.PASS, itemStackIn);
     }
 }

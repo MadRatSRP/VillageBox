@@ -10,19 +10,26 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
-public class ItemBlockWithInfo extends ItemBlock {
+public class ItemBlockWithInfo
+    extends ItemBlock {
 
     public ItemBlockWithInfo(Block block) {
         super(block);
     }
 
     @Override
-    public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
+    public void addInformation(@Nonnull ItemStack stack,
+                               @Nonnull EntityPlayer playerIn,
+                               @Nonnull List<String> tooltip, boolean advanced) {
         super.addInformation(stack, playerIn, tooltip, advanced);
+
         String n = stack.getItem().getUnlocalizedName();
+
         String info = I18n.format(PathHelper.full("info.tile." + n.substring(16, n.length())));
+
         tooltip.add(info);
     }
 }

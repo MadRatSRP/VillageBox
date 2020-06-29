@@ -11,9 +11,11 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
-public class ItemFireSword extends ItemSword {
+public class ItemFireSword
+    extends ItemSword {
 
     public ItemFireSword() {
         super(ModItems.ToolMaterials.STEEL);
@@ -22,17 +24,22 @@ public class ItemFireSword extends ItemSword {
     }
 
     @Override
-    public boolean hitEntity(ItemStack stack, EntityLivingBase target, EntityLivingBase attacker) {
+    public boolean hitEntity(@Nonnull ItemStack stack, EntityLivingBase target,
+                             @Nonnull EntityLivingBase attacker) {
         if (!target.worldObj.isRemote) {
             target.setFire(3);
         }
+
         return super.hitEntity(stack, target, attacker);
     }
 
     @Override
-    public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
+    public void addInformation(@Nonnull ItemStack stack, @Nonnull EntityPlayer playerIn,
+                               @Nonnull List<String> tooltip, boolean advanced) {
         super.addInformation(stack, playerIn, tooltip, advanced);
+
         String info = I18n.format(PathHelper.full("info.item.fireSword"));
+
         tooltip.add(info);
     }
 }

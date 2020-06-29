@@ -16,25 +16,33 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class ItemPainting extends Item {
+import javax.annotation.Nonnull;
+
+public class ItemPainting
+    extends Item {
 
     public ItemPainting() {
         this.setUnlocalizedName(PathHelper.full("painting"));
+
         this.setCreativeTab(ModItems.tabVB);
     }
 
     /**
      * Called when a Block is right-clicked with this Item
      */
-    public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+    @Nonnull
+    public EnumActionResult onItemUse(@Nonnull ItemStack stack, @Nonnull EntityPlayer playerIn,
+                                      @Nonnull World worldIn, BlockPos pos, @Nonnull EnumHand hand,
+                                      @Nonnull EnumFacing facing, float hitX, float hitY, float hitZ) {
         BlockPos blockpos = pos.offset(facing);
 
         if (facing != EnumFacing.DOWN && facing != EnumFacing.UP && playerIn.canPlayerEdit(blockpos, facing, stack)) {
             EntityHanging entityhanging = this.createEntity(worldIn, blockpos, facing);
 
-            if (entityhanging != null && entityhanging.onValidSurface()) {
+            if (entityhanging.onValidSurface()) {
                 if (!worldIn.isRemote) {
                     entityhanging.playPlaceSound();
+
                     worldIn.spawnEntityInWorld(entityhanging);
                 }
 
@@ -50,6 +58,4 @@ public class ItemPainting extends Item {
     private EntityPainting createEntity(World worldIn, BlockPos pos, EnumFacing clickedSide) {
         return new EntityPainting(worldIn, pos, clickedSide);
     }
-
-
 }
