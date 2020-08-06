@@ -8,14 +8,13 @@ import net.minecraft.entity.monster.EntityMob;
 import java.util.List;
 
 public class TileEntityFireTotem extends TileEntityTotem {
-
     @Override
     protected void updateTotonEffect() {
-        List<EntityMob> list = this.worldObj.getEntitiesWithinAABB(EntityMob.class, this.getEffectField(16, 10));
-        if (list != null) {
-            for (EntityMob mob : list) {
-                mob.setFire(4);
-            }
+        List<EntityMob> list = this.worldObj.getEntitiesWithinAABB(EntityMob.class,
+                this.getEffectField(16, 10));
+
+        for (EntityMob mob : list) {
+            mob.setFire(4);
         }
     }
 }

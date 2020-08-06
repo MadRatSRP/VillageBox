@@ -11,16 +11,15 @@ import net.minecraft.potion.PotionEffect;
 import java.util.List;
 
 public class TileEntityNatureTotem extends TileEntityTotem {
-
     @Override
     protected void updateTotonEffect() {
-        List<EntityLivingBase> list = this.worldObj.getEntitiesWithinAABB(EntityLivingBase.class, this.getEffectField(16, 10));
-        if (list != null) {
-            for (EntityLivingBase l : list) {
-                if (l instanceof EntityMob)
-                    continue;
-                l.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 100, 0));
-            }
+        List<EntityLivingBase> list = this.worldObj.getEntitiesWithinAABB(EntityLivingBase.class,
+                this.getEffectField(16, 10));
+
+        for (EntityLivingBase entity : list) {
+            if (entity instanceof EntityMob)
+                continue;
+            entity.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 100, 0));
         }
     }
 }
