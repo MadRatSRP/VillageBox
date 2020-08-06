@@ -5,7 +5,7 @@ package ckhbox.villagebox.common.util.helper;
 
 public class BitHelper {
     public static boolean readBit(int data, int offset) {
-        return ((data >> offset) & 1) == 0 ? false : true;
+        return ((data >> offset) & 1) != 0;
     }
 
     public static int writeBit(int data, int offset, boolean flag) {

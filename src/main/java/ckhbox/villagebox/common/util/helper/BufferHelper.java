@@ -10,6 +10,7 @@ import java.util.UUID;
 public class BufferHelper {
     public static void writeUuid(ByteBuf buf, UUID uuid) {
         buf.writeLong(uuid.getMostSignificantBits());
+
         buf.writeLong(uuid.getLeastSignificantBits());
     }
 

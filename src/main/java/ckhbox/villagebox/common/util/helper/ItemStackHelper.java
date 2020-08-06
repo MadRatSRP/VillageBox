@@ -17,40 +17,51 @@ public class ItemStackHelper {
     }
 
     private static boolean match(ItemStack[] items, ItemStack[] inputs, int size, boolean consume) {
-
         int[] tempStackSizes = null;
+
         if (consume) {
             tempStackSizes = new int[items.length];
         }
 
         ArrayList<ItemStack> waitForMatching = new ArrayList<ItemStack>();
+
         if (inputs != null) {
-            for (int i = 0; i < inputs.length; i++) {
-                if (inputs[i] != null) {
-                    waitForMatching.add(inputs[i]);
+            for (ItemStack input : inputs) {
+                if (input != null) {
+                    waitForMatching.add(input);
                 }
             }
         }
 
         boolean found;
+
         ItemStack item, target;
+
         for (int i = 0; i < size; i++) {
-            //find item in inputs
+            // find item in inputs
             found = false;
+
             item = items[i];
+
             if (item == null)
                 continue;
+
             for (int j = 0; j < waitForMatching.size(); j++) {
                 target = waitForMatching.get(j);
+
                 if (item.isItemEqual(target) && item.stackSize >= target.stackSize) {
                     found = true;
+
                     if (consume) {
                         tempStackSizes[i] = item.stackSize - target.stackSize;
                     }
+
                     waitForMatching.remove(j);
+
                     break;
                 }
             }
+
             if (!found) {
                 return false;
             }
@@ -61,10 +72,10 @@ public class ItemStackHelper {
 
         if (consume) {
             for (int i = 0; i < items.length; i++) {
-                if (items != null) {
-                    if (tempStackSizes[i] == 0) {
-                        items[i] = null;
-                    } else {
+                if (tempStackSizes[i] == 0) {
+                    items[i] = null;
+                } else {
+                    if (items[i] != null) {
                         items[i].stackSize = tempStackSizes[i];
                     }
                 }

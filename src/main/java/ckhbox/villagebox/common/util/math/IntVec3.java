@@ -27,12 +27,13 @@ public class IntVec3 {
 
     public void set(int x, int y, int z) {
         this.x = x;
+
         this.y = y;
+
         this.z = z;
     }
 
     public int[] toArray() {
         return new int[]{x, y, z};
     }
-
 }

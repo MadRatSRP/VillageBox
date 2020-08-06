@@ -1,0 +1,2 @@
+NameGenerator class - add setting to enable/disable male/female names
+(for example, ru names enabled, en names disabled)
