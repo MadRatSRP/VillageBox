@@ -16,10 +16,8 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 public class MessageSpawnNewVillagerThroughMail implements IMessage {
-
     public MessageSpawnNewVillagerThroughMail() {
     }
-
 
     @Override
     public void fromBytes(ByteBuf buf) {
@@ -37,37 +35,38 @@ public class MessageSpawnNewVillagerThroughMail implements IMessage {
          */
         @Override
         public IMessage onMessage(MessageSpawnNewVillagerThroughMail message, MessageContext ctx) {
-
-            //spawn villager
+            // spawn villager
             EntityPlayer player = ctx.getServerHandler().playerEntity;
 
             ItemStack hold = player.getHeldItemMainhand();
-            if (hold.getItem() == ModItems.mail) {
+            if (hold != null && hold.getItem() == ModItems.mail) {
                 int mailType = ItemMail.getMailType(hold);
-                if (mailType == ItemMail.MailType_NewVillagerMale || mailType == ItemMail.MailType_NewVillagerFemale) {
 
+                if (mailType == ItemMail.MailType_NewVillagerMale || mailType == ItemMail.MailType_NewVillagerFemale) {
                     String name = ItemMail.getMailSender(hold);
 
                     EntityVillager villager = new EntityVillager(player.worldObj, name, mailType == ItemMail.MailType_NewVillagerMale);
 
                     double d = 2.0F;
+
                     double x = player.posX - Math.sin(player.rotationYaw / 180.0F * (float) Math.PI) * d;
+
                     double z = player.posZ + Math.cos(player.rotationYaw / 180.0F * (float) Math.PI) * d;
+
                     double y = player.posY;
 
                     villager.setLocationAndAngles(x, y, z, player.rotationYaw + 180, 0);
+
                     ctx.getServerHandler().playerEntity.worldObj.spawnEntityInWorld(villager);
 
                     player.addChatMessage(
-                        new TextComponentTranslation(PathHelper.full("message.villager.newjoined"), villager.getName())
+                            new TextComponentTranslation(PathHelper.full("message.villager.newjoined"), villager.getName())
                     );
 
-                    //remove hold
-                    player.inventory.setInventorySlotContents(player.inventory.currentItem, (ItemStack) null);
-
+                    // remove hold
+                    player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
                 }
             }
-
             return null;
         }
     }

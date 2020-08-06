@@ -11,32 +11,35 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 public class MessageGuiSetHome implements IMessage {
-
     private int dimension;
+
     private int entityVillagerID;
+
     private boolean isMoveIn;
-
-
-    public MessageGuiSetHome() {
-    }
 
     public MessageGuiSetHome(int entityVillagerID, int dimension, boolean isMoveIn) {
         this.entityVillagerID = entityVillagerID;
+
         this.dimension = dimension;
+
         this.isMoveIn = isMoveIn;
     }
 
     @Override
     public void fromBytes(ByteBuf buf) {
         this.entityVillagerID = buf.readInt();
+
         this.dimension = buf.readInt();
+
         this.isMoveIn = buf.readBoolean();
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
         buf.writeInt(this.entityVillagerID);
+
         buf.writeInt(this.dimension);
+
         buf.writeBoolean(this.isMoveIn);
     }
 
@@ -46,12 +49,12 @@ public class MessageGuiSetHome implements IMessage {
          */
         @Override
         public IMessage onMessage(MessageGuiSetHome message, MessageContext ctx) {
-
             if (ctx.getServerHandler().playerEntity.worldObj.provider.getDimension() == message.dimension) {
-                //get villager
+                // get villager
                 Entity entity = ctx.getServerHandler().playerEntity.worldObj.getEntityByID(message.entityVillagerID);
-                if (entity != null && entity instanceof EntityVillager) {
+                if (entity instanceof EntityVillager) {
                     EntityVillager villager = (EntityVillager) entity;
+
                     if (message.isMoveIn) {
                         villager.setCurrentPosAsHome(ctx.getServerHandler().playerEntity);
                     } else {
@@ -59,7 +62,6 @@ public class MessageGuiSetHome implements IMessage {
                     }
                 }
             }
-
             return null;
         }
     }

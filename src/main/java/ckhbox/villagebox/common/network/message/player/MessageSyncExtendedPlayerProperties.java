@@ -11,8 +11,8 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 public class MessageSyncExtendedPlayerProperties implements IMessage {
-
     public int mailCount;
+
     public int newMailTimer;
 
     public MessageSyncExtendedPlayerProperties() {
@@ -25,12 +25,14 @@ public class MessageSyncExtendedPlayerProperties implements IMessage {
     @Override
     public void fromBytes(ByteBuf buf) {
         this.newMailTimer = buf.readInt();
+
         this.mailCount = buf.readInt();
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
         buf.writeInt(this.newMailTimer);
+
         buf.writeInt(this.mailCount);
     }
 
@@ -40,8 +42,11 @@ public class MessageSyncExtendedPlayerProperties implements IMessage {
          */
         @Override
         public IMessage onMessage(MessageSyncExtendedPlayerProperties message, MessageContext ctx) {
-            ExtendedPlayerProperties properties = ExtendedPlayerProperties.get(Minecraft.getMinecraft().thePlayer);
+            ExtendedPlayerProperties properties = ExtendedPlayerProperties
+                    .get(Minecraft.getMinecraft().thePlayer);
+
             properties.newMailTimer = message.newMailTimer;
+
             return null;
         }
     }

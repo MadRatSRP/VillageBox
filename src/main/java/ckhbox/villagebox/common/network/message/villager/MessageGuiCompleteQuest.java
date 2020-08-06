@@ -11,28 +11,27 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 public class MessageGuiCompleteQuest implements IMessage {
-
     private int dimension;
+
     private int entityVillagerID;
-
-
-    public MessageGuiCompleteQuest() {
-    }
 
     public MessageGuiCompleteQuest(int entityVillagerID, int dimension) {
         this.entityVillagerID = entityVillagerID;
+
         this.dimension = dimension;
     }
 
     @Override
     public void fromBytes(ByteBuf buf) {
         this.entityVillagerID = buf.readInt();
+
         this.dimension = buf.readInt();
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
         buf.writeInt(this.entityVillagerID);
+
         buf.writeInt(this.dimension);
     }
 
@@ -42,12 +41,13 @@ public class MessageGuiCompleteQuest implements IMessage {
          */
         @Override
         public IMessage onMessage(MessageGuiCompleteQuest message, MessageContext ctx) {
-
             if (ctx.getServerHandler().playerEntity.worldObj.provider.getDimension() == message.dimension) {
-                //get villager
+                // get villager
                 Entity entity = ctx.getServerHandler().playerEntity.worldObj.getEntityByID(message.entityVillagerID);
-                if (entity != null && entity instanceof EntityVillager) {
+
+                if (entity instanceof EntityVillager) {
                     EntityVillager villager = (EntityVillager) entity;
+
                     villager.completeCurrentQuest(ctx.getServerHandler().playerEntity);
                 }
             }

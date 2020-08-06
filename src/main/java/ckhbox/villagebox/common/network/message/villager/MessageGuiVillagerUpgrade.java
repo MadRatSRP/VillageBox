@@ -10,8 +10,6 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 public class MessageGuiVillagerUpgrade implements IMessage {
-
-
     public MessageGuiVillagerUpgrade() {
     }
 
@@ -31,8 +29,7 @@ public class MessageGuiVillagerUpgrade implements IMessage {
          */
         @Override
         public IMessage onMessage(MessageGuiVillagerUpgrade message, MessageContext ctx) {
-
-            //upgrade villager
+            // upgrade villager
             if (ctx.getServerHandler().playerEntity.openContainer instanceof ContainerVillagerUpgrading) {
                 ((ContainerVillagerUpgrading) ctx.getServerHandler().playerEntity.openContainer).upgrade();
             }

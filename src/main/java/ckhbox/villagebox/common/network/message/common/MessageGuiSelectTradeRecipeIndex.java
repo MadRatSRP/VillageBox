@@ -11,11 +11,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 public class MessageGuiSelectTradeRecipeIndex implements IMessage {
-
     private int currentRecipeIndex;
-
-    public MessageGuiSelectTradeRecipeIndex() {
-    }
 
     public MessageGuiSelectTradeRecipeIndex(int currentRecipeIndex) {
         this.currentRecipeIndex = currentRecipeIndex;
@@ -37,8 +33,8 @@ public class MessageGuiSelectTradeRecipeIndex implements IMessage {
          */
         @Override
         public IMessage onMessage(MessageGuiSelectTradeRecipeIndex message, MessageContext ctx) {
-
             Container container = ctx.getServerHandler().playerEntity.openContainer;
+
             if (container instanceof ContainerTrading) {
                 ((ContainerTrading) container).setCurrentRecipeIndex(message.currentRecipeIndex);
             }

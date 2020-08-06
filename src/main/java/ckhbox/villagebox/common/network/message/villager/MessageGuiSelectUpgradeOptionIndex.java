@@ -11,11 +11,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 public class MessageGuiSelectUpgradeOptionIndex implements IMessage {
-
     private int currentUpgradeOptionIndex;
-
-    public MessageGuiSelectUpgradeOptionIndex() {
-    }
 
     public MessageGuiSelectUpgradeOptionIndex(int currentUpgradeOptionIndex) {
         this.currentUpgradeOptionIndex = currentUpgradeOptionIndex;
@@ -37,8 +33,8 @@ public class MessageGuiSelectUpgradeOptionIndex implements IMessage {
          */
         @Override
         public IMessage onMessage(MessageGuiSelectUpgradeOptionIndex message, MessageContext ctx) {
-
             Container container = ctx.getServerHandler().playerEntity.openContainer;
+
             if (container instanceof ContainerVillagerUpgrading) {
                 ((ContainerVillagerUpgrading) container).setCurrentUpgradeOptionIndex(message.currentUpgradeOptionIndex);
             }

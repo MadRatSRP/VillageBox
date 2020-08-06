@@ -16,26 +16,21 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class MessageSyncCollections implements IMessage {
-
-    public NBTTagCompound tagcollections;
-
-    public MessageSyncCollections() {
-    }
+    public NBTTagCompound tagCollections;
 
     public MessageSyncCollections(Collections collections) {
-        this.tagcollections = new NBTTagCompound();
-        collections.saveNBTData(this.tagcollections);
+        this.tagCollections = new NBTTagCompound();
+        collections.saveNBTData(this.tagCollections);
     }
-
 
     @Override
     public void fromBytes(ByteBuf buf) {
-        this.tagcollections = ByteBufUtils.readTag(buf);
+        this.tagCollections = ByteBufUtils.readTag(buf);
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
-        ByteBufUtils.writeTag(buf, this.tagcollections);
+        ByteBufUtils.writeTag(buf, this.tagCollections);
     }
 
     private static class HandlerCommon implements IMessageHandler<MessageSyncCollections, IMessage> {
@@ -49,12 +44,14 @@ public class MessageSyncCollections implements IMessage {
     }
 
     public static class Handler extends HandlerCommon {
-
         @Override
         @SideOnly(Side.CLIENT)
         public IMessage onMessage(MessageSyncCollections message, MessageContext ctx) {
-            ExtendedPlayerProperties properties = ExtendedPlayerProperties.get(Minecraft.getMinecraft().thePlayer);
-            properties.collections.loadNBTData(message.tagcollections);
+            ExtendedPlayerProperties properties = ExtendedPlayerProperties
+                    .get(Minecraft.getMinecraft().thePlayer);
+
+            properties.collections.loadNBTData(message.tagCollections);
+
             return null;
         }
     }

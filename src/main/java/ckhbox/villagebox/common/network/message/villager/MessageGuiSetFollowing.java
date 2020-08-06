@@ -14,26 +14,34 @@ import javax.annotation.Nullable;
 
 public class MessageGuiSetFollowing implements IMessage {
     private int dimension;
+
     private int entityVillagerID;
+
     private boolean setPlayer;
 
     public MessageGuiSetFollowing(int entityVillagerID, int dimension, boolean setPlayer) {
         this.entityVillagerID = entityVillagerID;
+
         this.setPlayer = setPlayer;
+
         this.dimension = dimension;
     }
 
     @Override
     public void fromBytes(ByteBuf buf) {
         this.entityVillagerID = buf.readInt();
+
         this.dimension = buf.readInt();
+
         this.setPlayer = buf.readBoolean();
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
         buf.writeInt(this.entityVillagerID);
+
         buf.writeInt(this.dimension);
+
         buf.writeBoolean(this.setPlayer);
     }
 
@@ -43,13 +51,13 @@ public class MessageGuiSetFollowing implements IMessage {
          */
         @Override
         public IMessage onMessage(MessageGuiSetFollowing message, MessageContext ctx) {
-
             if (ctx.getServerHandler().playerEntity.worldObj.provider.getDimension() == message.dimension) {
                 // get villager
                 @Nullable Entity entity = ctx.getServerHandler().playerEntity.worldObj.getEntityByID(message.entityVillagerID);
 
                 if (entity instanceof EntityVillager) {
                     EntityVillager villager = (EntityVillager) entity;
+
                     villager.setFollowing(message.setPlayer ? ctx.getServerHandler().playerEntity : null);
                 }
             }
