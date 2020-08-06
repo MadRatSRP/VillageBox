@@ -20,21 +20,30 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ExtendedPlayerProperties {
-
     public static final ResourceLocation key = new ResourceLocation(VillageBoxMod.MOD_ID + ".expp");
 
     public static final int NewMailTimerTotal = 2000;
+
     public EntityPlayer player;
 
-    //-------------------------------------------------
-    public boolean hasSentInvitation;//if the player has sent the invivation
-    public int newMailTimer;//how much time left to receive a new mail
-    public int treasureHuntLevel;//high level will bring more gems
-    public boolean receivedVillagebook = false; // if the player has recived the village book
+    // -------------------------------------------------
+    // if the player has sent the invitation
+    public boolean hasSentInvitation;
+
+    // how much time left to receive a new mail
+    public int newMailTimer;
+
+    // high level will bring more gems
+    public int treasureHuntLevel;
+
+    // if the player has recived the village book
+    public boolean receivedVillagebook = false;
+
     public Collections collections;
 
     public ExtendedPlayerProperties(EntityPlayer player) {
         this.player = player;
+
         this.collections = new Collections(player);
     }
 
@@ -45,6 +54,7 @@ public class ExtendedPlayerProperties {
     public void sendNewVillagerInvitation() {
         if (!this.hasSentInvitation) {
             this.hasSentInvitation = true;
+
             this.resetMailTimer();
         }
     }
@@ -64,6 +74,7 @@ public class ExtendedPlayerProperties {
     public boolean upgradeTreasureHuntLevelTo(int level) {
         if (level > treasureHuntLevel) {
             treasureHuntLevel = level;
+
             return true;
         } else {
             return false;
@@ -72,33 +83,47 @@ public class ExtendedPlayerProperties {
 
     public void saveNBTData(NBTTagCompound compound) {
         compound.setBoolean("invited", this.hasSentInvitation);
+
         compound.setInteger("nmtimer", this.newMailTimer);
+
         compound.setInteger("treasurelvl", this.treasureHuntLevel);
+
         compound.setBoolean("receiveddvb", this.receivedVillagebook);
-        //collections
+
+        // collections
         NBTTagCompound collections = new NBTTagCompound();
+
         this.collections.saveNBTData(collections);
+
         compound.setTag("collections", collections);
     }
 
     public void loadNBTData(NBTTagCompound compound) {
         this.hasSentInvitation = compound.getBoolean("invited");
+
         this.newMailTimer = compound.getInteger("nmtimer");
+
         this.treasureHuntLevel = compound.getInteger("treasurelvl");
+
         this.receivedVillagebook = compound.getBoolean("receiveddvb");
-        //collections
+
+        // collections
         this.collections.loadNBTData(compound.getCompoundTag("collections"));
     }
 
     public void init(Entity entity, World world) {
         this.resetMailTimer();
+
         this.hasSentInvitation = false;
+
         this.treasureHuntLevel = 0;
     }
 
     public static class Collections {
-        private EntityPlayer player;
-        private List<Integer> proIDs = new ArrayList<Integer>(); //unlocked villager professions
+        private final EntityPlayer player;
+
+        //unlocked villager professions
+        private final List<Integer> proIDs = new ArrayList<Integer>();
 
         public Collections(EntityPlayer player) {
             this.player = player;
@@ -107,8 +132,11 @@ public class ExtendedPlayerProperties {
         public void addProfession(Profession profession) {
             if (profession != null && !this.proIDs.contains(profession.getRegID())) {
                 this.proIDs.add(profession.getRegID());
+
                 ItemStack villageBook = new ItemStack(ModItems.villageBook);
-                this.player.addChatMessage(new TextComponentTranslation(PathHelper.full("message.player.collections.addproid"),
+
+                this.player.addChatMessage(new TextComponentTranslation(
+                        PathHelper.full("message.player.collections.addproid"),
                     new TextComponentTranslation(profession.getUnlocalizedDisplayName()),
                     new TextComponentTranslation(villageBook.getUnlocalizedName() + ".name")));
             }
@@ -120,19 +148,23 @@ public class ExtendedPlayerProperties {
 
         public void loadNBTData(NBTTagCompound compound) {
             int[] proids = compound.getIntArray("proids");
-            if (proids != null && proids.length > 0) {
+
+            if (proids.length > 0) {
                 this.proIDs.clear();
-                for (int i = 0; i < proids.length; i++)
-                    this.proIDs.add(proids[i]);
+
+                for (int proid : proids)
+                    this.proIDs.add(proid);
             }
         }
 
         public void saveNBTData(NBTTagCompound compound) {
             if (this.proIDs.size() > 0) {
                 int[] temp = new int[this.proIDs.size()];
+
                 for (int i = 0; i < this.proIDs.size(); i++) {
                     temp[i] = this.proIDs.get(i);
                 }
+
                 compound.setIntArray("proids", temp);
             } else {
                 compound.removeTag("proids");

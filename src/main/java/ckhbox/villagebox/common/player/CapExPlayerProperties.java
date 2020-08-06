@@ -16,18 +16,21 @@ public class CapExPlayerProperties {
     public static Capability<ExtendedPlayerProperties> EXTENDED_PLAYER_PROPERTIES_CAPABILITY = null;
 
     public static void register() {
-        CapabilityManager.INSTANCE.register(ExtendedPlayerProperties.class, new Capability.IStorage<ExtendedPlayerProperties>() {
+        CapabilityManager.INSTANCE.register(ExtendedPlayerProperties.class,
+                new Capability.IStorage<ExtendedPlayerProperties>() {
             @Override
-            public NBTBase writeNBT(Capability<ExtendedPlayerProperties> capability, ExtendedPlayerProperties instance, EnumFacing side) {
+            public NBTBase writeNBT(Capability<ExtendedPlayerProperties> capability,
+                                    ExtendedPlayerProperties instance, EnumFacing side) {
                 return null;
             }
 
             @Override
-            public void readNBT(Capability<ExtendedPlayerProperties> capability, ExtendedPlayerProperties instance, EnumFacing side, NBTBase base) {
+            public void readNBT(Capability<ExtendedPlayerProperties> capability, ExtendedPlayerProperties instance,
+                                EnumFacing side, NBTBase base) {
             }
         }, new Callable<ExtendedPlayerProperties>() {
             @Override
-            public ExtendedPlayerProperties call() throws Exception {
+            public ExtendedPlayerProperties call() {
                 return null;
             }
         });
