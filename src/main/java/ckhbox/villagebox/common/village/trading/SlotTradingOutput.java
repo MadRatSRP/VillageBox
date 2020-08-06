@@ -7,19 +7,25 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
-public class SlotTradingOutput extends Slot {
+import javax.annotation.Nonnull;
 
+public class SlotTradingOutput extends Slot {
     private final InventoryTrading tradingInventory;
 
-    private EntityPlayer player;
-    private ITrading trader;
+    private final EntityPlayer player;
+
+    private final ITrading trader;
 
     private int field_75231_g;
 
-    public SlotTradingOutput(EntityPlayer player, ITrading trader, InventoryTrading tradingInventory, int slotIndex, int xPosition, int yPosition) {
+    public SlotTradingOutput(EntityPlayer player, ITrading trader, InventoryTrading tradingInventory,
+                             int slotIndex, int xPosition, int yPosition) {
         super(tradingInventory, slotIndex, xPosition, yPosition);
+
         this.player = player;
+
         this.trader = trader;
+
         this.tradingInventory = tradingInventory;
     }
 
@@ -34,8 +40,8 @@ public class SlotTradingOutput extends Slot {
      * Decrease the size of the stack in slot (first int arg) by the amount of the second int arg. Returns the new
      * stack.
      */
-    public ItemStack decrStackSize(int amount) {
-        if (this.getHasStack()) {
+    public @Nonnull ItemStack decrStackSize(int amount) {
+        if (this.getHasStack() && this.getStack() != null) {
             this.field_75231_g += Math.min(amount, this.getStack().stackSize);
         }
 
@@ -46,8 +52,9 @@ public class SlotTradingOutput extends Slot {
      * the itemStack passed in is the output - ie, iron ingots, and pickaxes, not ore and wood. Typically increases an
      * internal count then calls onCrafting(item).
      */
-    protected void onCrafting(ItemStack stack, int amount) {
+    protected void onCrafting(@Nonnull ItemStack stack, int amount) {
         this.field_75231_g += amount;
+
         this.onCrafting(stack);
     }
 
@@ -56,15 +63,17 @@ public class SlotTradingOutput extends Slot {
      */
     protected void onCrafting(ItemStack stack) {
         stack.onCrafting(this.player.worldObj, this.player, this.field_75231_g);
+
         this.field_75231_g = 0;
     }
 
-    public void onPickupFromSlot(EntityPlayer playerIn, ItemStack stack) {
+    public void onPickupFromSlot(@Nonnull EntityPlayer playerIn, @Nonnull ItemStack stack) {
         this.onCrafting(stack);
 
         if (this.tradingInventory.tradeCurrentRecipe()) {
             this.trader.onTrade();
         }
+
         this.tradingInventory.resetRecipeAndSlots();
     }
 }

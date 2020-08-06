@@ -7,12 +7,13 @@ import ckhbox.villagebox.common.util.helper.ItemStackHelper;
 import net.minecraft.item.ItemStack;
 
 public class TradingRecipe {
-
     private ItemStack[] itemsInput = new ItemStack[4];
+
     private ItemStack itemOutput;
 
     public TradingRecipe(ItemStack[] inputs, ItemStack output) {
         this.itemsInput = inputs;
+
         this.itemOutput = output;
     }
 
@@ -22,11 +23,10 @@ public class TradingRecipe {
 
     public void setItemsInput(ItemStack[] items) {
         if (items != null) {
-            //the part of items passed that is larger than size will be ignored
+            // the part of items passed that is larger than size will be ignored
             int total = Math.min(this.itemsInput.length, items.length);
-            for (int i = 0; i < total; i++) {
-                this.itemsInput[i] = items[i];
-            }
+
+            System.arraycopy(items, 0, this.itemsInput, 0, total);
         }
     }
 

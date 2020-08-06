@@ -12,11 +12,13 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class Quest {
-    private ItemStack[] required;
-    private ItemStack[] rewards;
+    private final ItemStack[] required;
+
+    private final ItemStack[] rewards;
 
     public Quest(ItemStack[] required, ItemStack[] rewards) {
         this.required = required;
+
         this.rewards = rewards;
     }
 
@@ -34,9 +36,10 @@ public class Quest {
     }
 
     public boolean canComplete(EntityPlayer player) {
-        if (required == null) return true;
-        for (int i = 0; i < required.length; i++) {
-            if (this.getItemNum(required[i], player) < required[i].stackSize) {
+        if (required == null)
+            return true;
+        for (ItemStack itemStack : required) {
+            if (this.getItemNum(itemStack, player) < itemStack.stackSize) {
                 return false;
             }
         }
@@ -44,43 +47,49 @@ public class Quest {
     }
 
     public boolean complete(EntityPlayer player) {
+        if (!canComplete(player))
+            return false;
 
-        if (!canComplete(player)) return false;
-
-        for (int i = 0; i < required.length; i++) {
-            this.consumeItems(required[i], player);
+        for (ItemStack itemStack : required) {
+            this.consumeItems(itemStack, player);
         }
 
         if (rewards != null) {
-            for (int i = 0; i < rewards.length; i++) {
-                ItemStack reward = rewards[i].copy();
+            for (ItemStack itemStack : rewards) {
+                ItemStack reward = itemStack.copy();
+
                 if (!player.inventory.addItemStackToInventory(reward)) {
                     player.dropItem(reward, false);
                 }
             }
         }
 
-        //exp
+        // exp
         int exp = 15;
 
         while (exp > 0) {
             int i = EntityXPOrb.getXPSplit(exp);
-            exp -= i;
-            player.worldObj.spawnEntityInWorld(new EntityXPOrb(player.worldObj, player.posX, player.posY + 0.5D, player.posZ, i));
-        }
 
+            exp -= i;
+
+            player.worldObj.spawnEntityInWorld(new EntityXPOrb(player.worldObj,
+                    player.posX, player.posY + 0.5D, player.posZ, i));
+        }
 
         return true;
     }
 
     public int getItemNum(ItemStack itemstack, EntityPlayer player) {
         ItemStack[] stacks = player.inventory.mainInventory;
+
         int count = 0;
-        for (int i = 0; i < stacks.length; ++i) {
-            if (stacks[i] != null && stacks[i].isItemEqual(itemstack)) {
-                count += stacks[i].stackSize;
+
+        for (ItemStack stack : stacks) {
+            if (stack != null && stack.isItemEqual(itemstack)) {
+                count += stack.stackSize;
             }
         }
+
         return count;
     }
 
@@ -91,10 +100,13 @@ public class Quest {
             if (stacks[i] != null && stacks[i].isItemEqual(itemstack)) {
                 if (stacks[i].stackSize >= itemstack.stackSize) {
                     stacks[i].stackSize -= itemstack.stackSize;
-                    if (stacks[i].stackSize == 0) stacks[i] = null;
+
+                    if (stacks[i].stackSize == 0)
+                        stacks[i] = null;
                     break;
                 } else {
                     itemstack.stackSize -= stacks[i].stackSize;
+
                     stacks[i] = null;
                 }
             }

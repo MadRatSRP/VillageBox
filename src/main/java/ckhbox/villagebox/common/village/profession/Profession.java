@@ -19,35 +19,45 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Profession implements IRegistrable {
-    //---------------------------------
+    // ---------------------------------
     // registry
     public static Registry<Profession> registry = new Registry<>();
+
     // trading recipe list
     protected TradingRecipeList tradingRecipeList;
+
     // texture
     protected ResourceLocation texturem;
+
     protected ResourceLocation texturef;
 
-    //what professions can upgrade from this profession
+    // what professions can upgrade from this profession
     protected int[] upgradeToNextOptionIDs;
-    protected Profession[] upgradeToNextOptions;//this will be automatically generated based on option classes
-    //what items are needed to upgrade to this profession(usually only gems, maximum: 3 stacks)
+
+    // this will be automatically generated based on option classes
+    protected Profession[] upgradeToNextOptions;
+
+    // what items are needed to upgrade to this profession(usually only gems, maximum: 3 stacks)
     protected ItemStack[] upgradeToCurentNeeds;
-    //what items the villager will hold (will randomly select if there are more than 1 items in the list)
+
+    // what items the villager will hold (will randomly select if there are more than 1 items in the list)
     protected ItemStack[] holdItems;
-    //quests
+
+    // quests
     protected List<Quest> quests;
-    //unlocalized name
+
+    // unlocalized name
     protected String unlocalized;
+
     private int regID;
 
     public Profession(JsonProfession proData) {
         unlocalized = PathHelper.full("profession." + proData.name);
+
         loadProfessionData(proData);
     }
 
     public static void init() {
-
         JsonVBData data = JsonDataManager.GetVBData();
 
         for (JsonProfession profession : data.listOfProfessions) {
@@ -71,6 +81,7 @@ public class Profession implements IRegistrable {
 
         // trading
         tradingRecipeList = new TradingRecipeList();
+
         if (proData.listOfTradingRecipes != null) {
             for (JsonTradingRecipe recipe : proData.listOfTradingRecipes) {
                 this.tradingRecipeList.add(new TradingRecipe(
@@ -81,6 +92,7 @@ public class Profession implements IRegistrable {
 
         // upgrading
         upgradeToNextOptionIDs = proData.upgradeProfessionIDs == null ? null : proData.upgradeProfessionIDs.clone();
+
         upgradeToCurentNeeds = JsonHelper.stringsToItemStacks(proData.upgradeRequirements);
 
         // items on hands
@@ -115,7 +127,7 @@ public class Profession implements IRegistrable {
                 }
 
                 if (list.size() > 0) {
-                    this.upgradeToNextOptions = list.toArray(new Profession[list.size()]);
+                    this.upgradeToNextOptions = list.toArray(new Profession[0]);
                 }
             }
         }
@@ -123,15 +135,13 @@ public class Profession implements IRegistrable {
     }
 
     private boolean isProIDBanned(int proid) {
-        if (VBConfig.proIDBanList == null)
-            return false;
-        else {
+        if (VBConfig.proIDBanList != null) {
             for (int i = 0; i < VBConfig.proIDBanList.length; i++) {
                 if (proid == VBConfig.proIDBanList[i])
                     return true;
             }
-            return false;
         }
+        return false;
     }
 
     public ItemStack[] getUpgradeToCurentNeeds() {
@@ -163,6 +173,7 @@ public class Profession implements IRegistrable {
 
     protected void createTextures(String name) {
         this.texturem = new ResourceLocation(PathHelper.full("textures/entity/villager/" + name + "_m.png"));
+
         this.texturef = new ResourceLocation(PathHelper.full("textures/entity/villager/" + name + "_f.png"));
     }
 

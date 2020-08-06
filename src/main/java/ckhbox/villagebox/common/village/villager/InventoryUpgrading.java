@@ -12,24 +12,31 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 
+import javax.annotation.Nonnull;
+import java.util.Arrays;
+
 public class InventoryUpgrading implements IInventory {
+    private final ItemStack[] inventoryItems = new ItemStack[3];
 
-    private ItemStack[] inventoryItems = new ItemStack[3];
+    private final EntityVillager villager;
 
-    private EntityVillager villager;
-    private EntityPlayer player;
+    private final EntityPlayer player;
 
     private int currentUpgradeOptionIndex;
+
     private Profession currentUpgradeOption;
 
     private boolean canUpgrade = false;
 
     public InventoryUpgrading(EntityPlayer player, EntityVillager villager) {
         this.villager = villager;
+
         this.player = player;
+
         this.resetUpgradeOptionAndSlots();
     }
 
+    @Nonnull
     @Override
     public String getName() {
         return "villagebox.upgrading";
@@ -40,6 +47,7 @@ public class InventoryUpgrading implements IInventory {
         return false;
     }
 
+    @Nonnull
     @Override
     public ITextComponent getDisplayName() {
         return new TextComponentString(this.getName());
@@ -58,25 +66,24 @@ public class InventoryUpgrading implements IInventory {
     @Override
     public ItemStack decrStackSize(int index, int count) {
         if (this.inventoryItems[index] != null) {
+            ItemStack take;
+
             if (this.inventoryItems[index].stackSize <= count) {
-                ItemStack take = this.inventoryItems[index];
+                take = this.inventoryItems[index];
+
                 this.inventoryItems[index] = null;
 
-                this.resetUpgradeOptionAndSlots();
-
                 //System.out.println("decrStackSize(not empty)");
-                return take;
             } else {
-                ItemStack take = this.inventoryItems[index].splitStack(count);
+                take = this.inventoryItems[index].splitStack(count);
 
                 if (this.inventoryItems[index].stackSize == 0) {
                     this.inventoryItems[index] = null;
                 }
-
-                this.resetUpgradeOptionAndSlots();
-
-                return take;
             }
+            this.resetUpgradeOptionAndSlots();
+
+            return take;
         } else {
             return null;
         }
@@ -86,7 +93,9 @@ public class InventoryUpgrading implements IInventory {
     public ItemStack removeStackFromSlot(int index) {
         if (this.inventoryItems[index] != null) {
             ItemStack removed = this.inventoryItems[index];
+
             this.inventoryItems[index] = null;
+
             return removed;
         } else {
             return null;
@@ -95,7 +104,6 @@ public class InventoryUpgrading implements IInventory {
 
     @Override
     public void setInventorySlotContents(int index, ItemStack stack) {
-
         this.inventoryItems[index] = stack;
 
         if (stack != null && stack.stackSize > this.getInventoryStackLimit()) {
@@ -116,22 +124,22 @@ public class InventoryUpgrading implements IInventory {
     }
 
     @Override
-    public boolean isUseableByPlayer(EntityPlayer player) {
+    public boolean isUseableByPlayer(@Nonnull EntityPlayer player) {
         return true;
     }
 
     @Override
-    public void openInventory(EntityPlayer player) {
+    public void openInventory(@Nonnull EntityPlayer player) {
 
     }
 
     @Override
-    public void closeInventory(EntityPlayer player) {
+    public void closeInventory(@Nonnull EntityPlayer player) {
 
     }
 
     @Override
-    public boolean isItemValidForSlot(int index, ItemStack stack) {
+    public boolean isItemValidForSlot(int index, @Nonnull ItemStack stack) {
         return true;
     }
 
@@ -152,9 +160,7 @@ public class InventoryUpgrading implements IInventory {
 
     @Override
     public void clear() {
-        for (int i = 0; i < this.inventoryItems.length; ++i) {
-            this.inventoryItems[i] = null;
-        }
+        Arrays.fill(this.inventoryItems, null);
     }
 
     public boolean canUpgrade() {
@@ -165,6 +171,7 @@ public class InventoryUpgrading implements IInventory {
         if (this.canUpgrade()) {
             if (ItemStackHelper.consume(this.inventoryItems, this.currentUpgradeOption.getUpgradeToCurentNeeds(), 3)) {
                 this.villager.upgrade(this.currentUpgradeOption.getRegID());
+
                 this.player.closeScreen();
             }
         }
@@ -172,19 +179,21 @@ public class InventoryUpgrading implements IInventory {
 
     public void resetUpgradeOptionAndSlots() {
         Profession[] options = this.villager.getProfession().getUpgradeToNextOptions();
+
         this.currentUpgradeOption = options == null ? null : options[this.currentUpgradeOptionIndex];
 
         this.canUpgrade = false;
+
         if (this.currentUpgradeOption != null) {
             if (ItemStackHelper.match(this.inventoryItems, this.currentUpgradeOption.getUpgradeToCurentNeeds(), 3)) {
                 this.canUpgrade = true;
             }
         }
-
     }
 
     public void setCurrentUpgradeOptionIndex(int currentUpgradeOptionIndex) {
         this.currentUpgradeOptionIndex = currentUpgradeOptionIndex;
+
         this.resetUpgradeOptionAndSlots();
     }
 }

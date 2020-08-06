@@ -9,21 +9,28 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 
+import javax.annotation.Nonnull;
+import java.util.Arrays;
+
 public class InventoryTrading implements IInventory {
+    // 4 inputs and 1 output
+    private final ItemStack[] inventoryItems = new ItemStack[5];
 
-    private ItemStack[] inventoryItems = new ItemStack[5]; // 4 inputs and 1 output
+    private final ITrading trader;
 
-    private ITrading trader;
-    private EntityPlayer player;
+    private final EntityPlayer player;
 
     private int currentRecipeIndex;
+
     private TradingRecipe currentRecipe;
 
     public InventoryTrading(EntityPlayer player, ITrading trader) {
         this.trader = trader;
+
         this.player = player;
     }
 
+    @Nonnull
     @Override
     public String getName() {
         return "villagebox.trading";
@@ -34,6 +41,7 @@ public class InventoryTrading implements IInventory {
         return false;
     }
 
+    @Nonnull
     @Override
     public ITextComponent getDisplayName() {
         return new TextComponentString(this.getName());
@@ -51,21 +59,26 @@ public class InventoryTrading implements IInventory {
 
     @Override
     public ItemStack decrStackSize(int index, int count) {
-
         //System.out.println("decrStackSize:" + index + "," + count);
+
         if (this.inventoryItems[index] != null) {
             if (index == 4) {
                 ItemStack take = this.inventoryItems[index];
+
                 this.inventoryItems[index] = null;
+
                 return take;
             } else if (this.inventoryItems[index].stackSize <= count) {
                 ItemStack take = this.inventoryItems[index];
+
                 this.inventoryItems[index] = null;
 
                 if (this.inventoryResetNeededOnSlotChange(index)) {
                     this.resetRecipeAndSlots();
                 }
+
                 //System.out.println("decrStackSize(not empty)");
+
                 return take;
             } else {
                 ItemStack take = this.inventoryItems[index].splitStack(count);
@@ -89,7 +102,9 @@ public class InventoryTrading implements IInventory {
     public ItemStack removeStackFromSlot(int index) {
         if (this.inventoryItems[index] != null) {
             ItemStack removed = this.inventoryItems[index];
+
             this.inventoryItems[index] = null;
+
             return removed;
         } else {
             return null;
@@ -98,7 +113,6 @@ public class InventoryTrading implements IInventory {
 
     @Override
     public void setInventorySlotContents(int index, ItemStack stack) {
-
         this.inventoryItems[index] = stack;
 
         if (stack != null && stack.stackSize > this.getInventoryStackLimit()) {
@@ -121,22 +135,22 @@ public class InventoryTrading implements IInventory {
     }
 
     @Override
-    public boolean isUseableByPlayer(EntityPlayer player) {
+    public boolean isUseableByPlayer(@Nonnull EntityPlayer player) {
         return true;
     }
 
     @Override
-    public void openInventory(EntityPlayer player) {
+    public void openInventory(@Nonnull EntityPlayer player) {
 
     }
 
     @Override
-    public void closeInventory(EntityPlayer player) {
+    public void closeInventory(@Nonnull EntityPlayer player) {
 
     }
 
     @Override
-    public boolean isItemValidForSlot(int index, ItemStack stack) {
+    public boolean isItemValidForSlot(int index, @Nonnull ItemStack stack) {
         return true;
     }
 
@@ -157,9 +171,7 @@ public class InventoryTrading implements IInventory {
 
     @Override
     public void clear() {
-        for (int i = 0; i < this.inventoryItems.length; ++i) {
-            this.inventoryItems[i] = null;
-        }
+        Arrays.fill(this.inventoryItems, null);
     }
 
     private boolean inventoryResetNeededOnSlotChange(int index) {
@@ -168,6 +180,7 @@ public class InventoryTrading implements IInventory {
 
     public void resetRecipeAndSlots() {
         int count = 0;
+
         for (int i = 0; i < 4; i++) {
             if (this.inventoryItems[i] != null)
                 count++;
@@ -176,9 +189,11 @@ public class InventoryTrading implements IInventory {
         this.currentRecipe = this.trader.getTradingRecipeList().get(this.currentRecipeIndex);
 
         ItemStack output = null;
+
         if (this.currentRecipe.match(this.inventoryItems)) {
             output = this.currentRecipe.getItemOutput().copy();
         }
+
         this.setInventorySlotContents(4, output);
     }
 
@@ -186,11 +201,13 @@ public class InventoryTrading implements IInventory {
         if (this.currentRecipe != null) {
             return this.currentRecipe.trade(this.inventoryItems);
         }
+
         return false;
     }
 
     public void setCurrentRecipeIndex(int currentRecipeIndexIn) {
         this.currentRecipeIndex = currentRecipeIndexIn;
+
         this.resetRecipeAndSlots();
     }
 }
